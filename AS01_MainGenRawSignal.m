@@ -1,4 +1,4 @@
-clc; clear; close all hidden
+clc; clear; close all hidden 
 % This is the main script for simulating space SAR
 % The script will generate a raw SAR signal (baseband) based on the optial
 % satellite image of the taregt swath
@@ -39,7 +39,7 @@ drawnow
 %% Generate spatial sampling points (Tragets)
 [Targetlat,Targetlon]= F03_GenerateTargets(latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Param); % This is for optical-based targets
 %% Get ground reflectrivity
-F04_GetGroundReflect
+a = F04_GetGroundReflect(Targetlat,Targetlon,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2);
 figure(2)
 % Converting to cartisian coordinates for plotting
 [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
