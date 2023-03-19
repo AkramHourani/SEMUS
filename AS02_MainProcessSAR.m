@@ -12,7 +12,7 @@ subplot(2,4,1)
 pc =pcolor(FastTime/1e-6,1:etaTotal,real(sqd));
 pc.LineStyle='none';
 colormap parula
-xlabel('Fast time [ms]')
+xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 0: Raw time domain (magnitude)')
 %% Step 1: Range Compression
@@ -39,7 +39,7 @@ S1_ref = fft1d1(src_ref);
 subplot(2,4,2)
 pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
 pc.LineStyle='none';
-xlabel('Fast time [ms]')
+xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 1: Range compression')
 drawnow
@@ -73,7 +73,7 @@ end
 subplot(2,4,5)
 pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));
 pc.LineStyle='none';
-xlabel('Fast time [ms]')
+xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 3.2: RCMC')
 drawnow

@@ -25,7 +25,7 @@ end
 [~,etaIdx]=min(abs(R(:,end)-R(:,1)));
 R = R(etaIdx,:);
 [Ro,Idx] = min(R);
-GRP = [latSawthMid(Idx),lonSwathMid(Idx),0]; % Group reference point
+GRP = [latSawthMid(Idx),lonSwathMid(Idx),0]; % ground reference point
 %% Plot swath
 geoplot(Satlla(:,1),Satlla(:,2)); %Satellite subline
 hold on
@@ -75,15 +75,12 @@ PulseWidthSamples = round(RadPar.T/(FastTime(end)-FastTime(1))*TimeLength);
 %Window = [Window,zeros(1,TimeLength-length(Window))];
 %%   Generate base chrip (not nessasry step, just for testing)
 tau = 0;
-
-% Hanning window added to the pulse
 sb = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
     .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));%.*Window;
 figure(5)
 plot(FastTime/1e-6,real(sb))
 xlabel('Time [\mus]')
 ylabel('Real part')
-
 title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
@@ -105,7 +102,7 @@ end
 disp ('Generating the reference signal...')
 tauo = 2*Ro/c;% delay of the refernece point
 parfor etaIdx=1:etaTotal
-    sqd_ref(etaIdx,:) = F05_CalcReflection(a,latSawthMid(Idx),lonSwathMid(Idx),Satlla(etaIdx,:),RadPar,E,sataz,c,tauo,FastTime);
+    sqd_ref(etaIdx,:) = F05_CalcReflection(a,GRP(1),GRP(2),Satlla(etaIdx,:),RadPar,E,sataz,c,tauo,FastTime);
 end
 %% This is the logest part of the simulations 
 % the script will step through the azimuth (slow time) and generate the
