@@ -4,7 +4,6 @@ close all hidden;
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
-
 fft1d1 = @ (x) fftshift(fft(fftshift(x,1),[],1),1);
 ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% plotting raw time domain signal
@@ -89,14 +88,14 @@ S3 = S2 .* conj(S2_ref);
 sSLC = ifft1d1(S3);
 
 figure(2)
-Range =(0:RangeBin:(numel(FastTime)-1)*RangeBin)/1000/2;
+Range =(-(numel(FastTime)/2)*RangeBin:RangeBin:(numel(FastTime)/2-1)*RangeBin)/2;
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.dt);
 
 CrossRange = (1:etaTotal)*Param.dt*speed/1000;
 %%
 sSLC=sSLC./max(abs(sSLC),[],"all");
 ax=gca;
-pc =pcolor(Range,CrossRange,(abs(sSLC)));
+pc =pcolor(Range/1000,CrossRange,(abs(sSLC)));
 pc.LineStyle='none';
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
@@ -105,13 +104,38 @@ ylabel('Cross Range [km]')
 title('Step 5: Comressed image')
 colormap bone
 axis equal
+ 
+%% Geographic projection
+% Here we map the cross-range / range to domain to the original geographic
+% coordinates longitute / latitude.
 
-%%
-%figure(3)
-% subplot(2,1,1)
-% clf
-% plot(real(S2(:,round(length(S2)/2+2))))
-% hold on
-% plot(real(Haz)*1e-10)
-% plot(imag(sSLC(:,round(length(sSLC)/2+2))))
+for eta =1:etaTotal
+[~,~,SAR_Range(eta,:)] = geodetic2aer(Targetlat(eta,:),Targetlon(eta,:),0,Satlla(eta,1),Satlla(eta,2),Satlla(eta,3),E);
+SAR_Range(eta,:) = (SAR_Range(eta,:)-slantrangeMid(eta))*2;
+SARlat(eta,:) = interp1(SAR_Range(eta,:),Targetlat(eta,:),Range,"linear","extrap");
+SARlon(eta,:) = interp1(SAR_Range(eta,:),Targetlon(eta,:),Range,"linear","extrap");
+end
+figure
+subplot(1,2,1)
+[xEast,yNorth,~] = latlon2local(SARlat,SARlon,0,GRP);
+scatter(xEast(:)/1000,yNorth(:)/1000,2,double(abs(sSLC(:))),'MarkerEdgeColor','none','MarkerFaceColor','flat')
+colormap bone
+axis equal
+hold on
+plot(0,0,'+'); % Mid point (reference)
+xlabel('x-axis [km]')
+ylabel('y-axis [km]')
+title('Processed SAR Image')
+
+subplot(1,2,2)
+[xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
+scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
+colormap bone
+axis equal
+hold on
+plot(0,0,'+'); % Mid point (reference)
+xlabel('x-axis [km]')
+ylabel('y-axis [km]')
+title('Satellite swath (optical)')
+
 
