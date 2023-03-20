@@ -1,0 +1,4 @@
+This folder contains parameters for generating
+1- 3 target points at high frequency and PRF and high number of targets ==> Testtargets
+2- 3 target points at high frequency and lower PRF and number of targets ==> Testtargets2
+2- Whole scene image with low frequency and high number of points
