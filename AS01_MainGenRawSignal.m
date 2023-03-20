@@ -9,26 +9,30 @@ A00_Parameters
 % This Scrip/function creat the satellite orbit
 [SatECI] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);
 DateTime =  startTime:seconds(Param.dt):(startTime + seconds(Param.dt *(size(SatECI,2)-1)));
-DateVector = datevec(DateTime);
-GeoTime = 0:Param.dt:Param.dt *(size(SatECI,2)- 1);
+DateVector = datevec(DateTime); 
+GeoTime = 0:Param.dt:Param.dt *(size(SatECI,2)- 2);
+DateVector(end,:)=[];
+SatECI(:,end)=[]; % Trim the last reading it has some errors
 %% Finding the swath
 Satlla = eci2lla(SatECI',DateVector);
-[latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,sataz]=F02_FindSwath(Satlla,RadPar,E);
-%% Find ground reference point
-R=[];
-for etaIdx=1:length(latSawthMid)
-    [~,~,R(etaIdx,:)] = geodetic2aer(latSawthMid(etaIdx),lonSwathMid(etaIdx),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
-    %plot(R(ctr,:))
-    %hold on
-end
-% Find eta with most symetrical pass
-[~,etaIdx]=min(abs(R(:,end)-R(:,1)));
-R = R(etaIdx,:);
-[Ro,Idx] = min(R);
+[latSawthMid,lonSwathMid,slantrangeMid,Swathwidth,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2]=F02_FindSwath(Satlla,RadPar,E);
+%% This will find the GRP in the middle of the swath
+Idx = round(length(lonSwathL2)/2);
+[~,~,R] = geodetic2aer(latSawthMid(Idx),lonSwathMid(Idx),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
+[Ro,~] = min(R);
 GRP = [latSawthMid(Idx),lonSwathMid(Idx),0]; % ground reference point
+
+
+[~,~,SAR_Dist_Edge1] = geodetic2aer(latSawthL1(Idx),lonSwathL1(Idx),0,Satlla(Idx,1),Satlla(Idx,2),Satlla(Idx,3),E);
+[~,~,SAR_Dist_Edge2] = geodetic2aer(latSawthL2(Idx),lonSwathL2(Idx),0,Satlla(Idx,1),Satlla(Idx,2),Satlla(Idx,3),E);
+Swathwidth_SARDistance = abs(SAR_Dist_Edge1-SAR_Dist_Edge2);
 %% Plot swath
+
 geoplot(Satlla(:,1),Satlla(:,2)); %Satellite subline
 hold on
+
+geoplot(latSawthMid,lonSwathMid,'--'); %Swath center line
+
 geoplot(latSawthMid,lonSwathMid,'--'); %Swath center line
 geoplot(GRP(1),GRP(2),'x'); %Swath center point
 geoplot(latSawthL1,lonSwathL1,'color',ColorOrder(2,:)); %Swath edge line 1
@@ -57,14 +61,14 @@ figure(6)
 % The 1.2 is added such that hal the power is matching the beamwidth
 AntennaGain = RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6));
 pc =pcolor(OffBoreSightAz,OffBoreSightRange,AntennaGain);
-pc.LineStyle='none';
+pc.LineStyle='none'; 
 axis equal;
 colorbar
 xlabel('Azimuth direction [deg]')
 ylabel('Range direction [deg]')
 title('Antenna gain pattern example')
 %%  Generate the reference reflected waveform template s(eta,t)
-SwathWidthTime = Swathwidths_m/c;
+SwathWidthTime = Swathwidth_SARDistance/c*2;
 FastTime = (-SwathWidthTime/2:RadPar.ts:SwathWidthTime/2);
 etaTotal=length(DateVector);
 TimeLength = length(FastTime);
@@ -84,7 +88,7 @@ ylabel('Real part')
 title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
-Testing=0; % 0 for optical proccessing and 1 for 3 targets testing, and 2 for a single target
+Testing=1; % 0 for optical proccessing and 1 for 3 targets testing, and 2 for a single target
 FileName = 'matlabOptical';
 NTesting = 3;
 if Testing==1 % this is for three targets testing
@@ -94,33 +98,44 @@ if Testing==1 % this is for three targets testing
     a = ones(NTesting,1);
 end
 if Testing==2 % this is for single targets testing
-    Targetlat = latSawthMid(Idx);
-    Targetlon = lonSwathMid(Idx);
+    Targetlat = GRP(1);
+    Targetlon = GRP(2);
     a = 1;
 end
+%% Approx azimuth of the satellite to clauclate the antenna pattern
+if RadPar.Left == 1
+    sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) +90;
+else
+    sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) -90;
+end
+
+
 %% Reference sqd that will be used for template match filtering
 disp ('Generating the reference signal...')
 tauo = 2*Ro/c;% delay of the refernece point
-parfor etaIdx=1:etaTotal
-    sqd_ref(etaIdx,:) = F05_CalcReflection(a,GRP(1),GRP(2),Satlla(etaIdx,:),RadPar,E,sataz,c,tauo,FastTime);
+parfor eta=1:etaTotal
+    [sqd_ref(eta,:)] = F05_CalcReflection(a,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
 %% This is the logest part of the simulations 
 % the script will step through the azimuth (slow time) and generate the
 % reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
-parfor etaIdx=1:etaTotal
-    sqd(etaIdx,:) =F05_CalcReflection(a,Targetlat,Targetlon,Satlla(etaIdx,:),RadPar,E,sataz,c,tauo,FastTime);
-    disp(etaIdx)
+parfor eta=1:etaTotal
+    sqd(eta,:) =F05_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    disp(eta)
 end
 toc
 %% Plot the raw unfocused SAR signal (Optional)
 figure(7)
 pc =pcolor(FastTime/1e-6,1:etaTotal,abs(sqd));
 pc.LineStyle='none';
+ax=gca;
+grid on
+ax.Layer = 'top';
 colormap bone
-xlabel('Fast time [ms]')
+xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Raw time domain (magnitude)')
 %% Save the waveform
-save('Test01.mat')
+save('Test02.mat')
