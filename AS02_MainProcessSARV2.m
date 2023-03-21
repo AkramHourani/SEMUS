@@ -1,9 +1,8 @@
-clc
-clear
-close all hidden;
+clc;clear;close all hidden;
 % load('matlabTestRef')                               % This is for reconstructing the ground reference point 
 % load('matlabTestTargets')                           % This is for reconstructing three targets test
 load('matlabOptical1')                               % This is for reconstructing the whole scene image
+load('Test01.mat')                               % This is for testing
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -59,14 +58,14 @@ end
 %%% Analytical Method %%%%
 % R = R - DeltaR;
 % Haz = exp(1j*2*pi* R *2*RadPar.fo/c);             % Azimuth Matched Filter
-Haz = exp(-1j*2*pi* DeltaR *2*RadPar.fo/c);             % Azimuth Matched Filter
+Haz = exp(-1j*2*pi* DeltaR *2*RadPar.fo/c);         % Azimuth Matched Filter
 S3 = S2 .* repmat(Haz.',1,size(S2,2));              % Compressed data after azimuth compression
 
 % FrequencyAzimuth = -Param.PRF/2 : Param.PRF/ size(sqd,1): Param.PRF/2-(Param.PRF/size(sqd,1));    % Slowtime frequency array - Azimuth frequency
 % [~,velocity,~] = states(sat);
 % v = abs(sqrt((velocity(1,:).^2 + velocity(2,:).^2+ velocity(3,:).^2)));
 % Ka = 2 * v.^2 ./ (RadPar.Lambda *  DeltaR.');
-% Haz = exp(1j*pi* FrequencyAzimuth.^2 ./Ka);             % Azimuth Matched Filter
+% Haz = exp(1j*pi* FrequencyAzimuth.^2 ./Ka);         % Azimuth Matched Filter
 % S3 = S2 .* repmat(Haz.',1,size(S2,2));              % Compressed data after azimuth compression
 
 %%% Empirical Method %%%%
