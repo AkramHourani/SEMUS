@@ -16,8 +16,8 @@ gt = groundTrack(sat);
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
-% geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
-geoplot((Satlla(:,1)-2.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
+geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
+% geoplot((Satlla(:,1)-2.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
 hold on
 geoplot(latSawthMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
 geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));                          % Swath center point GRP
@@ -25,11 +25,11 @@ geoplot(latSawthL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));         
 geoplot(latSawthL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
 
 % Adding LoRa Transmitter to Geoplot
-geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
-legend('satellite subtrack','swath mid track','','','','Interferer Tx','FontSize',10,'interpreter','latex')
+% geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
+% legend('satellite subtrack','swath mid track','','','','Interferer Tx','FontSize',10,'interpreter','latex')
 
-% legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
-geolimits([-38 -37],[144 146])                                                                            % Latitude - Longitude limits
+legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
+% geolimits([-38 -37],[144 146])                                                                            % Latitude - Longitude limits
 ax=gca;
 ax.LatitudeAxis.TickValues=[];
 ax.LongitudeAxis.TickValues=[];
@@ -86,8 +86,8 @@ set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % title('Assumed Antenna Gain Pattern','FontSize',16,'interpreter','latex')
 % xlim([-1 1])
 
-Filename1='Figure10';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure10';
+% print(h_Fig, '-dpng','-r600',Filename1)
 %% Generate base chrip (not nessasry step, just for testing)
 figure(4)
 plot(FastTime/1e-6,real(sb))

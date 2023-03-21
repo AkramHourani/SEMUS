@@ -7,7 +7,7 @@ A00_Parameters                                                                  
 %% Create Geomtry setup - STEP1.Create Satellite Scenario
 [SatECI,velocity,DateTime] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);  % Script for creating the satellite scenario and orbit
 DateVector = datevec(DateTime);                                                     % Convert datetime data into Date vector of 6 elements for the whole flight duration
-GeoTime = 0:Param.ts:Param.ts *(size(SatECI,2)- 1);                                 % Geometrical sampling time - Azimuth sampling
+GeoTime = 0:Param.ts:Param.ts *(size(SatECI,2)- 2);                                 % Geometrical sampling time - Azimuth sampling
 DateVector(end,:)=[];
 SatECI(:,end)=[];                                                                   % Trim the last reading it has some errors
 %% Find the swath - STEP2.Geometric Simulator

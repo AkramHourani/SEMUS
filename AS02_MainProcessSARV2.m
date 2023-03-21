@@ -1,8 +1,8 @@
 clc;clear;close all hidden;
-% load('matlabTestRef')                             % This is for reconstructing the ground reference point 
-% load('matlabTestTargets')                         % This is for reconstructing three targets test
-load('matlabOptical1')                            % This is for reconstructing the whole scene image
-% load('Test01.mat')                                  % This is for testing
+% load('matlabTestRef')                               % This is for reconstructing the ground reference point 
+% load('matlabTestTargets')                           % This is for reconstructing three targets test
+% load('matlabOptical1')                              % This is for reconstructing the whole scene image
+load('Test01.mat')                                  % This is for testing
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
