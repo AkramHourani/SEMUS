@@ -116,8 +116,9 @@ if length(Targetlat)>5
     for eta =1:etaTotal
         [~,~,SAR_Range(eta,:)] = geodetic2aer(Targetlat(eta,:),Targetlon(eta,:),0,Satlla(eta,1),Satlla(eta,2),Satlla(eta,3),E);
         SAR_Range(eta,:) = (SAR_Range(eta,:)-slantrangeMid(eta));
-        SARlat(eta,:) = interp1(SAR_Range(eta,:),Targetlat(eta,:),Range,"linear","extrap");
-        SARlon(eta,:) = interp1(SAR_Range(eta,:),Targetlon(eta,:),Range,"linear","extrap");
+        RangeExact = linspace(min(SAR_Range(eta,:)),max(SAR_Range(eta,:)),numel(FastTime));
+        SARlat(eta,:) = interp1(SAR_Range(eta,:),Targetlat(eta,:),RangeExact,"linear","extrap");
+        SARlon(eta,:) = interp1(SAR_Range(eta,:),Targetlon(eta,:),RangeExact,"linear","extrap");
     end
     figure
     subplot(1,2,1)
