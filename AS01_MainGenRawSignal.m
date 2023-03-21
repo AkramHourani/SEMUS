@@ -73,24 +73,22 @@ end
 tauo = 2*Ro/c;                  % Delay of the GRP
 % Reference sqd_ref that will be used for template match filtering
 disp ('Generating the reference signal...')
-parfor etaIdx=1:etaTotal
-    sqd_ref(etaIdx,:) = F06_CalcReflection(a,GRP(Idx),GRP(Idx),Satlla(etaIdx,:),RadPar,E,sataz,c,tauo,FastTime);
+parfor eta=1:etaTotal
+    sqd_ref(eta,:) = F06_CalcReflection(a,GRP(Idx),GRP(Idx),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
 
 Power_ref = F06_CalcReflection(1,latSawthMid(Idx),lonSwathMid(Idx),Satlla(round(etaTotal/2),:),RadPar,E,sataz,c,tauo,FastTime);
 
 % Scene reflections sqd - reflected signal from the entire swath
+% the script will step through the azimuth (slow time) and generate the
+% reflected signal from the entire swath
+tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
-parfor etaIdx=1:etaTotal
-    sqd(etaIdx,:) = F06_CalcReflection(a,Targetlat,Targetlon,Satlla(etaIdx,:),RadPar,E,sataz,c,tauo,FastTime);
-    
-%     figure(6)
-%     plot(FastTime/1e-6,real(sqd(eta,:)))
-%     xlabel('Time [\mus]')
-%     ylabel('Reflection magnitude')
-    disp(etaIdx)
-%     waitbar(eta/etaTotal,Bar)
+parfor eta=1:etaTotal
+    sqd(eta,:) = F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    disp(eta)
 end
+toc
 %%
 close all hidden
 save(FileName)
