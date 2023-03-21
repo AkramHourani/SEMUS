@@ -26,11 +26,11 @@ a = F05_GetGroundReflect(Targetlat,Targetlon,latSawthL1,lonSwathL1,latSawthL2,lo
 %% Test antenna pattern - STEP4.Amplitude Simulator
 [OffBoreSightRange, OffBoreSightAz] = meshgrid (-RadPar.BeamRange:0.001:RadPar.BeamRange,-RadPar.BeamAz:0.001:RadPar.BeamAz); 
 % The zeta is added such that half the power is matching the beamwidth
-zeta = 50.76;                                           % Empirically calculated
+zeta = 50.76;                                                               % Empirically calculated
 AntennaGain = RadPar.Gain * (sinc(OffBoreSightRange*pi/180*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAz*pi/180*zeta/RadPar.BeamAz)).^2;
 %%  Generate the reference reflected waveform template s(eta,t)
 % FastTime = -((slantrange2(Idx) - slantrange1(Idx))/c)*1.1:RadPar.ts:((slantrange2(Idx) - slantrange1(Idx))/c)*1.1;   % This will cover about 1.1*swath width
-SwathWidthTime = Swathwidth_SARDistance/c*2;                                           % Time at mid of the swath using the distance
+SwathWidthTime = Swathwidth_SARDistance/c*2;                                % Time at mid of the swath using the distance
 FastTime = (-SwathWidthTime/2)*1.1:RadPar.ts:(SwathWidthTime/2)*1.1;        % Range fasttime
 SlowTime = 0:Param.ts:Param.ft;                                             % Azimuth slowtime
 etaTotal=length(DateVector);                                                % Slowtime length
@@ -84,8 +84,7 @@ end
 Power_ref = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(round(etaTotal/2),:),RadPar,E,sataz,c,tauo,FastTime);
 
 % Scene reflections sqd - reflected signal from the entire swath
-% the script will step through the azimuth (slow time) and generate the
-% reflected signal from the entire swath
+% the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
 parfor eta=1:etaTotal
