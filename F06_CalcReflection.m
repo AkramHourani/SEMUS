@@ -1,4 +1,4 @@
-function Reflection = F06_CalcReflection(a,Targetlat,Targetlon,Satlla,RadPar,E,sataz,c,tauo,FastTime)
+ function Reflection = F06_CalcReflection(a,Targetlat,Targetlon,Satlla,RadPar,E,sataz,c,tauo,FastTime)
 % Obtain the geomtry for all points (targets) in the swath
 [az,elev,slantRange] = geodetic2aer(Targetlat,Targetlon,0,Satlla(1),Satlla(2),Satlla(3),E);
 OffBoreSightRange = elev + 90 - RadPar.AntOffNadir;
