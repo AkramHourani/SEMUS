@@ -30,4 +30,3 @@ sataz=sataz';
 [Swathwidths_m,~] = distance(latSawthL1(1),lonSwathL1(1),latSawthL2(1),lonSwathL2(1));
 Swathwidths_m = deg2km(Swathwidths_m)*1000;
 end
-
