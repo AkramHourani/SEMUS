@@ -76,10 +76,10 @@ tauo = 2*Ro/c;                  % Delay of the GRP
 % Reference sqd_ref that will be used for template match filtering
 disp ('Generating the reference signal...')
 parfor eta=1:etaTotal
-    sqd_ref(eta,:) = F06_CalcReflection(a,GRP(Idx),GRP(Idx),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    sqd_ref(eta,:) = F06_CalcReflection(a,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
 
-Power_ref = F06_CalcReflection(1,latSawthMid(Idx),lonSwathMid(Idx),Satlla(round(etaTotal/2),:),RadPar,E,sataz,c,tauo,FastTime);
+Power_ref = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(round(etaTotal/2),:),RadPar,E,sataz,c,tauo,FastTime);
 
 % Scene reflections sqd - reflected signal from the entire swath
 % the script will step through the azimuth (slow time) and generate the
