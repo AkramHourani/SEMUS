@@ -1,8 +1,8 @@
 clc;clear;close all hidden;
 % load('matlabTestRef')                             % This is for reconstructing the ground reference point 
 % load('matlabTestTargets')                         % This is for reconstructing three targets test
-% load('matlabOptical1')                            % This is for reconstructing the whole scene image
-load('Test01.mat')                                  % This is for testing
+load('matlabOptical1')                            % This is for reconstructing the whole scene image
+% load('Test01.mat')                                  % This is for testing
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -75,11 +75,11 @@ Haz= conj(S2_ref);
 S3 = S2 .* Haz;
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                          % Final Focused SAR Image
-%%
+%% Plot Focused SAR Image
 figure(1)
 Range =(-(numel(FastTime)/2)*RangeBin:RangeBin:(numel(FastTime)/2-1)*RangeBin);
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.dt);
-CrossRange = (1:etaTotal)*Param.dt*speed/1000;
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);
+CrossRange = (1:etaTotal)*Param.ts*speed/1000;
 
 sSLC=sSLC./max(abs(sSLC),[],"all");
 ax=gca;

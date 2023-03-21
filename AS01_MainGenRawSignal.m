@@ -9,7 +9,7 @@ A00_Parameters                                                                  
 DateVector = datevec(DateTime);                                                     % Convert datetime data into Date vector of 6 elements for the whole flight duration
 GeoTime = 0:Param.ts:Param.ts *(size(SatECI,2)- 1);                                 % Geometrical sampling time - Azimuth sampling
 DateVector(end,:)=[];
-SatECI(:,end)=[]; % Trim the last reading it has some errors
+SatECI(:,end)=[];                                                                   % Trim the last reading it has some errors
 %% Find the swath - STEP2.Geometric Simulator
 % Convert Earth-centered inertial (ECI) coordinates of satellite into latitude, longitude, altitude (LLA) geodetic coordinates
 Satlla = eci2lla(SatECI',DateVector);    % The conversion is based on the Universal Coordinated Time (UTC) specified by Date vector
