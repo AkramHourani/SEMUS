@@ -1,4 +1,4 @@
-function Reflection = F05_CalcReflectionBi(a,Targetlat,Targetlon,SatllaSrc,SatllaDist,RadPar,E,satazSrc,satazDist,c,tauoBi,FastTime)
+function Reflection = F06_CalcReflectionBi(a,Targetlat,Targetlon,SatllaSrc,SatllaDist,RadPar,E,satazSrc,satazDist,c,tauoBi,FastTime)
 
 % Find the time advance (time to wait before captureing, this
 % is becuase of the large difference between the mono-static range and the
