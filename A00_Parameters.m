@@ -9,14 +9,14 @@ Re = earthRadius;                       % Store Earth radius into Re variable
 Elem.a = Re+h;                          % Semi-major axis of the platform
 Elem.e   = 0;                           % Eccentricity - 0 means circular orbit, non zero for eliptical orbit 0 < e < 1
 Elem.omega = 90;                        % Argument of periapsis in degrees - Defines the position of a body moving from vertical axis
-Elem.Inc = 34.8;                        % Inclination in degrees - Angle between the orbital plane and the equator between 0 and 180 degrees
-Elem.TA  = -175.72;                     % True Anomaly in degrees - Satalliete position in the orbit
-Elem.RAAN = 90;                         % Right Ascension Of Ascending Node in degress - Ω angle is measured eastwards from x axis to ascending node on nodal line
+Elem.Inc = 88;                        % Inclination in degrees - Angle between the orbital plane and the equator between 0 and 180 degrees
+Elem.TA  = 123.78;                     % True Anomaly in degrees - Satalliete position in the orbit
+Elem.RAAN = 192.53;                         % Right Ascension Of Ascending Node in degress - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                    % Earth's standard gravitational parameter
 Param.T = 2*pi*sqrt(Elem.a^3/Param.mu); % Orbital period
-Param.PRF = 200;                        % Pulse Repeatition Frequency [PRF]
+Param.PRF = 300;                        % Pulse Repeatition Frequency [PRF]
 Param.ts = 1/Param.PRF;                 % Orbit time step - Geo-sampling period in seconds - Slowtime sampling
-Param.ft = 1.5;                         % flight duration - along azimuth direction in seconds
+Param.ft = 0.8;                         % flight duration - along azimuth direction in seconds
 %% Targets
 Param.NtargetsRange = 400;              % Number of targets in each eta bin
 %% Time

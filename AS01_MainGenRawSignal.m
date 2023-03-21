@@ -14,7 +14,7 @@ Satlla = eci2lla(SatECI',DateVector);    % The conversion is based on the Univer
 [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,slantrange1,latSawthL2,lonSwathL2,slantrange2,sataz]=F02_FindSwath(Satlla,RadPar,E);
 %% Find the Ground Reference Point - GRP
 Idx = round(length(lonSwathL2)/2);
-[R,Ro,GRP,SAR_Dist_Edge1,SAR_Dist_Edge2,Swathwidth_SARDistance] = F03_FindGRP(latSawthMid,lonSwathMid,Satlla,E,Idx);
+[R,Ro,GRP,SAR_Dist_Edge1,SAR_Dist_Edge2,Swathwidth_SARDistance] = F03_FindGRP(latSawthMid,lonSwathMid,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Satlla,E,Idx);
 %% Generate spatial sampling points (Tragets)
 [Targetlat,Targetlon]= F04_GenerateTargets(latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Param); % This is for optical-based targets
 %% Get ground reflectrivity - STEP3.Reflectivity Simulator
@@ -58,8 +58,8 @@ if Testing==1                   % 1 for three targets testing
 end
 
 if Testing==2                   % 2 for one target testing - GRP (Midswath point)
-    Targetlat = latSawthMid(Idx);
-    Targetlon = lonSwathMid(Idx);
+    Targetlat = GRP(1);
+    Targetlon = GRP(2);
     a = 1;
     FileName = 'matlabTestRef';
 end

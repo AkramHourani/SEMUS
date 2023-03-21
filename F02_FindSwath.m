@@ -6,10 +6,10 @@ function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwat
 for eta=1:size(Satlla,1)-10 % Compute the azimuth for each point
     if RadPar.Left == 1
         % Adding 90deg if the scanning on the left side of the trajectory
-        sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2)) +90;
+        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(eta+1,1),Satlla(eta+1,2),E) +90;
     else
         % Subtracting 90deg if the scanning on the rigth side of the trajectory
-        sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2)) -90;
+        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(end+1,1),Satlla(eta+1,2),E) -90;
     end
 end
 

@@ -58,7 +58,7 @@ end
 %%% Analytical Method %%%%
 % R = R - DeltaR;
 % Haz = exp(1j*2*pi* R *2*RadPar.fo/c);             % Azimuth Matched Filter
-Haz = exp(-1j*2*pi* DeltaR *2*RadPar.fo/c);         % Azimuth Matched Filter
+% Haz = exp(-1j*2*pi* DeltaR *2*RadPar.fo/c);         % Azimuth Matched Filter
 % S3 = S2 .* repmat(Haz,1,size(S2,2));              % Compressed data after azimuth compression
 
 % FrequencyAzimuth = -Param.PRF/2 : Param.PRF/ size(sqd,1): Param.PRF/2-(Param.PRF/size(sqd,1));    % Slowtime frequency array - Azimuth frequency
@@ -76,7 +76,7 @@ S3 = S2 .* Haz;
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                          % Final Focused SAR Image
 %%
-figure(2)
+figure(1)
 Range =(-(numel(FastTime)/2)*RangeBin:RangeBin:(numel(FastTime)/2-1)*RangeBin);
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.dt);
 CrossRange = (1:etaTotal)*Param.dt*speed/1000;
@@ -102,7 +102,7 @@ SAR_Range(eta,:) = (SAR_Range(eta,:)-slantrangeMid(eta));
 SARlat(eta,:) = interp1(SAR_Range(eta,:),Targetlat(eta,:),Range,"linear","extrap");
 SARlon(eta,:) = interp1(SAR_Range(eta,:),Targetlon(eta,:),Range,"linear","extrap");
 end
-figure
+figure(2)
 subplot(1,2,1)
 ax=gca;
 [xEast,yNorth,~] = latlon2local(SARlat,SARlon,0,GRP);

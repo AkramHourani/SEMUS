@@ -1,4 +1,4 @@
-function [R,Ro,GRP,SAR_Dist_Edge1,SAR_Dist_Edge2,Swathwidth_SARDistance] = F03_FindGRP(latSawthMid,lonSwathMid,Satlla,E,Idx)
+function [R,Ro,GRP,SAR_Dist_Edge1,SAR_Dist_Edge2,Swathwidth_SARDistance] = F03_FindGRP(latSawthMid,lonSwathMid,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Satlla,E,Idx)
 
 [~,~,R] = geodetic2aer(latSawthMid(Idx),lonSwathMid(Idx),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
 % Find Reference range at the centre of the dwell at ground refernece point(GRP) - Find Index of mid point of the dwell
