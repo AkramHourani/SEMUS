@@ -10,19 +10,6 @@ ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
 % This is a cloumn-wise FFT - Azimuth
 fft1d1 = @ (x) fftshift(fft(fftshift(x,1),[],1),1);
 ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
-%% Add noise and interference to the received signal
-% % Add AWGN to the recieved signal
-% N01_GenerateAWGN
-% sqd = sqd + AWGN;
-% % Add AM signal
-% N02_GenerateAM
-% sqd = sqd + sAM;                                    % Signal to interference = 18
-% % Add QPSK signal
-% N04_GenerateQPSK
-% sqd = sqd + sQPSK;                                  % Signal to interference = 25
-% % Add LORA signal
-% N06_GenerateLORA
-% sqd = sqd + sLORA;                                  % Signal to interference = 22
 %% STEP6.SAR Image Processing
 %% Step 1: Range Compression
 So = fft1d2(sqd);                                   % FFT the time domain signal (FFT along each eta row)
