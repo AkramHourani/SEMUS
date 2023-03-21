@@ -1,8 +1,8 @@
 clc;clear;close all hidden;
-% load('matlabTestRef')                               % This is for reconstructing the ground reference point 
-% load('matlabTestTargets')                           % This is for reconstructing three targets test
-load('matlabOptical1')                               % This is for reconstructing the whole scene image
-load('Test01.mat')                               % This is for testing
+% load('matlabTestRef')                             % This is for reconstructing the ground reference point 
+% load('matlabTestTargets')                         % This is for reconstructing three targets test
+% load('matlabOptical1')                            % This is for reconstructing the whole scene image
+load('Test01.mat')                                  % This is for testing
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -59,7 +59,7 @@ end
 % R = R - DeltaR;
 % Haz = exp(1j*2*pi* R *2*RadPar.fo/c);             % Azimuth Matched Filter
 Haz = exp(-1j*2*pi* DeltaR *2*RadPar.fo/c);         % Azimuth Matched Filter
-S3 = S2 .* repmat(Haz.',1,size(S2,2));              % Compressed data after azimuth compression
+% S3 = S2 .* repmat(Haz,1,size(S2,2));              % Compressed data after azimuth compression
 
 % FrequencyAzimuth = -Param.PRF/2 : Param.PRF/ size(sqd,1): Param.PRF/2-(Param.PRF/size(sqd,1));    % Slowtime frequency array - Azimuth frequency
 % [~,velocity,~] = states(sat);
@@ -69,10 +69,10 @@ S3 = S2 .* repmat(Haz.',1,size(S2,2));              % Compressed data after azim
 % S3 = S2 .* repmat(Haz.',1,size(S2,2));              % Compressed data after azimuth compression
 
 %%% Empirical Method %%%%
-% midpoint = round(size(S2_ref,2)/2)+1;
-% S2_ref = repmat(S2_ref(:,midpoint),1,size(S2,2));
-% Haz= conj(S2_ref);
-% S3 = S2 .* Haz;
+midpoint = round(size(S2_ref,2)/2)+1;
+S2_ref = repmat(S2_ref(:,midpoint),1,size(S2,2));
+Haz= conj(S2_ref);
+S3 = S2 .* Haz;
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                          % Final Focused SAR Image
 %%
