@@ -70,7 +70,9 @@ else
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) -90;
 end
 %% Genrate reflections s(eta,t) and Reference signal- STEP5.Waveform Generator
+
 tauo = 2*Ro/c;                  % Delay of the GRP
+
 % Reference sqd_ref that will be used for template match filtering
 disp ('Generating the reference signal...')
 parfor eta=1:etaTotal
