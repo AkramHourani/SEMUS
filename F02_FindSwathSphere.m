@@ -1,4 +1,4 @@
-function [latSawthMid,lonSwathMid,Swathwidth,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,R_grd_o]=F02_FindSwathSphere(Satlla,RadPar,Re,h)
+function [latSawthMid,lonSwathMid,Swathwidth,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,R_grd_o]=F02_FindSwathV2(Satlla,RadPar,Re,h)
 
 Incident_o = asind((Re+h)/Re*sind(RadPar.AntOffNadir));
 varphi_o = Incident_o-RadPar.AntOffNadir;
