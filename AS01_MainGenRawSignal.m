@@ -1,15 +1,15 @@
  clc; clear; close all hidden
 % This is the main file for simulating space SAR
-% The script will generate a raw SAR signal (baseband) based on the optial
-% satellite image of the taregt swath
+% The script will generate a raw SAR signal (baseband) based on the optial satellite image of the taregt swath
 %% Load paratmers
 A00_Parameters                                                                      % Script for parameters definitions
 %% Create Geomtry setup - STEP1.Create Satellite Scenario
 [SatECI,velocity,DateTime] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);  % Script for creating the satellite scenario and orbit
 DateVector = datevec(DateTime);                                                     % Convert datetime data into Date vector of 6 elements for the whole flight duration
 GeoTime = 0:Param.ts:Param.ts *(size(SatECI,2)- 2);                                 % Geometrical sampling time - Azimuth sampling
-DateVector(end,:)=[];
+DateVector(end,:)=[];                                                               % Trim the last reading it has some errors
 SatECI(:,end)=[];                                                                   % Trim the last reading it has some errors
+velocity(:,end)=[];                                                                 % Trim the last reading it has some errors
 %% Find the swath - STEP2.Geometric Simulator
 % Convert Earth-centered inertial (ECI) coordinates of satellite into latitude, longitude, altitude (LLA) geodetic coordinates
 Satlla = eci2lla(SatECI',DateVector);    % The conversion is based on the Universal Coordinated Time (UTC) specified by Date vector
@@ -31,7 +31,7 @@ AntennaGain = RadPar.Gain * (sinc(OffBoreSightRange*pi/180*zeta/RadPar.BeamRange
 %%  Generate the reference reflected waveform template s(eta,t)
 % FastTime = -((slantrange2(Idx) - slantrange1(Idx))/c)*1.1:RadPar.ts:((slantrange2(Idx) - slantrange1(Idx))/c)*1.1;   % This will cover about 1.1*swath width
 SwathWidthTime = Swathwidth_SARDistance/c*2;                                % Time at mid of the swath using the distance
-FastTime = (-SwathWidthTime/2)*1.1:RadPar.ts:(SwathWidthTime/2)*1.1;        % Range fasttime
+FastTime = (-SwathWidthTime/2):RadPar.ts:(SwathWidthTime/2);                % Range fasttime
 SlowTime = 0:Param.ts:Param.ft;                                             % Azimuth slowtime
 etaTotal=length(DateVector);                                                % Slowtime length
 TimeLength = length(FastTime);                                              % Fasttime length

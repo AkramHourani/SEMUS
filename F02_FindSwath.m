@@ -1,15 +1,14 @@
 function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,slantrange1,latSawthL2,lonSwathL2,slantrange2]=F02_FindSwath(Satlla,RadPar,E)
-% This is to compute the approximate azimuth of the swath (also the
-% satellite azimuth -> i.e. the direction of motion of the satellite
+% This is to compute the approximate azimuth of the swath (also the satellite azimuth -> i.e. the direction of motion of the satellite
 
 % This is to compute the azimuth for each point of the satellite motion
-for eta=1:size(Satlla,1)-10 % Compute the azimuth for each point
+for eta=1:size(Satlla,1)-10
     if RadPar.Left == 1
         % Adding 90deg if the scanning on the left side of the trajectory
-        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(eta+1,1),Satlla(eta+1,2),E) +90;
+        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(eta+1,1),Satlla(eta+1,2),E) + 90;
     else
         % Subtracting 90deg if the scanning on the rigth side of the trajectory
-        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(end+1,1),Satlla(eta+1,2),E) -90;
+        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(end+1,1),Satlla(eta+1,2),E) - 90;
     end
 end
 
