@@ -1,4 +1,4 @@
-function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,slantrange1,latSawthL2,lonSwathL2,slantrange2,sataz]=F02_FindSwath(Satlla,RadPar,E)
+function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,slantrange1,latSawthL2,lonSwathL2,slantrange2]=F02_FindSwath(Satlla,RadPar,E)
 % This is to compute the approximate azimuth of the swath (also the
 % satellite azimuth -> i.e. the direction of motion of the satellite
 

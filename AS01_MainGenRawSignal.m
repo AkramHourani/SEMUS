@@ -13,7 +13,7 @@ SatECI(:,end)=[];                                                               
 %% Find the swath - STEP2.Geometric Simulator
 % Convert Earth-centered inertial (ECI) coordinates of satellite into latitude, longitude, altitude (LLA) geodetic coordinates
 Satlla = eci2lla(SatECI',DateVector);    % The conversion is based on the Universal Coordinated Time (UTC) specified by Date vector
-[latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,slantrange1,latSawthL2,lonSwathL2,slantrange2,sataz]=F02_FindSwath(Satlla,RadPar,E);
+[latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSawthL1,lonSwathL1,slantrange1,latSawthL2,lonSwathL2,slantrange2]=F02_FindSwath(Satlla,RadPar,E);
 %% Find the Ground Reference Point - GRP
 Idx = round(length(lonSwathL2)/2);
 [R,Ro,GRP,SAR_Dist_Edge1,SAR_Dist_Edge2,Swathwidth_SARDistance] = F03_FindGRP(latSawthMid,lonSwathMid,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Satlla,E,Idx);
