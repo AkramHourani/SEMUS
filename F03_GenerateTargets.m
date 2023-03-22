@@ -5,8 +5,9 @@ function [Targetlat,Targetlon]= F03_GenerateTargets(latSawthL1,lonSwathL1,latSaw
 
 Targetlat=zeros(length(latSawthL1),Param.NtargetsRange+1);
 Targetlon=zeros(length(latSawthL1),Param.NtargetsRange+1);
-etaTotal=length(latSawthL1);
+etaTotal=length(latSawthL1);                % Eta - Azimuth 
 
 for eta=1:etaTotal
-[Targetlat(eta,:),Targetlon(eta,:)] = gcwaypts(latSawthL1(eta),lonSwathL1(eta),latSawthL2(eta),lonSwathL2(eta),Param.NtargetsRange); 
+    [Targetlat(eta,:),Targetlon(eta,:)] = gcwaypts(latSawthL1(eta),lonSwathL1(eta),latSawthL2(eta),lonSwathL2(eta),Param.NtargetsRange); 
+end
 end
