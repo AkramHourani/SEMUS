@@ -3,10 +3,16 @@ function [Targetlat,Targetlon]= F03_GenerateTargets(latSawthL1,lonSwathL1,latSaw
 % points (arc) between the two edges of the swath based on the great cricle
 % connecting the two edges.
 
-Targetlat=zeros(length(latSawthL1),Param.NtargetsRange+1);
-Targetlon=zeros(length(latSawthL1),Param.NtargetsRange+1);
-etaTotal=length(latSawthL1);
+% creat the variable tamplate
+Targetlat=zeros(Param.NtargetsAz,Param.NtargetsRange);
+Targetlon=zeros(Param.NtargetsAz,Param.NtargetsRange);
 
-for eta=1:etaTotal
-[Targetlat(eta,:),Targetlon(eta,:)] = gcwaypts(latSawthL1(eta),lonSwathL1(eta),latSawthL2(eta),lonSwathL2(eta),Param.NtargetsRange); 
+
+%Interpolate the swath lines to match the number of azimuth samples
+[TargetEdgeLat1, TargetEdgeLon1] = gcwaypts(latSawthL1(1),lonSwathL1(1),latSawthL1(end),lonSwathL1(end),Param.NtargetsAz-1); 
+[TargetEdgeLat2, TargetEdgeLon2] = gcwaypts(latSawthL2(1),lonSwathL2(1),latSawthL2(end),lonSwathL2(end),Param.NtargetsAz-1); 
+
+for AzTarget=1:Param.NtargetsAz
+
+[Targetlat(AzTarget,:),Targetlon(AzTarget,:)] = gcwaypts(TargetEdgeLat1(AzTarget),TargetEdgeLon1(AzTarget),TargetEdgeLat2(AzTarget),TargetEdgeLon2(AzTarget),Param.NtargetsRange-1); 
 end

@@ -1,6 +1,6 @@
 clc; clear; close all
-load('Test01.mat')
-%load('matlabOptical.mat')
+load('Test03.mat')
+Param.ts = Param.dt;
 close all hidden;
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
@@ -42,41 +42,67 @@ xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 1: Range compression')
 drawnow
+
 %% Step 3 Range cell migration compensation
-DeltaR = R - Ro; % Based on the GRP
+DeltaR = R- Ro; % Based on the GRP
+% shifting range cells (RCMC)
+% RangeBin = RadPar.ts*c/2;
+% NbinsShift = -round(DeltaR/RangeBin);
+% subplot(2,4,3)
+% plot(1:etaTotal,NbinsShift);
+% xlabel('Azimuth index')
+% ylabel('Range compensation [m]')
+% title('Step 3.1: Range compensation profile')
+% 
+% 
+% for eta=1:etaTotal
+% src(eta,:) = circshift(src(eta,:),NbinsShift(eta));
+% src_ref(eta,:) = circshift(src_ref(eta,:),NbinsShift);
+% end
+
+% subplot(2,4,4)
+% pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
+% pc.LineStyle='none';
+% xlabel('Fast time [\mus]')
+% ylabel('Azimuth index')
+% title('RCMC')
+% drawnow
+
+%% Step 2 Azimuth FFT
+S2_ref = fft1d1(src_ref);
+S2 = fft1d1(src);
+subplot(2,4,6)
+pc =pcolor(FastTime/1e-6,1:etaTotal,abs(S2));
+pc.LineStyle='none';
+xlabel('Fast time [ms]')
+ylabel('Azimuth index')
+title('Step 2: Az FFT')
+
+
+%% Step 3 Range cell migration corretion
+DeltaR = R- Ro; % Based on the GRP
 subplot(2,4,4)
-plot(1:etaTotal,abs(DeltaR));
+plot(1:etaTotal,DeltaR);
 xlabel('Azimuth index')
 ylabel('Range compensation [m]')
 title('Step 3.1: Range compensation profile')
 
 % shiftring range cells
 RangeBin = RadPar.ts*c/2;
-NbinsShift = -round(DeltaR/RangeBin);
-for ctr=1:size(src,1)
-    src(ctr,:) = circshift(src(ctr,:),NbinsShift(ctr));
+NbinsShift = -floor(DeltaR/RangeBin);
+for eta=1:etaTotal
+S2(eta,:) = circshift(S2(eta,:),NbinsShift(eta));
+S2_ref(eta,:) = circshift(S2_ref(eta,:),NbinsShift);
 end
 
-for ctr=1:size(src_ref,1)
-    src_ref(ctr,:) = circshift(src_ref(ctr,:),NbinsShift(ctr));
-end
+
 subplot(2,4,3)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
+pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));
 pc.LineStyle='none';
 xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 3.2: RCMC')
 drawnow
-%% Step 2 Azimuth FFT
-S2_ref = fft1d1(src_ref);
-S2 = fft1d1(src);
-subplot(2,4,5)
-pc =pcolor(FastTime/1e-6,1:etaTotal,abs(S2));
-pc.LineStyle='none';
-xlabel('Fast time [ms]')
-ylabel('Azimuth index')
-title('Step 2: Az FFT')
-Param.ts = Param.dt
 
 %% Step 4/5 Azimuth compression
 Haz = exp(1j*pi*R*4*RadPar.fo/c);
@@ -102,7 +128,7 @@ pc =pcolor(Range/1000,CrossRange,(abs(sSLC)));
 pc.LineStyle='none';
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
-xlabel('Sar Range [km]')
+xlabel('Slant Range [km]')
 ylabel('Cross Range [km]')
 title('Step 5: Comressed image')
 colormap bone
@@ -112,20 +138,30 @@ axis equal
 % Here we map the cross-range / range to domain to the original geographic
 % coordinates longitute / latitude.
 
-if length(Targetlat)>5
-    for eta =1:etaTotal
-        [~,~,SAR_Range(eta,:)] = geodetic2aer(Targetlat(eta,:),Targetlon(eta,:),0,Satlla(eta,1),Satlla(eta,2),Satlla(eta,3),E);
-        SAR_Range(eta,:) = (SAR_Range(eta,:)-slantrangeMid(eta));
-        RangeExact = linspace(min(SAR_Range(eta,:)),max(SAR_Range(eta,:)),numel(FastTime));
-        SARlat(eta,:) = interp1(SAR_Range(eta,:),Targetlat(eta,:),RangeExact,"linear","extrap");
-        SARlon(eta,:) = interp1(SAR_Range(eta,:),Targetlon(eta,:),RangeExact,"linear","extrap");
+if length(Targetlat)>100
+    for Ctr =1:length(Targetlat)
+        [~,~,SAR_Range(Ctr,:)] = geodetic2aer(Targetlat(Ctr,:),Targetlon(Ctr,:),0,Satlla(Ctr,1),Satlla(Ctr,2),Satlla(Ctr,3),E);
+        SAR_Range(Ctr,:) = (SAR_Range(Ctr,:)-slantrangeMid(Ctr));
+       
+        % Resample the range vector to match the number of points in the
+        % fast time vector
+        x = 1:length(SAR_Range(Ctr,:));
+        xq = linspace(1,length(SAR_Range(Ctr,:)),length(FastTime));
+        RangeExact = interp1(x,SAR_Range(Ctr,:),xq);;
+
+        SARlat(Ctr,:) = interp1(SAR_Range(Ctr,:),Targetlat(Ctr,:),RangeExact,"linear","extrap");
+        SARlon(Ctr,:) = interp1(SAR_Range(Ctr,:),Targetlon(Ctr,:),RangeExact,"linear","extrap");
     end
     figure
     subplot(1,2,1)
     ax=gca;
     [xEast,yNorth,~] = latlon2local(SARlat,SARlon,0,GRP);
     %scatter(xEast(:)/1000,yNorth(:)/1000,2,double(abs(sSLC(:))),'MarkerEdgeColor','none','MarkerFaceColor','flat')
-    J = imadjust(double(abs(sSLC)));
+    J = double(abs(sSLC));
+    J = J/max(J,[],"all");
+    J  = imgaussfilt(J ,2); % Smothing filter
+    J = imadjust(J);
+    
     imagesc(xEast(1,:)/1000,yNorth(:,1)/1000,J)
     colormap bone
     ax.YAxis.Direction="Normal";
@@ -140,9 +176,9 @@ if length(Targetlat)>5
     ax=gca;
     [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
     %scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
-    a=a./sum(a,"all");
-    J = imadjust(a);
-    imagesc(xEast(1,:)/1000,yNorth(:,1)/1000,J)
+    a=a./max(a,[],"all");
+    %J = imadjust(a);
+    imagesc(xEast(1,:)/1000,yNorth(:,1)/1000,a)
     colormap bone
     ax.YAxis.Direction="Normal";
     axis equal
