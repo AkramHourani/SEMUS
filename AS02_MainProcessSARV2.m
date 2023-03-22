@@ -1,5 +1,5 @@
 clc; clear; close all
-load('Test03.mat')
+load('Test02.mat')
 Param.ts = Param.dt;
 close all hidden;
 %% This is a raw-wise FFT / IFFT

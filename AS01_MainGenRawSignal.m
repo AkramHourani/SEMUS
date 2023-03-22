@@ -92,7 +92,7 @@ ylabel('Real part')
 title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
-Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for 3 targets testing, and 3 for unity reflection
+Testing=2; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
 FileName = 'matlabOptical';
 
 if Testing==1 % this is for single targets testing
@@ -148,4 +148,4 @@ xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Raw time domain (magnitude)')
 %% Save the waveform
-save('Test03.mat')
+save('Test02.mat')
