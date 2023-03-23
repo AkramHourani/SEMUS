@@ -63,7 +63,7 @@ title('Step 3.1: Range compensation profile')
 
 % shiftring range cells
 RangeBin = RadPar.ts*c/2;
-NbinsShift = -floor(DeltaR/RangeBin);
+NbinsShift = -round(DeltaR/RangeBin);
 for eta=1:etaTotal
 S2(eta,:) = circshift(S2(eta,:),NbinsShift(eta));
 S2_ref(eta,:) = circshift(S2_ref(eta,:),NbinsShift);
