@@ -18,6 +18,8 @@ Param.ScanDuration = seconds(0.8);
 %% Targets
 Param.NtargetsAz = 20; % number of targets in each eta bin
 Param.NtargetsRange = 20; % number of targets in each eta bin
+Param.Margin = 1.2; % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
+
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');
 stopTime  = startTime + Param.ScanDuration ;

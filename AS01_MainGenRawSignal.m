@@ -63,8 +63,7 @@ title('Antenna gain pattern example')
 [~,~,Edge2]  = geodetic2aer(latSawthL2(MidEta),lonSwathL2(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);
 Swathwidth_SARDistance = abs(Edge1-Edge2);
 SwathWidthTime = Swathwidth_SARDistance/c*2;
-Margin = 1.2; % This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
-FastTime = (-SwathWidthTime/2*Margin:RadPar.ts:SwathWidthTime/2*Margin);
+FastTime = (-SwathWidthTime/2*Param.Margin:RadPar.ts:SwathWidthTime/2*Param.Margin);
 TimeLength = length(FastTime);
 sqd=(zeros(etaTotal,TimeLength)); % initialize the reflection matrix
 PulseWidthSamples = round(RadPar.T/(FastTime(end)-FastTime(1))*TimeLength);
