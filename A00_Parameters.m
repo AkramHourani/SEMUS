@@ -16,8 +16,8 @@ Param.mu = 3.986e14; % Erth's standard gravitational parameter
 Param.T = 2*pi*sqrt(Elem.a^3/Param.mu); % Orbital period
 Param.dt = 1/2e3; % Orbit time step
 %% Targets
-Param.NtargetsAz = 200; % number of targets in each eta bin
-Param.NtargetsRange = 200; % number of targets in each eta bin
+Param.NtargetsAz = 20; % number of targets in each eta bin
+Param.NtargetsRange = 20; % number of targets in each eta bin
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');
 stopTime = startTime + seconds(0.8);
