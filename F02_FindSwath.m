@@ -15,7 +15,7 @@ end
 p = polyfit(1:size(Satlla,1)-10,sataz,1);
 sataz = p(1) *(1:size(Satlla,1))+ p(2);
 sataz=sataz';
-
+ 
 % Finding Mid-swath position (Longitude and latitude)
 [latSawthMid,lonSwathMid,slantrangeMid] = lookAtSpheroid(Satlla(:,1),Satlla(:,2),Satlla(:,3),sataz,RadPar.AntOffNadir,E);
 
@@ -26,6 +26,6 @@ sataz=sataz';
     sataz,RadPar.AntOffNadir+RadPar.SwathWidthDeg/2,E);
 
 % Finding the Swath width in meters
-[Swathwidths_m,~] = distance(latSawthL1(1),lonSwathL1(1),latSawthL2(1),lonSwathL2(1));
+[Swathwidths_m,~] = distance(latSawthL1(1),lonSwathL1(1),latSawthL2(1),lonSwathL2(1),E);
 Swathwidths_m = deg2km(Swathwidths_m)*1000;
 end

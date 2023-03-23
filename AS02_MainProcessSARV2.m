@@ -1,6 +1,5 @@
 clc; clear; close all
 load('Mesh_Mono.mat')
-Param.ts = Param.dt;
 close all hidden;
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
