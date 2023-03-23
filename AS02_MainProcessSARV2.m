@@ -1,5 +1,5 @@
 clc; clear; close all
-load('Mesh_Mono.mat')
+load('Test03')
 close all hidden;
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
@@ -42,31 +42,6 @@ ylabel('Azimuth index')
 title('Step 1: Range compression')
 drawnow
 
-%% Step 3 Range cell migration compensation
-DeltaR = R- Ro; % Based on the GRP
-% shifting range cells (RCMC)
-% RangeBin = RadPar.ts*c/2;
-% NbinsShift = -round(DeltaR/RangeBin);
-% subplot(2,4,3)
-% plot(1:etaTotal,NbinsShift);
-% xlabel('Azimuth index')
-% ylabel('Range compensation [m]')
-% title('Step 3.1: Range compensation profile')
-% 
-% 
-% for eta=1:etaTotal
-% src(eta,:) = circshift(src(eta,:),NbinsShift(eta));
-% src_ref(eta,:) = circshift(src_ref(eta,:),NbinsShift);
-% end
-
-% subplot(2,4,4)
-% pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
-% pc.LineStyle='none';
-% xlabel('Fast time [\mus]')
-% ylabel('Azimuth index')
-% title('RCMC')
-% drawnow
-
 %% Step 2 Azimuth FFT
 S2_ref = fft1d1(src_ref);
 S2 = fft1d1(src);
@@ -93,7 +68,6 @@ for eta=1:etaTotal
 S2(eta,:) = circshift(S2(eta,:),NbinsShift(eta));
 S2_ref(eta,:) = circshift(S2_ref(eta,:),NbinsShift);
 end
-
 
 subplot(2,4,3)
 pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));

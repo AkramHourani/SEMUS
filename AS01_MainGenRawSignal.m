@@ -78,7 +78,7 @@ ylabel('Real part')
 title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
-Testing=2; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
+Testing=3; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
 
 if Testing==1 % this is for single targets testing
     Targetlat = GRP(1);
@@ -136,4 +136,4 @@ xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Raw time domain (magnitude)')
 %% Save the waveform
-save('Mesh_Mono.mat')
+save(FileName)
