@@ -10,7 +10,7 @@ A00_Parameters
 [SatECI,Satlla,DateVector] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);
 etaTotal=length(DateVector); % Total numeber of slow time steps
 %% Finding the swath
-[latSawthMid,lonSwathMid,slantrangeMid,Swathwidth,latSwathL1,lonSwathL1,latSawthL2,lonSwathL2]=F02_FindSwath(Satlla,RadPar,E);
+[latSawthMid,lonSwathMid,slantrangeMid,Swathwidth,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2]=F02_FindSwath(Satlla,RadPar,E);
 %% This will find the GRP in the middle of the swath
 %find the range migration of the middle of the swath
 % This is the index of mid swath
@@ -27,14 +27,14 @@ geoplot(latSawthMid,lonSwathMid,'--'); %Swath center line
 geoplot(latSawthMid,lonSwathMid,'--'); %Swath center line
 geoplot(GRP(1),GRP(2),'x'); %Swath center point
 geoplot(latSwathL1,lonSwathL1,'color',ColorOrder(2,:)); %Swath edge line 1
-geoplot(latSawthL2,lonSwathL2,'color',ColorOrder(2,:)); %Swath edge line
+geoplot(latSwathL2,lonSwathL2,'color',ColorOrder(2,:)); %Swath edge line
 legend('satellite subtrack','swath mid track')
 title('Swath location') 
 drawnow 
 %% Generate spatial sampling points (Tragets)
-[Targetlat,Targetlon]= F03_GenerateTargets(latSwathL1,lonSwathL1,latSawthL2,lonSwathL2,Param); % This is for optical-based targets
+[Targetlat,Targetlon]= F03_GenerateTargets(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Param); % This is for optical-based targets
 %% Get ground reflectrivity
-a = F04_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSawthL2,lonSwathL2);
+a = F04_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2);
 figure(2) 
 % Converting to cartisian coordinates for plotting
 [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
@@ -60,7 +60,7 @@ ylabel('Range direction [deg]')
 title('Antenna gain pattern example')
 %%  Generate the reference reflected waveform template s(eta,t)
 [~,~,Edge1] = geodetic2aer(latSwathL1(MidEta),lonSwathL1(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);
-[~,~,Edge2]  = geodetic2aer(latSawthL2(MidEta),lonSwathL2(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);
+[~,~,Edge2]  = geodetic2aer(latSwathL2(MidEta),lonSwathL2(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);
 Swathwidth_SARDistance = abs(Edge1-Edge2);
 SwathWidthTime = Swathwidth_SARDistance/c*2;
 FastTime = (-SwathWidthTime/2*Param.Margin:RadPar.ts:SwathWidthTime/2*Param.Margin);
