@@ -1,1 +1,0 @@
-[AH20230319] New version v2.0 uploaded to GitHub, major updates: waveform, ground refence point, use of functions, and others.

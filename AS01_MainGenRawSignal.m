@@ -47,7 +47,7 @@ ylabel('y-axis [km]')
 title('Satellite swath (optical)')
 %% Test antenna pattern (optional part of the script) - STEP4.Amplitude Simulator
 figure(6)
-[OffBoreSightRange, OffBoreSightAz] = meshgrid (-RadPar.BeamRange:0.001:RadPar.BeamRange,-RadPar.BeamAz:0.001:RadPar.BeamAz);
+[OffBoreSightRange, OffBoreSightAz] = meshgrid (-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
 % The 1.2 is added such that half the power is matching the beamwidth
 AntennaGain = RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6));
 pc =pcolor(OffBoreSightAz,OffBoreSightRange,AntennaGain);
@@ -77,8 +77,8 @@ ylabel('Real part')
 title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
-Testing=3; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-
+Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
+FileName = 'SAR_Image.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);

@@ -1,6 +1,8 @@
 clc; clear; close all
 close all hidden;
-load('Test03')
+%load('Test01')
+%load('Test02')
+load('SAR_Image')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -60,8 +62,8 @@ ylabel('Range compensation [m]')
 title('Step 3.1: Range compensation profile')
 
 % shifting the range cells
-RangeBin = RadPar.ts*c;
-NbinsShift = -round(DeltaR/RangeBin);
+RangeBin = RadPar.ts*c/2;
+NbinsShift = -round(DeltaR/RangeBin)*2;
 for eta=1:etaTotal
 S2(eta,:) = circshift(S2(eta,:),NbinsShift(eta));
 S2_ref(eta,:) = circshift(S2_ref(eta,:),NbinsShift);
@@ -87,73 +89,28 @@ S3 = S2 .* conj(S2_ref);
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                             % Final Focused SAR Image
 
+%% plotting (this is an approzimate projection of the swath)
 figure(2)
 Range =(-(numel(FastTime)/2)*RangeBin:RangeBin:(numel(FastTime)/2-1)*RangeBin);
+[~,El,~]= geodetic2aer(GRP(1),GRP(2),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);
+
+RangeGround = Range/cosd(El);
+
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);
 CrossRange = (1:etaTotal)*Param.ts*speed/1000;
-%%
-sSLC=sSLC./max(abs(sSLC),[],"all");
+
+J = abs(sSLC);
+J = J./max(J,[],"all");
+J = imresize(J,2);
+J  = imgaussfilt(J ,2); % Smothing filter
+J = imadjust(J,[0 0.6]);
+imagesc(RangeGround/1000,CrossRange,J)
 ax=gca;
-pc =pcolor(Range/1000,CrossRange,(abs(sSLC)));
-pc.LineStyle='none';
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
-xlabel('Slant Range [km]')
+xlabel('Ground distance (approx.) [km]')
 ylabel('Cross Range [km]')
 title('Step 5: Comressed image')
 colormap bone
 axis equal
-%% Geographic projection
-% Here we map the cross-range / range to domain to the original geographic
-% coordinates longitute / latitude.
-
-if length(Targetlat)>100
-    for Ctr =1:length(Targetlat)
-        [~,~,SAR_Range(Ctr,:)] = geodetic2aer(Targetlat(Ctr,:),Targetlon(Ctr,:),0,Satlla(Ctr,1),Satlla(Ctr,2),Satlla(Ctr,3),E);
-        SAR_Range(Ctr,:) = (SAR_Range(Ctr,:)-slantrangeMid(Ctr));
-       
-        % Resample the range vector to match the number of points in the
-        % fast time vector
-        x = 1:length(SAR_Range(Ctr,:));
-        xq = linspace(1,length(SAR_Range(Ctr,:)),length(FastTime));
-        RangeExact = interp1(x,SAR_Range(Ctr,:),xq);;
-
-        SARlat(Ctr,:) = interp1(SAR_Range(Ctr,:),Targetlat(Ctr,:),RangeExact,"linear","extrap");
-        SARlon(Ctr,:) = interp1(SAR_Range(Ctr,:),Targetlon(Ctr,:),RangeExact,"linear","extrap");
-    end
-    figure
-    subplot(1,2,1)
-    ax=gca;
-    [xEast,yNorth,~] = latlon2local(SARlat,SARlon,0,GRP);
-    %scatter(xEast(:)/1000,yNorth(:)/1000,2,double(abs(sSLC(:))),'MarkerEdgeColor','none','MarkerFaceColor','flat')
-    J = double(abs(sSLC));
-    J = J/max(J,[],"all");
-    J  = imgaussfilt(J ,2); % Smothing filter
-    J = imadjust(J);
-    
-    imagesc(xEast(1,:)/1000,yNorth(:,1)/1000,J)
-    colormap bone
-    ax.YAxis.Direction="Normal";
-    axis equal
-    hold on
-    plot(0,0,'+'); % Mid point (reference)
-    xlabel('x-axis [km]')
-    ylabel('y-axis [km]')
-    title('Processed SAR Image')
-
-    subplot(1,2,2)
-    ax=gca;
-    [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
-    %scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
-    a=a./max(a,[],"all");
-    %J = imadjust(a);
-    imagesc(xEast(1,:)/1000,yNorth(:,1)/1000,a)
-    colormap bone
-    ax.YAxis.Direction="Normal";
-    axis equal
-    hold on
-    plot(0,0,'+'); % Mid point (reference)
-    xlabel('x-axis [km]')
-    ylabel('y-axis [km]')
-    title('Satellite swath (optical)')
-end
+xlim([-1 1]*Swathwidth/2/1000);

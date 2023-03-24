@@ -12,18 +12,18 @@ Elem.TA  = 123.78;                              % [deg] True Anomaly - Satalliet
 Elem.RAAN = 192.52;                             % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravitational parameter
 Param.T = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
-Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
+Param.PRF = 1e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 Param.ScanDuration = seconds(0.8);              % [s] Flight duration - along azimuth direction
 %% Targets
-Param.NtargetsAz = 20;                          % Number of targets in each eta bin
-Param.NtargetsRange = 20;                       % Number of targets in each range bin
-Param.Margin = 1.2;                             % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
+Param.NtargetsAz = 400;                          % Number of targets in each eta bin
+Param.NtargetsRange = 300;                       % Number of targets in each range bin
+Param.Margin = 1.2;                              % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');   % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ;    % [s] Set up the end time
 %% Radar Paramters
-RadPar.fo = (1000e6);                           % [Hz] Carrier frequency
+RadPar.fo = (500e6);                            % [Hz] Carrier frequency
 RadPar.Lambda = freq2wavelen(RadPar.fo);        % [m] Wavelength
 RadPar.AntOffNadir = 30;                        % [deg] Antenna Off-Nadir angle (pointing angle)
 
