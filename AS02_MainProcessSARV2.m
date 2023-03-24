@@ -60,7 +60,7 @@ ylabel('Range compensation [m]')
 title('Step 3.1: Range compensation profile')
 
 % shifting the range cells
-RangeBin = RadPar.ts*c/2;
+RangeBin = RadPar.ts*c;
 NbinsShift = -round(DeltaR/RangeBin);
 for eta=1:etaTotal
 S2(eta,:) = circshift(S2(eta,:),NbinsShift(eta));
