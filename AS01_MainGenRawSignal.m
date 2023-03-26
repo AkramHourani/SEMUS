@@ -5,11 +5,11 @@ clc; clear; close all hidden
 %% Load paratmers
 % You can change paramters here
 A00_Parameters
-%% Create Geomtry setup - STEP1.Create Satellite Scenario
+%% Create Geomtry setup - STEP1.Geometric Simulator
 % This Scrip/function creat the satellite orbit
 [SatECI,Satlla,DateVector] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);
 etaTotal=length(DateVector);                            % Total numeber of slow time steps
-%% Finding the swath - STEP2.Geometric Simulator
+%% Finding the swath 
 [latSawthMid,lonSwathMid,slantrangeMid,Swathwidth,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2]=F02_FindSwath(Satlla,RadPar,E);
 %% This will find the GRP in the middle of the swath
 %find the range migration of the middle of the swath
@@ -30,9 +30,9 @@ geoplot(latSwathL2,lonSwathL2,'color',ColorOrder(2,:)); % Swath edge line 2
 legend('satellite subtrack','swath mid track')
 title('Swath location') 
 drawnow 
-%% Generate spatial sampling points (Tragets)
+%% Generate spatial sampling points (Tragets) - STEP2.Target Reflectivity Simulator
 [Targetlat,Targetlon]= F03_GenerateTargets(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Param); % This is for optical-based targets
-%% Get ground reflectrivity - STEP3.Reflectivity Simulator
+%% Get ground reflectrivity 
 a = F04_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2);
 figure(2) 
 % Converting to cartisian coordinates for plotting
@@ -45,7 +45,7 @@ plot(0,0,'+'); % Mid point (reference)
 xlabel('x-axis [km]')
 ylabel('y-axis [km]')
 title('Satellite swath (optical)')
-%% Test antenna pattern (optional part of the script) - STEP4.Amplitude Simulator
+%% Test antenna pattern (optional part of the script) - STEP3.Waveform Amplitude Simulator
 figure(6)
 [OffBoreSightRange, OffBoreSightAz] = meshgrid (-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
 % The 1.2 is added such that half the power is matching the beamwidth
@@ -113,7 +113,7 @@ tauo = 2*Ro/c;                              % Delay of the Ground refernece poin
 parfor eta=1:etaTotal
     [sqd_ref(eta,:)] = F05_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
-%% This is the logest part of the simulations - STEP5.Waveform Generator
+%% This is the logest part of the simulations - STEP4.Waveform Generator
 % Scene reflections sqd - reflected signal from the entire swath
 % the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
