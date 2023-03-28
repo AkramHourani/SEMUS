@@ -17,7 +17,7 @@ colormap parula
 xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 0: Raw time domain (magnitude)')
-%% STEP6.SAR Image Processing
+%% STEP5.SAR Image Processing
 %% Step 1: Range Compression
 So = fft1d2(sqd);                                   % FFT the time domain signal (FFT along each eta row)
 % This is the template for the Match Filter
@@ -76,7 +76,7 @@ xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 title('Step 3.2: RCMC')
 drawnow
-%% Step 4/5 Azimuth compression
+%% Step 4 Azimuth compression
 Haz = exp(1j*pi*R*4*RadPar.fo/c);               % Azimuth Analytical Matched Filter
 %S3 = S2 .* repmat(Haz,1,size(S2,2));
 subplot(2,4,6)
@@ -88,7 +88,6 @@ S2_ref = repmat(S2_ref(:,midpoint),1,size(S2,2));
 S3 = S2 .* conj(S2_ref);
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                             % Final Focused SAR Image
-
 %% plotting (this is an approzimate projection of the swath)
 figure(2)
 
