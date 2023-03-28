@@ -1,6 +1,6 @@
 clc; clear; close all
-%load('Mesh_Bi.mat')
-load('Sydney_Bi.mat')
+load('Mesh_Bi.mat')
+%load('Sydney_Bi.mat')
 close all hidden;
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
@@ -54,7 +54,7 @@ title('Step 2: Az FFT')
 
 %% Step 3 Range cell migration compensation
 
-DeltaR = RSoI+RI - (RoSoI+RoI); % The migration of the GRP
+DeltaR = RSoI+RI - (Ro); % The migration of the GRP
 subplot(2,4,4)
 plot(1:etaTotal,abs(DeltaR));
 xlabel('Azimuth index')
@@ -110,7 +110,7 @@ pc =pcolor(Range/1000,etaVec,Img);
 pc.LineStyle='none';
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
-xlabel('Slant Range [km]')
+xlabel('Bistatic Range [km]')
 ylabel('Az Index')
 title('Step 5: Comressed image')
 colormap turbo
@@ -152,7 +152,7 @@ for Ctr=1:length(CLat(:))
     % find the closest approach
     [Rmin, etaMin]  = min(RTemp1+RTemp2); 
     ContAz(row,col) = etaMin; % This is the slow-time of the closest approach
-    ContR(row,col)  = Rmin-RoSoI-RoI; % This is the slant distance to the control point
+    ContR(row,col)  = Rmin-Ro; % This is the slant distance to the control point
     
 end
 

@@ -2,7 +2,7 @@ clc; clear; close all hidden
 % This is the main file for simulating space SAR - Passive
 %% Load paratmers
 addpath("SEMUS")
-A00_ParametersScenario
+A00_Parameters
 Param.NtargetsAz = 11; % number of targets in each eta bin
 Param.NtargetsRange = 11; % number of targets in each eta bin
 
@@ -13,13 +13,14 @@ etaTotal=length(DateVector); % Total numeber of slow time steps
 %% Finding the swath
 [latSawthMidSoI,lonSwathMidSoI,slantrangeMidSoI,SwathwidthSoI,latSwathL1SoI,lonSwathL1SoI,latSwathL2SoI,lonSwathL2SoI]=F02_FindSwath(SatllaSoI,RadPar,E);
 %% Create Geomtry setup (Interferer)
-Elem.Inc = 100;  % Inclination in degrees
-Elem.TA  = 124.735;  %  in degrees
-Elem.RAAN = 200.67;
-RadPar.T = 4e-6; % Pulse width
-RadPar.bw = 10e6; % Bandwidth of the RF signal to calcualte the ramp rate
-RadPar.K =  -(RadPar.bw /RadPar.T); % ramp rate
-RadPar.Left = 1; % the scanning on the left side of the satellite trajectory
+% Elem.Inc = 100;  % Inclination in degrees
+% Elem.TA  = 124.735;  %  in degrees
+% Elem.RAAN = 200.67;
+% RadPar.T = 4e-6; % Pulse width
+% RadPar.bw = 10e6; % Bandwidth of the RF signal to calcualte the ramp rate
+% RadPar.K =  -(RadPar.bw /RadPar.T); % ramp rate
+% RadPar.Left = 1; % the scanning on the left side of the satellite trajectory
+Param.h = 300; 
 [SatECII,SatllaI,~] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem); % This Scrip/function creat the satellite orbit
 %% Finding the swath of the SoI / Interferer
 [latSawthMidI,lonSwathMidI,slantrangeMidI,Swathwidths_mI,latSwathL1I,lonSwathL1I,latSwathL2I,lonSwathL2I]=F02_FindSwath(SatllaI,RadPar,E);
@@ -29,13 +30,14 @@ RadPar.Left = 1; % the scanning on the left side of the satellite trajectory
 % This is the index of mid swath
 MidEta = round(length(lonSwathL2SoI)/2);
 [~,~,RSoI] = geodetic2aer(latSawthMidSoI(MidEta),lonSwathMidSoI(MidEta),0,SatllaSoI(:,1),SatllaSoI(:,2),SatllaSoI(:,3),E);
-RoSoI = min(RSoI);
+%RoSoI = min(RSoI);
 GRP = [latSawthMidSoI(MidEta),lonSwathMidSoI(MidEta),0]; % ground reference point
 
 % This is the distane between the interfering satellite to the mid of the
 % SoI swath
 [~,~,RI] = geodetic2aer(latSawthMidSoI(MidEta),lonSwathMidSoI(MidEta),0,SatllaI(:,1),SatllaI(:,2),SatllaI(:,3),E);
-RoI = min(RI);
+%RoI = min(RI);
+Ro = min(RSoI+RI);
 %% Plotting
 Scale = 0.5;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[1000 150 800 800/1.618*Scale]);
@@ -126,7 +128,8 @@ else
     satazI = azimuth(SatllaI(1,1),SatllaI(1,2),SatllaI(end,1),SatllaI(end,2),E) -90;
 end
 %% Reference sqd that will be used for template match filtering
-tauoBi = (RoSoI+RoI)/c;% bi-static delay of the refernece point
+%tauoBi = (RoSoI+RoI)/c;% bi-static delay of the refernece point
+tauoBi = (Ro)/c;% bi-static delay of the refernece point
 disp ('Generating the reference signal...')
 parfor etaIdx=1:etaTotal
     sqd_ref(etaIdx,:) = F05_CalcReflectionBi(1,GRP(1),GRP(2),SatllaI(etaIdx,:),SatllaSoI(etaIdx,:),RadPar,E,mean(satazI),mean(satazSoI),c,tauoBi,FastTime);
@@ -161,4 +164,5 @@ ylabel('Azimuth index')
 title('Raw time domain (magnitude)')
 
 %%
-save(FileName)
+%save(FileName)
+save('Mesh_Bi')
