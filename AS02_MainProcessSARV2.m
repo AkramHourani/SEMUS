@@ -62,8 +62,8 @@ ylabel('Range compensation [m]')
 title('Step 3.1: Range compensation profile')
 
 % shifting the range cells
-RangeBin = RadPar.ts*c/2;
-NbinsShift = -round(DeltaR/RangeBin)*2;
+RangeBin = RadPar.ts*c; % This is the time-equivalent distance (twice the slant distance)
+NbinsShift = -round(DeltaR/RangeBin);
 for eta=1:etaTotal
 S2(eta,:) = circshift(S2(eta,:),NbinsShift(eta));
 S2_ref(eta,:) = circshift(S2_ref(eta,:),NbinsShift);
@@ -91,10 +91,12 @@ sSLC = ifft1d1(S3);                             % Final Focused SAR Image
 
 %% plotting (this is an approzimate projection of the swath)
 figure(2)
+
+% This is the time-equivalent range (i.e. twice the slant range)
 Range =(-(numel(FastTime)/2)*RangeBin:RangeBin:(numel(FastTime)/2-1)*RangeBin);
 [~,El,~]= geodetic2aer(GRP(1),GRP(2),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);
 
-RangeGround = Range/cosd(El);
+RangeGround = Range/2/cosd(El);
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);
 CrossRange = (1:etaTotal)*Param.ts*speed/1000;
