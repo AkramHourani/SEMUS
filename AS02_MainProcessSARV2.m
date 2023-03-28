@@ -1,4 +1,4 @@
-clc; clear; close all
+    clc; clear; close all
 load('SAR_Image.mat')
 close all hidden;
 %% This is a raw-wise FFT / IFFT
