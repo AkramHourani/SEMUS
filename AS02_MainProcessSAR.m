@@ -60,7 +60,7 @@ RangeBin = RadPar.ts*c;
 NbinsShift = -round(DeltaR/RangeBin);
 for AzCtr=1:etaTotal
     S2(AzCtr,:) = circshift(S2(AzCtr,:),NbinsShift(AzCtr));
-    S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift);
+    %S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift);
 end
 
 subplot(2,3,5)
