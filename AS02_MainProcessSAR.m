@@ -71,7 +71,7 @@ ylabel('Azimuth index')
 title('Step 3.2: RCMC')
 drawnow
 %% Step 4 Azimuth compression
-Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
+Haz = exp(1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
 %S3 = S2 .* repmat(Haz,1,size(S2,2));
 subplot(2,3,6)
 plot(real(Haz))
@@ -100,7 +100,8 @@ ax.XAxis.Direction = 'reverse';
 xlabel('Slant Range [km]')
 ylabel('Cross Range [km]')
 title('Step 5: Compressed image')
-colormap turbo
+% colormap turbo
+colormap bone
 %axis equal
 drawnow
 %imwrite(abs(sSLC),"Mono_SAR.png");
@@ -122,7 +123,7 @@ for AzCtr =1:ResAz % Creat the points based on the swath
     [CLat(AzCtr,:),CLon(AzCtr,:)] = gcwaypts(latSwathL1(eta),lonSwathL1(eta),latSwathL2(eta),lonSwathL2(eta),ResR-1);
 
 end
-%% Second: calculate the transformation control points in Az/Range domain based on given Lat/Lon
+%% Second: Calculate the transformation control points in Az/Range domain based on given Lat/Lon
 for Ctr=1:length(CLat(:))
     % Find the disance profile of the target over the entire aquisition period
     [~,~,RTemp]=geodetic2aer(CLat(Ctr),CLon(Ctr),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
