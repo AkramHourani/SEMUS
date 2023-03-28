@@ -20,6 +20,7 @@ MidEta = round(length(lonSwathL2)/2);
 GRP = [latSawthMid(MidEta),lonSwathMid(MidEta),0];      % Ground Reference Point (GRP)
 Ro = min(R);                                            % The reference range at the ground refernece point (GRP)
 %% Plot swath
+figure(1) 
 geoplot(Satlla(:,1),Satlla(:,2));                       % Satellite subline
 hold on
  
@@ -46,8 +47,8 @@ xlabel('x-axis [km]')
 ylabel('y-axis [km]')
 title('Satellite swath (optical)')
 %% Test antenna pattern (optional part of the script) - STEP3.Waveform Amplitude Simulator
-figure(6)
-[OffBoreSightRange, OffBoreSightAz] = meshgrid (-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
+figure(3)
+[OffBoreSightRange, OffBoreSightAz] = meshgrid(-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
 % The 1.2 is added such that half the power is matching the beamwidth
 AntennaGain = RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6));
 pc =pcolor(OffBoreSightAz,OffBoreSightRange,AntennaGain);
@@ -70,7 +71,7 @@ PulseWidthSamples = round(RadPar.T/(FastTime(end)-FastTime(1))*TimeLength);
 tau = 0;
 sb = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
     .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));%.*Window;
-figure(5)
+figure(4)
 plot(FastTime/1e-6,real(sb))
 xlabel('Time [\mus]')
 ylabel('Real part')
@@ -124,7 +125,7 @@ parfor eta=1:etaTotal
 end
 toc
 %% Plot the raw unfocused SAR signal (Optional)
-figure(7)
+figure(5)
 pc =pcolor(FastTime/1e-6,1:etaTotal,abs(sqd));
 pc.LineStyle='none';
 ax=gca;

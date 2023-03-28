@@ -16,9 +16,9 @@ Param.PRF = 1e3;                                % [Hz] Pulse Repeatition Frequen
 Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 Param.ScanDuration = seconds(0.8);              % [s] Flight duration - along azimuth direction
 %% Targets
-Param.NtargetsAz = 400;                          % Number of targets in each eta bin
-Param.NtargetsRange = 300;                       % Number of targets in each range bin
-Param.Margin = 1.2;                              % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
+Param.NtargetsAz = 400;                         % Number of targets in each eta bin
+Param.NtargetsRange = 300;                      % Number of targets in each range bin
+Param.Margin = 1.2;                             % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');   % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ;    % [s] Set up the end time
@@ -39,4 +39,3 @@ RadPar.K =  (RadPar.bw /RadPar.T);              % [Hz/s] Ramp (chirp) rate
 
 RadPar.SwathWidthDeg = 0.5;                     % [deg] Swath width in degrees
 RadPar.Left = 1;                                % The scanning on the left side of the satellite trajectory
-
