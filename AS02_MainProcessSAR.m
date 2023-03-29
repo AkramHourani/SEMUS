@@ -61,7 +61,7 @@ RangeBin = RadPar.ts*c/2;                           % This is the slant range bi
 NbinsShift = -round(DeltaR/RangeBin);               % The number of bins shifted due to migration
 for AzCtr=1:etaTotal
     S2(AzCtr,:) = circshift(S2(AzCtr,:),NbinsShift(AzCtr));
-    S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift(AzCtr));
+    %S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift);
 end
 
 subplot(2,3,5)
