@@ -1,7 +1,7 @@
 clc; clear; close all
 close all hidden;
-load('Test03')
-% load('SAR_Image1')
+% load('Test03')
+load('SAR_Image1')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -152,7 +152,7 @@ RangeM  = repmat(RangeEq,etaTotal,1);
 hold on
 axis equal
 pc =pcolor(xImg/1000,yImg/1000,Img);
-scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
+% scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
 scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(1,:))
 pc.LineStyle='none';
 grid on
