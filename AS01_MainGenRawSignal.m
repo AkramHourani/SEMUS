@@ -1,10 +1,10 @@
-clc; clear; close all hidden 
+    clc; clear; close all hidden 
 % This is the main script for simulating space SAR
 % The script will generate a raw SAR signal (baseband) based on the optial
 % satellite image of the taregt swath
 %% Load paratmers
 % You can change paramters here
-A00_Parameters
+A01_Parameters
 %% Create Geomtry setup - STEP1.Geometric Simulator
 % This Scrip/function creat the satellite orbit
 [SatECI,Satlla,DateVector] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);
@@ -49,8 +49,9 @@ title('Satellite swath (optical)')
 %% Test antenna pattern (optional part of the script) - STEP3.Waveform Amplitude Simulator
 figure(3)
 [OffBoreSightRange, OffBoreSightAz] = meshgrid(-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
-% The 1.2 is added such that half the power is matching the beamwidth
-AntennaGain = RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6));
+% The zeta is added such that half the power is matching the beamwidth
+zeta = 50.76;                                                                               % Empirically calculated
+AntennaGain = RadPar.Gain * (sinc(OffBoreSightRange*pi/180*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAz*pi/180*zeta/RadPar.BeamAz)).^2;
 pc =pcolor(OffBoreSightAz,OffBoreSightRange,AntennaGain);
 pc.LineStyle='none'; 
 axis equal;

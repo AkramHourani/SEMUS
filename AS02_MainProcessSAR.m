@@ -1,7 +1,7 @@
 clc; clear; close all
 close all hidden;
 % load('Test03')
-load('SAR_Image1')
+load('SAR_Image')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -61,7 +61,7 @@ RangeBin = RadPar.ts*c/2;                           % This is the slant range bi
 NbinsShift = -round(DeltaR/RangeBin);               % The number of bins shifted due to migration
 for AzCtr=1:etaTotal
     S2(AzCtr,:) = circshift(S2(AzCtr,:),NbinsShift(AzCtr));
-    %S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift);
+    S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift(AzCtr));
 end
 
 subplot(2,3,5)
@@ -89,10 +89,14 @@ Img=abs(sSLC)./max(abs(sSLC),[],"all");
 Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
+CrossRange = (1:etaTotal)*Param.ts*speed;
+
 % Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
 RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
 ax=gca;
-pc =pcolor(RangeEq/1000,1:size(Img,1),Img);
+pc =pcolor(RangeEq/1000,CrossRange/1000,Img);
+% pc =pcolor(RangeEq/1000,(1:size(Img,1))/1000,Img);
 pc.LineStyle='none';
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';

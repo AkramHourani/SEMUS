@@ -1,10 +1,14 @@
 function [Reflection] = F05_CalcReflection(a,Targetlat,Targetlon,Satlla,RadPar,E,sataz,c,tauo,FastTime)
 % Obtain the geomtry for all points (targets) in the swath
 [az,elev,slantRange] = geodetic2aer(Targetlat,Targetlon,0,Satlla(1),Satlla(2),Satlla(3),E);
-OffBoreSightRange = elev+90 - RadPar.AntOffNadir;
+OffBoreSightRange = elev + 90 - RadPar.AntOffNadir;
 OffBoreSightAz = az - sataz;
 
-AntennaGain = single(RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6)));
+% AntennaGain = single(RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6)));
+% The zeta is added such that half the power is matching the beamwidth
+zeta = 50.76;             
+AntennaGain =single(RadPar.Gain * abs(sinc(OffBoreSightRange*pi/180*zeta/RadPar.BeamRange)).^2 .* abs(sinc(OffBoreSightAz*pi/180*zeta/RadPar.BeamAz)).^2);
+
 tau = single(2*slantRange/c - tauo); % relative delay w. r. t. the middel of the swath (i.e to the reference point)
 
 % Process refelctions from all points in the scene - Generate Quadrature
