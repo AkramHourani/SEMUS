@@ -9,10 +9,10 @@ ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
 fft1d1 = @ (x) fftshift(fft(fftshift(x,1),[],1),1);
 ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% Add noise and interference to the received signal
-A03_Parameters                                       % Load interference parameters
+A02_Parameters                                       % Load interference parameters
 % % Add AWGN to the recieved signal
-F06_GenerateAWGN
-sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
+% F06_GenerateAWGN
+% sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % % Add AM signal
 % F07_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
@@ -20,8 +20,8 @@ sqd = sqd + AWGN;                                    % Signal to interference = 
 % F09_GenerateQPSK
 % sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % % Add LORA signal
-F11_GenerateLORA
-sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% F11_GenerateLORA
+% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)
@@ -100,7 +100,8 @@ sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
-Img = imadjust(Img,[0 0.6]);
+Img = imadjust(Img);
+% Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -123,6 +124,8 @@ colormap bone
 drawnow
 %% Geographic projection for the SAR image
 %% First: Create transformation control points in Lat/Lon domain
+Scale = 1.2;
+h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 ResAz = 8;                                          % Control points in the Azimuth direction
 ResR  = 8;                                          % Control points in the Range direction
 if etaTotal> ResAz
@@ -180,4 +183,7 @@ ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
 xlabel('North-axis [km]')
 ylabel('East-axis [km]')
-title('Corrected geo image')
+% title('Corrected geo image')
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+Filename1='Figure10';
+print(h_Fig, '-dpng','-r600',Filename1)

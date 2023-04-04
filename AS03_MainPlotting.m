@@ -16,19 +16,19 @@ gt = groundTrack(sat);
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
-geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
-% geoplot((Satlla(:,1)-2.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
+% geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
+geoplot((Satlla(:,1)-2.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
 hold on
 geoplot(latSawthMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
 geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));                          % Swath center point GRP
-geoplot(latSawthL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
-geoplot(latSawthL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
+geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
+geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
 
 % Adding LoRa Transmitter to Geoplot
-% geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
-% legend('satellite subtrack','swath mid track','','','','Interferer Tx','FontSize',10,'interpreter','latex')
+geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
+legend('satellite subtrack','swath mid track','','','','Interferer Tx','FontSize',10,'interpreter','latex')
 
-legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
+% legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
 % geolimits([-38 -37],[144 146])                                                                            % Latitude - Longitude limits
 ax=gca;
 ax.LatitudeAxis.TickValues=[];
@@ -59,6 +59,7 @@ line(xEast(1,:)/1000,yNorth(1,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:),
 hold on
 line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
 hold on
+Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
 line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 2)
 hold on
 plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 15);                           % Mid point (reference)
@@ -67,8 +68,8 @@ ylabel('y-axis [km]','FontSize',12,'interpreter','latex')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % title('Satellite swath (optical)','FontSize',16,'interpreter','latex')
 
-% Filename1='Figure9';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure9';
+print(h_Fig, '-dpng','-r600',Filename1)
 %% Test antenna pattern - STEP4.Amplitude Simulator
 % figure(3)
 Scale = 1.2;
@@ -192,21 +193,29 @@ Filename1='Figure12';
 % print(h_Fig, '-dpng','-r600',Filename1)
 %% Step 5 Azimuth IFFT
 % figure(8) 
-RangeBin = 2*RadPar.ts*c;                           % Ground range resolution
-Range =(0:RangeBin:(numel(FastTime)-1)*RangeBin)/1000;
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
-CrossRange = (1:etaTotal)*Param.ts*speed/1000;
-
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
-pc =pcolor(Range,CrossRange,abs(sSLC));
-% imagesc(abs(sSLC_s{2}))
+Img=abs(sSLC)./max(abs(sSLC),[],"all");
+Img = imadjust(Img);
+% Img = imadjust(Img,[0 0.6]);
+Calibration = 1;
+
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
+CrossRange = (1:etaTotal)*Param.ts*speed;
+
+% Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
+RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
+ax=gca;
+pc =pcolor(RangeEq/1000,CrossRange/1000,Img);
+% pc =pcolor(RangeEq/1000,(1:size(Img,1))/1000,Img);
 pc.LineStyle='none';
-xlabel('Range [km]')
+ax.YAxis.Direction = 'reverse';
+ax.XAxis.Direction = 'reverse';
+xlabel('Slant Range [km]')
 ylabel('Cross Range [km]')
 % title('Step 5: Compressed SAR image using RDA')
-% title('Step 5: Focused SAR image with LORA Interference')
+% colormap turbo
 colormap bone
 % colormap gray
 % colormap jet
