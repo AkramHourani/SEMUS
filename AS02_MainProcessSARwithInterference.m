@@ -1,7 +1,7 @@
 clc; clear; close all
 close all hidden;
 % load('Test03')
-load('SAR_Image1')
+load('SAR_Image2')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -86,7 +86,7 @@ ylabel('Azimuth index')
 title('Step 3.2: RCMC')
 drawnow
 %% Step 4 Azimuth compression
-Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
+Haz = exp(-1j*pi*DeltaR*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
 subplot(2,3,6)
 plot(real(Haz))
 
@@ -100,8 +100,8 @@ sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
-Img = imadjust(Img);
-% Img = imadjust(Img,[0 0.6]);
+% Img = imadjust(Img);
+Img = imadjust(Img,[0 0.7]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
