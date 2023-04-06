@@ -1,7 +1,7 @@
 clc; clear; close all
 close all hidden;
 % load('Test03')
-load('SAR_Image')
+load('SAR_Image3')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -86,7 +86,7 @@ sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
-Img = imadjust(Img,[0 0.6]);
+Img = imadjust(Img,[0 0.4]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -109,6 +109,8 @@ colormap bone
 drawnow
 %% Geographic projection for the SAR image
 %% First: Create transformation control points in Lat/Lon domain
+Scale = 1.2;
+h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 ResAz = 8;                                          % Control points in the Azimuth direction
 ResR  = 8;                                          % Control points in the Range direction
 if etaTotal> ResAz
@@ -167,3 +169,7 @@ ax.XAxis.Direction = 'reverse';
 xlabel('North-axis [km]')
 ylabel('East-axis [km]')
 title('Corrected geo image')
+% title('Corrected geo image')
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+% Filename1='Figure10';
+% print(h_Fig, '-dpng','-r600',Filename1)

@@ -68,8 +68,8 @@ ylabel('y-axis [km]','FontSize',12,'interpreter','latex')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % title('Satellite swath (optical)','FontSize',16,'interpreter','latex')
 
-Filename1='Figure9';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure9';
+% print(h_Fig, '-dpng','-r600',Filename1)
 %% Test antenna pattern - STEP4.Amplitude Simulator
 % figure(3)
 Scale = 1.2;
