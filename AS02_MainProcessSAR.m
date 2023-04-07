@@ -1,7 +1,7 @@
 clc; clear; close all
 close all hidden;
 % load('Test03')
-load('SAR_Image3')
+load('SAR_Image4')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -86,7 +86,7 @@ sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
-Img = imadjust(Img,[0 0.4]);
+Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))

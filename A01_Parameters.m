@@ -14,16 +14,16 @@ Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravi
 Param.T = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
 Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
-Param.ScanDuration = seconds(1.5);              % [s] Flight duration - along azimuth direction
+Param.ScanDuration = seconds(1);              % [s] Flight duration - along azimuth direction
 %% Targets
-Param.NtargetsAz = 300;                         % Number of targets in each eta bin
-Param.NtargetsRange = 300;                      % Number of targets in each range bin
+Param.NtargetsAz = 250;                         % Number of targets in each eta bin
+Param.NtargetsRange = 250;                      % Number of targets in each range bin
 Param.Margin = 1.2;                             % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');   % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ;    % [s] Set up the end time
 %% Radar Paramters
-RadPar.fo = 1.3e9;                              % Carrier frequency [Hz] - L-band
+RadPar.fo = 1.2e9;                              % [Hz] Carrier frequency - L-band
 % RadPar.fo = (500e6);                            % [Hz] Carrier frequency
 RadPar.Lambda = freq2wavelen(RadPar.fo);        % [m] Wavelength
 RadPar.AntOffNadir = 30;                        % [deg] Antenna Off-Nadir angle (pointing angle)
@@ -32,7 +32,7 @@ RadPar.BeamRange = 5;                           % [deg] Antenna beamwidth in the
 RadPar.BeamAz    = 5;                           % [deg] Antenna beamwidth in the azimuth direction
 RadPar.Gain  = 10^(12/10);                      % [dBi] Antenna gain example
 
-RadPar.bw = 15e6;                               % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
+RadPar.bw = 30e6;                               % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
 RadPar.fs = RadPar.bw*2;                        % [Hz] Sampling rate (the multiplier is added to improve image quality)
 RadPar.ts = (1/RadPar.fs);                      % [s] Sample time
 RadPar.T = 5e-6;                                % [s] Pulse width
