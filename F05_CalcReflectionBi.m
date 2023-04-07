@@ -22,7 +22,7 @@ tau = single((slantRangeSrc+slantRangeDist)/c - tauoBi); % relative delay w. r. 
 % Process refelctions from all points in the scene
 Pulses = exp(1j*pi *   (-2*RadPar.fo * tau(:) + RadPar.K*(FastTime-tau(:)).^2   )    ) .*(FastTime>(-RadPar.T/2+tau(:))).*(FastTime<(RadPar.T/2+tau(:)));
 
-Reflection = sum(a(:).*AntennaGainSrc(:).*AntennaGainDist(:)./...
+Reflection = sum(a(:).* sqrt(AntennaGainSrc(:)) .* sqrt(AntennaGainDist(:))./...
     (single(slantRangeSrc(:)).^2 + single(slantRangeDist(:)).^2).*Pulses,1);
 %%
 end

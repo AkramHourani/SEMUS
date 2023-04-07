@@ -14,6 +14,6 @@ tau = single(2*slantRange/c - tauo); % relative delay w. r. t. the middel of the
 % Process refelctions from all points in the scene - Generate Quadrature
 % Demodulated Signal Sqd - Time Domain - Equation 5.1 Book
 Pulses = exp(1j*pi *   (-2*RadPar.fo * tau(:) + RadPar.K*(FastTime-tau(:)).^2   )    ) .*(FastTime>(-RadPar.T/2+tau(:))).*(FastTime<(RadPar.T/2+tau(:)));
-Reflection = sum(a(:).*AntennaGain(:)./single(slantRange(:)).^2.*Pulses,1);
+Reflection = sum(a(:).* sqrt(AntennaGain(:))./single(slantRange(:)).^2.*Pulses,1);
 
 end
