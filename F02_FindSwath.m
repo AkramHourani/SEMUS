@@ -1,4 +1,4 @@
-function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,sataz]=F02_FindSwath(Satlla,RadPar,E)
+function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,slantrange1,slantrange2,sataz]=F02_FindSwath(Satlla,RadPar,E)
 % This is to compute the approximate azimuth of the swath (also the satellite azimuth -> i.e. the direction of motion of the satellite
 
 % This is to compute the azimuth for each point of the satellite motion
@@ -20,9 +20,9 @@ sataz=sataz';
 [latSawthMid,lonSwathMid,slantrangeMid] = lookAtSpheroid(Satlla(:,1),Satlla(:,2),Satlla(:,3),sataz,RadPar.AntOffNadir,E);
 
 % Finding 2 edges of the swath (Longitude and latitude) along azimuth
-[latSwathL1,lonSwathL1,~] = lookAtSpheroid(Satlla(:,1),Satlla(:,2),Satlla(:,3),...
+[latSwathL1,lonSwathL1,slantrange1] = lookAtSpheroid(Satlla(:,1),Satlla(:,2),Satlla(:,3),...
     sataz,RadPar.AntOffNadir-RadPar.SwathWidthDeg/2,E);
-[latSwathL2,lonSwathL2,~] = lookAtSpheroid(Satlla(:,1),Satlla(:,2),Satlla(:,3),...
+[latSwathL2,lonSwathL2,slantrange2] = lookAtSpheroid(Satlla(:,1),Satlla(:,2),Satlla(:,3),...
     sataz,RadPar.AntOffNadir+RadPar.SwathWidthDeg/2,E);
 
 % Finding the Swath width in meters

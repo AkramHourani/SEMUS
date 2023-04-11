@@ -66,6 +66,7 @@ plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 15);           
 xlabel('x-axis [km]','FontSize',12,'interpreter','latex')
 ylabel('y-axis [km]','FontSize',12,'interpreter','latex')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
+grid on
 % title('Satellite swath (optical)','FontSize',16,'interpreter','latex')
 
 % Filename1='Figure9';

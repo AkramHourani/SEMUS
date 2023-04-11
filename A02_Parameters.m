@@ -30,7 +30,7 @@ QPSK.SIR = 22;                          % Assumed SIR in [dB]
 %% LoRa Signal Parameters
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
 % SF ∈ {7, 8, 9, 10, 11, 12}. % Generate 0.16s of LORA data ==> Controlled by the SF=9
-LORA.SF = 9;                            % Spreading factor
+LORA.SF = 7;                            % Spreading factor
 LORA.BW = 125e3 ;                       % Signal bandwidth of LoRa transmission [Hz]
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]
 LORA.fs = RadPar.fs ;                   % Sampling frequency-Same as radar range sampling frequency [Hz]

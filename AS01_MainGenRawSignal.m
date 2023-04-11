@@ -10,7 +10,7 @@ A01_Parameters
 [SatECI,Satlla,DateVector] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);
 etaTotal=length(DateVector);                            % Total numeber of slow time steps
 %% Finding the swath 
-[latSawthMid,lonSwathMid,slantrangeMid,Swathwidth,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2]=F02_FindSwath(Satlla,RadPar,E);
+[latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,slantrange1,slantrange2]=F02_FindSwath(Satlla,RadPar,E);
 %% This will find the GRP in the middle of the swath
 %find the range migration of the middle of the swath
 % This is the index of the mid of the swath across the dwell time
