@@ -1,10 +1,13 @@
 % function F14_RadarTx
 %% Interfering Radar Signal Parameters
 IR.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
-IR.fs = RadPar.fs;                      % Sampling frequency same higher than SAR sampling frequency [Hz]
-IR.t = (0:1/IR.fs:0.2);                  % Time base vector for the carrier modulated signal
-IR.fm = 1e6;                            % Baseband signal frequency [Hz]       
-IR.NumberofAM = 1;                      % Number of Radar signals
+IR.fs = RadPar.fs;                      % Sampling frequency same as SAR sampling frequency [Hz]
+IR.ts = (1/IR.fs);                      % [s] Sample time
+IR.bw = 15e6;                               % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
+IR.T = 5e-6;                                % [s] Pulse width
+IR.K =  (IR.bw /IR.T);              % [Hz/s] Ramp (chirp) rate
+IR.t = (0:1/IR.fs:0.2);                 % Time base vector for the carrier modulated signal
+IR.NumberofIR = 1;                      % Number of Radar signals
 IR.TxShift = 0.05;                      % Shift of Radar Transmitter from GRP longitude
 IR.Gain = 1;                            % Asumme omin-directional isotropic Radar transmitter G = 1
 IR.SIR = 20;                            % Assumed SIR in [dB]
@@ -21,14 +24,14 @@ AntennaGainR =single(IR.Gain * abs(sinc(OffBoreSightRIR*pi/180*zeta/RadPar.BeamR
 
 tauoR = (slantRangeR)/c;                                % Single way delay from the radar
 parfor idx=1:etaTotal
-        Pulses = exp(1j*pi * (-2 *IR.fc * tauoR(:) + RadPar.K*(FastTime-tauoR(:)).^2  ) ) .*(FastTime>(-RadPar.T/2+tauoR(:))).*(FastTime<(RadPar.T/2+tauoR(:)));
-        sqd(idx,:) = sum(sqrt(AntennaGainR(:) * sqrt(IR.Gain))./single(slantRangeR(:)).^2.*Pulses,1);
+        Pulses_I = exp(1j*pi * (-2 *IR.fc * tauoR(:) + IR.K*(IR.t-tauoR(:)).^2  ) ) .*(IR.t>(-IR.T/2+tauoR(:))).*(IR.t<(IR.T/2+tauoR(:)));
+        sqd_I(idx,:) = sum(sqrt(AntennaGainR(:) * sqrt(IR.Gain))./single(slantRangeR(:)).^2.*Pulses_I,1);
 end
 
 %% Define Activation Timing
 TxTime = Param.ts;
 RxTime = abs(min(FastTime,[],"all")) + abs(max(FastTime,[],"all"));
 
-AMTime = length(signal_IQA)/AM.fs;
-Discard_Q = round(length(signal_IQA)* TxTime/AMTime);         % Number of samples on LORA data to be removed
-Keep_Q = round(size(sqd,2)* RxTime/AMTime);                   % Number of samples on LORA data to be considered
+IRTime = length(sqd_I)/IR.fs;
+Discard_Q = round(length(sqd_I)* TxTime/IRTime);         % Number of samples on IR data to be removed
+Keep_Q = round(size(sqd_I,2)* RxTime/IRTime);                   % Number of samples on IR data to be considered
