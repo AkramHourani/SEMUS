@@ -15,13 +15,15 @@ lonIR = GRP(2) - IR.TxShift;                              % Radar Tx longitude i
 [azR,elevR,slantRangeR] = geodetic2aer(latIR,lonIR,0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
 OffBoreSightRIR = elevR + 90 - RadPar.AntOffNadir;
 OffBoreSightAzIR = azR - sataz;
+% The zeta is added such that half the power is matching the beamwidth
+zeta = 50.76;             
+AntennaGainR =single(IR.Gain * abs(sinc(OffBoreSightRIR*pi/180*zeta/RadPar.BeamRange)).^2 .* abs(sinc(OffBoreSightAzIR*pi/180*zeta/RadPar.BeamAz)).^2);
+
 tauoR = (slantRangeR)/c;                                % Single way delay from the radar
 parfor idx=1:etaTotal
-    sqd(idx,:) =F05_CalcReflection(a,latIR,lonIR,Satlla(idx,:),RadPar,E,sataz,c,tauoR,FastTime);
+        Pulses = exp(1j*pi * (-2 *IR.fc * tauoR(:) + RadPar.K*(FastTime-tauoR(:)).^2  ) ) .*(FastTime>(-RadPar.T/2+tauoR(:))).*(FastTime<(RadPar.T/2+tauoR(:)));
+        sqd(idx,:) = sum(sqrt(AntennaGainR(:) * sqrt(IR.Gain))./single(slantRangeR(:)).^2.*Pulses,1);
 end
-
-
-
 
 %% Define Activation Timing
 TxTime = Param.ts;
