@@ -11,8 +11,8 @@ ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% Add noise and interference to the received signal
 A02_Parameters                                       % Load interference parameters
 % % Add AWGN to the recieved signal
-F06_GenerateAWGN
-sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
+% F06_GenerateAWGN
+% sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % % Add AM signal
 % F07_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
@@ -20,8 +20,11 @@ sqd = sqd + AWGN;                                    % Signal to interference = 
 % F09_GenerateQPSK
 % sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % % Add LORA signal
-F11_GenerateLORA
-sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% F11_GenerateLORA
+% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% % Add Radar signal
+F14_GenerateRadarTx
+sqd = sqd + sIR;                                   % Signal to interference = IR.SIR
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)
