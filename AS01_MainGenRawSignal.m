@@ -80,7 +80,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image4.mat';
+FileName = 'SAR_Image5.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
@@ -112,7 +112,7 @@ end
 %% Reference sqd_ref that will be used as template for matched filter
 disp ('Generating the reference signal...')
 tauo = 2*Ro/c;                              % Delay of the Ground refernece point
-parfor eta=1:etaTotal
+for eta=1:etaTotal
     [sqd_ref(eta,:)] = F05_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
 %% This is the logest part of the simulations - STEP4.Waveform Generator
@@ -120,7 +120,7 @@ end
 % the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
-parfor eta=1:etaTotal
+for eta=1:etaTotal
     sqd(eta,:) =F05_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end

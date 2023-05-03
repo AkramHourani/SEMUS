@@ -12,12 +12,12 @@ Elem.TA  = -175.72;                             % [deg] True Anomaly - Satalliet
 Elem.RAAN = 90;                                 % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravitational parameter
 Param.T = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
-Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
+Param.PRF = 3e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
-Param.ScanDuration = seconds(1);              % [s] Flight duration - along azimuth direction
+Param.ScanDuration = seconds(1);                % [s] Flight duration - along azimuth direction
 %% Targets
-Param.NtargetsAz = 250;                         % Number of targets in each eta bin
-Param.NtargetsRange = 250;                      % Number of targets in each range bin
+Param.NtargetsAz = 350;                         % Number of targets in each eta bin
+Param.NtargetsRange = 350;                      % Number of targets in each range bin
 Param.Margin = 1.2;                             % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');   % [s] Set up the start time

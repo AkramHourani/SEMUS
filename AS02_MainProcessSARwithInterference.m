@@ -1,7 +1,7 @@
 clc; clear; close all
 close all hidden;
 % load('Test03')
-load('SAR_Image4')
+load('SAR_Image5')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -20,11 +20,11 @@ A02_Parameters                                       % Load interference paramet
 % F09_GenerateQPSK
 % sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % % Add LORA signal
-% F11_GenerateLORA
-% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+F11_GenerateLORA
+sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add Radar signal
-F14_GenerateRadarTx
-sqd = sqd + sIR;                                   % Signal to interference = IR.SIR
+% F14_GenerateRadarTx
+% sqd = sqd + sIR;                                   % Signal to interference = IR.SIR
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)
@@ -187,6 +187,7 @@ ax.XAxis.Direction = 'reverse';
 xlabel('North-axis [km]')
 ylabel('East-axis [km]')
 % title('Corrected geo image')
+% xlim([-4 4])
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
 Filename1='Figure11';
 print(h_Fig, '-dpng','-r600',Filename1)
