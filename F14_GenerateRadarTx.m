@@ -40,7 +40,7 @@ IRPowerdB = 20*log10(IRPower);
 % Received power at SAR radar from IR tx in watts
 P_IR = IRPower * IR.Gain * sqrt(AntennaGainIR)  ./ fspl(slantRangeIR,RadPar.Lambda);%% Define Activation Timing
 %% Total interference signal
-sIR = sqd_I .* sqrt(P_IR);
+sInfR = sqd_I .* sqrt(P_IR);
 % imagesc(real(sIR))
 % %% Define IR Timing
 % TxTime = Param.ts;

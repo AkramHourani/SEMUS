@@ -24,7 +24,7 @@ F11_GenerateLORA
 sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add Radar signal
 % F14_GenerateRadarTx
-% sqd = sqd + sIR;                                   % Signal to interference = IR.SIR
+% sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)
