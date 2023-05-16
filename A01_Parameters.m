@@ -7,12 +7,12 @@ Re = earthRadius;                               % Store Earth radius into Re var
 Elem.a = Re+Param.h;                            % [m] Semi-major axis of the platform
 Elem.e   = 0;                                   % Eccentricity - 0 means circular orbit, non zero for eliptical orbit 0 < e < 1
 Elem.omega = 90;                                % [deg] Argument of periapsis - Defines the position of a body moving from vertical axis
-Elem.Inc = 34.8;                                % [deg] Inclination - Angle between the orbital plane and the equator between 0 and 180 degrees
-Elem.TA  = -175.72;                             % [deg] True Anomaly - Satalliete position in the orbit
-Elem.RAAN = 90;                                 % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
+Elem.Inc = 97.44;                                % [deg] Inclination - Angle between the orbital plane and the equator between 0 and 180 degrees
+Elem.TA  = -129.65;                             % [deg] True Anomaly - Satalliete position in the orbit
+Elem.RAAN = -7.55;                                 % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravitational parameter
 Param.T = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
-Param.PRF = 3e3;                                % [Hz] Pulse Repeatition Frequency - PRF
+Param.PRF = 3.5e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 Param.ScanDuration = seconds(1);                % [s] Flight duration - along azimuth direction
 %% Targets
@@ -26,7 +26,7 @@ stopTime  = startTime + Param.ScanDuration ;    % [s] Set up the end time
 RadPar.fo = 1.2e9;                              % [Hz] Carrier frequency - L-band
 % RadPar.fo = (500e6);                            % [Hz] Carrier frequency
 RadPar.Lambda = freq2wavelen(RadPar.fo);        % [m] Wavelength
-RadPar.AntOffNadir = 30;                        % [deg] Antenna Off-Nadir angle (pointing angle)
+RadPar.AntOffNadir = 45;                        % [deg] Antenna Off-Nadir angle (pointing angle)
 
 RadPar.BeamRange = 5;                           % [deg] Antenna beamwidth in the range direction
 RadPar.BeamAz    = 5;                           % [deg] Antenna beamwidth in the azimuth direction

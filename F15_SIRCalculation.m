@@ -6,7 +6,10 @@ S_I  = repmat(G,size(S_InfR,1),1).*S_InfR;
 % Get the leaked interference 
 Interf = Src - S_I;
 interf = ifft1d2(Interf);
-% imagesc(real(interf)
+
+imagesc(real(interf))
+
+% imagesc(real(interf))
 % Interferece power calculation
 Pi = 10*log10(sum((abs(interf)).^2,'all')/size(interf,1)); 
 % Signal power calculation

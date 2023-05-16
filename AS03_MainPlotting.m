@@ -17,7 +17,7 @@ Scale = 1.1;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
 % geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
-geoplot((Satlla(:,1)-2.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
+geoplot((Satlla(:,1)-1.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
 hold on
 geoplot(latSawthMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
 geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));                          % Swath center point GRP
@@ -25,10 +25,10 @@ geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));         
 geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
 
 % Adding LoRa Transmitter to Geoplot
-% geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
-% legend('satellite subtrack','swath mid track','','','','Interferer Tx','FontSize',10,'interpreter','latex')
+geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
+legend('satellite subtrack','swath mid track','GRP','Swath','','Interferer Tx','Location','northwest','NumColumns',2,'FontSize',10,'interpreter','latex')
 
-legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
+% legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
 % geolimits([-38 -37],[144 146])                                                                            % Latitude - Longitude limits
 ax=gca;
 ax.LatitudeAxis.TickValues=[];

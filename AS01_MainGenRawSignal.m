@@ -1,4 +1,4 @@
-    clc; clear; close all hidden 
+clc; clear; close all hidden 
 % This is the main script for simulating space SAR
 % The script will generate a raw SAR signal (baseband) based on the optial
 % satellite image of the taregt swath
@@ -80,7 +80,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image5.mat';
+FileName = 'SAR_Image3.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
