@@ -19,7 +19,7 @@ h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition'
 % geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
 geoplot((Satlla(:,1)-1.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
 hold on
-geoplot(latSawthMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
+geoplot(latSwathMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
 geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));                          % Swath center point GRP
 geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
 geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
@@ -62,7 +62,7 @@ hold on
 Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
 line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 2)
 hold on
-plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 15);                           % Mid point (reference)
+plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
 xlabel('x-axis [km]','FontSize',12,'interpreter','latex')
 ylabel('y-axis [km]','FontSize',12,'interpreter','latex')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);

@@ -1,7 +1,6 @@
 clc; clear; close all
 close all hidden;
-% load('Test03')
-load('SAR_Image3')
+load('SAR_Image11')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -159,9 +158,21 @@ hold on
 axis equal
 pc =pcolor(xImg/1000,yImg/1000,Img);
 % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
-scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(1,:))
+% scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
 pc.LineStyle='none';
 grid on
+hold on
+line(xEast(1,:)/1000,yNorth(1,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
+hold on
+line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
+hold on
+Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
+line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 2)
+hold on
+plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
+
+% colormap copper
+% colormap jet
 % colormap turbo
 colormap bone
 ax.YAxis.Direction = 'reverse';
@@ -171,5 +182,5 @@ ylabel('East-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
 % xlim([-4 4])
-% Filename1='Figure10';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure10';
+print(h_Fig, '-dpng','-r600',Filename1)

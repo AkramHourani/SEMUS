@@ -1,16 +1,33 @@
 %% Antenna Dimensions
-[~,~,Ro] = geodetic2aer(latSawthMid(MidEta),lonSwathMid(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);   % Reference range at the centre of the swath at ground refernece point(GRP)
+[~,~,Ro] = geodetic2aer(latSwathMid(MidEta),lonSwathMid(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);   % Reference range at the centre of the swath at ground refernece point(GRP)
 [~,~,R1] = geodetic2aer(latSwathL1(MidEta),lonSwathL1(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);     % Reference range at near edge of the swath and the center of the dwell
 [~,~,R2] = geodetic2aer(latSwathL2(MidEta),lonSwathL2(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);     % Reference range at far edge of the swath and the center of the dwell
 [~,~,R11] = geodetic2aer(latSwathL1(1),lonSwathL1(1),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);              % Reference range at near edge of the swath and the start of the dwell
 [~,~,R12] = geodetic2aer(latSwathL1(end),lonSwathL1(end),0,Satlla(end,1),Satlla(end,2),Satlla(end,3),E);    % Reference range at near edge of the swath and end of the dwell
-[~,~,R21] = geodetic2aer(latSawthL2(1),lonSwathL2(1),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);              % Reference range at far edge of the swath and the start of the dwell
-[~,~,R22] = geodetic2aer(latSawthL2(end),lonSwathL2(end),0,Satlla(end,1),Satlla(end,2),Satlla(end,3),E);    % Reference range at far edge of the swath and the end of the dwell
+[~,~,R21] = geodetic2aer(latSwathL2(1),lonSwathL2(1),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);              % Reference range at far edge of the swath and the start of the dwell
+[~,~,R22] = geodetic2aer(latSwathL2(end),lonSwathL2(end),0,Satlla(end,1),Satlla(end,2),Satlla(end,3),E);    % Reference range at far edge of the swath and the end of the dwell
+
+[~,~,R1all] = geodetic2aer(latSwathLMid(:),lonSwathLMid(:),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);              % Reference range at near edge of the swath and the start of the dwell
+grazang1a = grazingang(Param.h,R1all(1),'Curved');                     % Grazing angle (in degrees) from the scene center and the center of the dwell 
+grazang1b = grazingang(Param.h,R1all(end),'Curved');                   % Grazing angle (in degrees) from the scene center and the center of the dwell 
+incident1a = 90 - grazang1a;                                           % Incident angle of GRP
+incident1b = 90 - grazang1b;                                           % Incident angle of GRP
+PRF = 2 *Ro * abs((cos(incident1a)-cos(incident1b))) / RadPar.Lambda
 
 % Doppler frequency calculation
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);
 [sqang,~] = sarsquintang(SatECI,RadPar.AntOffNadir);                     % Squint angle for SAR data collection                        
-Dopplerfre = 2 * speed * (RadPar.BeamAz * pi / 180) * cosd(max(sqang)) / RadPar.Lambda % Doppler Frequency
+Dopplerfre = 2 * speed * (RadPar.BeamAz * pi / 180) * cosd(max(sqang)) / RadPar.Lambda    % Doppler Frequency - from Jansing
+Dopplerfreq = 4* max(DeltaR) / (RadPar.Lambda * time2num(Param.ScanDuration,"seconds"))   % PRF min - Doppler according to my calculation
+PRF_min = 1.2 * Dopplerfreq
+PRF_min = 1.2 * speed^2 * time2num(Param.ScanDuration,"seconds") / (RadPar.Lambda * Ro)
+[~,~,R_nn_S] = geodetic2aer(latSwathL1(1),lonSwathL1(1),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);              % Reference range at near edge of the swath and the start of the dwell
+[~,~,R_fn_S] = geodetic2aer(latSwathL2(1),lonSwathL2(1),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);              % Reference range at far edge of the swath and the start of the dwell
+PRF_max = ((2 * (R_fn_S-R_nn_S) /c ) + RadPar.T )^ -1
+[~,~,R_f_S] = geodetic2aer(latSwathL2(end),lonSwathL2(end),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);    % Reference range at far edge of the swath and the end of the dwell
+[~,~,R_f_E] = geodetic2aer(latSwathL2(end),lonSwathL2(end),0,Satlla(end,1),Satlla(end,2),Satlla(end,3),E);    % Reference range at far edge of the swath and the end of the dwell
+Dopplerfreq = 4* (R_f_S-R_f_E) / (RadPar.Lambda * time2num(Param.ScanDuration,"seconds"))   % PRF min - Doppler according to my calculation
+PRF_min = 1.2 * Dopplerfreq
 
 % System Parameters Calculation
 % STEP.0 Angles calculation

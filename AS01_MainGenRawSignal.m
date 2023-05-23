@@ -10,21 +10,21 @@ A01_Parameters
 [SatECI,Satlla,DateVector] = F01_CreateSatGeometry(startTime,stopTime,Param,Elem);
 etaTotal=length(DateVector);                            % Total numeber of slow time steps
 %% Finding the swath 
-[latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,slantrange1,slantrange2]=F02_FindSwath(Satlla,RadPar,E);
+[latSwathMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,slantrange1,slantrange2]=F02_FindSwath(Satlla,RadPar,E);
 %% This will find the GRP in the middle of the swath
 %find the range migration of the middle of the swath
 % This is the index of the mid of the swath across the dwell time
 MidEta = round(length(lonSwathL2)/2);
 % Find the reference range at the centre of the dwell at the ground refernece point (GRP)
-[~,~,R] = geodetic2aer(latSawthMid(MidEta),lonSwathMid(MidEta),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
-GRP = [latSawthMid(MidEta),lonSwathMid(MidEta),0];      % Ground Reference Point (GRP)
+[~,~,R] = geodetic2aer(latSwathMid(MidEta),lonSwathMid(MidEta),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
+GRP = [latSwathMid(MidEta),lonSwathMid(MidEta),0];      % Ground Reference Point (GRP)
 Ro = min(R);                                            % The reference range at the ground refernece point (GRP)
 %% Plot swath
 figure(1) 
 geoplot(Satlla(:,1),Satlla(:,2));                       % Satellite subline
 hold on
  
-geoplot(latSawthMid,lonSwathMid,'--');                  % Swath center line
+geoplot(latSwathMid,lonSwathMid,'--');                  % Swath center line
 geoplot(GRP(1),GRP(2),'x');                             % Swath center point
 geoplot(latSwathL1,lonSwathL1,'color',ColorOrder(2,:)); % Swath edge line 1
 geoplot(latSwathL2,lonSwathL2,'color',ColorOrder(2,:)); % Swath edge line 2
@@ -80,7 +80,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image3.mat';
+FileName = 'SAR_Image11.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
