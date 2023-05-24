@@ -202,8 +202,8 @@ Img = imadjust(Img);
 % Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
-CrossRange = (1:etaTotal)*Param.ts*speed;
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
+CrossRange = (1:etaTotal)*Param.tg*speed;
 
 % Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
 RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
@@ -260,12 +260,12 @@ set(gca,'LooseInset',get(gca,'TightInset'));
 %% Plot the image the other way around
 figure(10)
 Range =(0:RangeBin:(numel(FastTime)-1)*RangeBin)/1000;
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
 
 % Scale = 1;
 % h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
-CrossRange = (1:etaTotal)*Param.ts*speed/1000;
+CrossRange = (1:etaTotal)*Param.tg*speed/1000;
 pc =pcolor(CrossRange,Range,abs(sSLC.'));
 % imagesc(abs(sSLC))
 pc.LineStyle='none';

@@ -1,6 +1,7 @@
 clc; clear; close all
 close all hidden;
-load('SAR_Image11')
+load('SAR_Image12')
+% sqd_ref = gather(sqd_ref);
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -85,11 +86,12 @@ sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
-Img = imadjust(Img,[0 0.4]);
+% Img = Img.^2;
+Img = imadjust(Img,[0 0.3]);
 Calibration = 1;
 
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
-CrossRange = (1:etaTotal)*Param.ts*speed;
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
+CrossRange = (1:etaTotal)*Param.tg*speed;
 
 % Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
 RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
@@ -182,5 +184,5 @@ ylabel('East-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
 % xlim([-4 4])
-Filename1='Figure10';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure101';
+% print(h_Fig, '-dpng','-r600',Filename1)

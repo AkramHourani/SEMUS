@@ -11,9 +11,9 @@ Elem.Inc = 88;                                  % [deg] Inclination - Angle betw
 Elem.TA  = 123.78;                              % [deg] True Anomaly - Satalliete position in the orbit
 Elem.RAAN = 192.52;                             % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravitational parameter
-Param.T = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
+Param.Tf = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
 Param.PRF = 1e3;                                % [Hz] Pulse Repeatition Frequency - PRF
-Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
+Param.tg = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 Param.ScanDuration = seconds(0.8);              % [s] Flight duration - along azimuth direction
 %% Targets
 Param.NtargetsAz = 400;                         % Number of targets in each eta bin

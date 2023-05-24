@@ -15,7 +15,7 @@ incident1b = 90 - grazang1b;                                           % Inciden
 PRF = 2 *Ro * abs((cos(incident1a)-cos(incident1b))) / RadPar.Lambda
 
 % Doppler frequency calculation
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);
 [sqang,~] = sarsquintang(SatECI,RadPar.AntOffNadir);                     % Squint angle for SAR data collection                        
 Dopplerfre = 2 * speed * (RadPar.BeamAz * pi / 180) * cosd(max(sqang)) / RadPar.Lambda    % Doppler Frequency - from Jansing
 Dopplerfreq = 4* max(DeltaR) / (RadPar.Lambda * time2num(Param.ScanDuration,"seconds"))   % PRF min - Doppler according to my calculation
@@ -26,7 +26,7 @@ PRF_min = 1.2 * speed^2 * time2num(Param.ScanDuration,"seconds") / (RadPar.Lambd
 PRF_max = ((2 * (R_fn_S-R_nn_S) /c ) + RadPar.T )^ -1
 [~,~,R_f_S] = geodetic2aer(latSwathL2(end),lonSwathL2(end),0,Satlla(1,1),Satlla(1,2),Satlla(1,3),E);    % Reference range at far edge of the swath and the end of the dwell
 [~,~,R_f_E] = geodetic2aer(latSwathL2(end),lonSwathL2(end),0,Satlla(end,1),Satlla(end,2),Satlla(end,3),E);    % Reference range at far edge of the swath and the end of the dwell
-Dopplerfreq = 4* (R_f_S-R_f_E) / (RadPar.Lambda * time2num(Param.ScanDuration,"seconds"))   % PRF min - Doppler according to my calculation
+Dopplerfreq = 2* (R_f_S-R_f_E) / (RadPar.Lambda * time2num(Param.ScanDuration,"seconds"))   % PRF min - Doppler according to my calculation
 PRF_min = 1.2 * Dopplerfreq
 
 % System Parameters Calculation

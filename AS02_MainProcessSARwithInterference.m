@@ -106,8 +106,8 @@ Img=abs(sSLC)./max(abs(sSLC),[],"all");
 Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
-speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.ts);   % Platform speed = sqrt(Param.mu/(h+Re))
-CrossRange = (1:etaTotal)*Param.ts*speed;
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
+CrossRange = (1:etaTotal)*Param.tg*speed;
 
 % Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
 RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);

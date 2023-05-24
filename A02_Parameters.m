@@ -1,13 +1,4 @@
-%% Noise Parameters
-Noise.Pt = 2400;                        % Assumed Transmitted power [Watt]
-Noise.NESO = -24.5;                     % Noise equivalent sigma naught [dB] 
-Noise.FeederL = 10;                     % Feeder loss [dB]
-Noise.Duty = 0.1;                       % Duty Cycle
-Noise.kb = 1.38e-23;                    % Boltzmann's constant [ J K−1]
-Noise.T = 290;                          % Absolute temperature in degrees Kelvin
-Noise.Bn = Param.PRF/Noise.Duty;        % Noise equivalent bandwidth
-Noise.F = 8 ;                           % Noise figure [dB]
-Noise.SNR = 24;                         % Assumed Signal to noise ratio  [dB]
+%% Interferers Parameters
 %% AM Signal Parameters
 AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
 AM.fs = 2*RadPar.fo;                   % Sampling frequency same higher than SAR sampling frequency [Hz]

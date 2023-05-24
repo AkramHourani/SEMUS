@@ -43,7 +43,7 @@ P_IR = IRPower * IR.Gain * sqrt(AntennaGainIR)  ./ fspl(slantRangeIR,RadPar.Lamb
 sInfR = sqd_I .* sqrt(P_IR);
 % imagesc(real(sIR))
 % %% Define IR Timing
-% TxTime = Param.ts;
+% TxTime = Param.tg;
 % RxTime = abs(min(FastTime,[],"all")) + abs(max(FastTime,[],"all"));
 % 
 % IRTime = length(sqd_I)/IR.fs;
