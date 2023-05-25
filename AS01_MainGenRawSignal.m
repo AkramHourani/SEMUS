@@ -11,6 +11,8 @@ A01_Parameters
 etaTotal=length(DateVector);                            % Total numeber of slow time steps
 %% Finding the swath 
 [latSwathMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,slantrange1,slantrange2]=F02_FindSwath(Satlla,RadPar,E);
+%% Check the Doppler frequency by checking the maximu velocity of the swath corners
+[V_max] = F00_VelocityCheck(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Satlla,R,Param);
 %% This will find the GRP in the middle of the swath
 %find the range migration of the middle of the swath
 % This is the index of the mid of the swath across the dwell time

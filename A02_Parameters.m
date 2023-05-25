@@ -1,7 +1,7 @@
 %% Interferers Parameters
 %% AM Signal Parameters
 AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
-AM.fs = 2*RadPar.fo;                   % Sampling frequency same higher than SAR sampling frequency [Hz]
+AM.fs = 2*RadPar.fo;                    % Sampling frequency same higher than SAR sampling frequency [Hz]
 % AM.fs = 50*RadPar.fs;                   % Sampling frequency same higher than SAR sampling frequency [Hz]
 AM.t = (0:1/AM.fs:0.2);                 % Time base vector for the carrier modulated signal
 AM.fm = 1e6;                            % Baseband signal frequency [Hz]       
@@ -20,7 +20,7 @@ QPSK.Gain = 1;                          % Asumme omin-directional isotropic QPSK
 QPSK.SIR = 22;                          % Assumed SIR in [dB]
 %% LoRa Signal Parameters
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
-% SF ∈ {7, 8, 9, 10, 11, 12}. % Generate 0.16s of LORA data ==> Controlled by the SF=9
+% SF ∈ {7, 8, 9, 10, 11, 12}.           % Generate 0.16s of LORA data ==> Controlled by the SF=9
 LORA.SF = 9;                            % Spreading factor
 LORA.BW = 125e3 ;                       % Signal bandwidth of LoRa transmission [Hz]
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]

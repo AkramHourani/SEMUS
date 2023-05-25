@@ -8,7 +8,7 @@ for eta=1:size(Satlla,1)-10
         sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(eta+1,1),Satlla(eta+1,2),E) +90;
     else
         % Subtracting 90deg if the scanning on the rigth side of the trajectory
-        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(end+1,1),Satlla(eta+1,2),E) -90;
+        sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(eta+1,1),Satlla(eta+1,2),E) -90;
     end
 end
 

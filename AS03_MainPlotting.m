@@ -8,7 +8,7 @@ for i= 1: size(lat,1)
 end
 play(sc)
 sc.Viewers.CameraReferenceFrame='Inertial';
-ac = access(sat, gs(:));
+% ac = access(sat, gs(:));
 gt = groundTrack(sat);
 %% Finding the swath - STEP2.Geometric Simulator
 % Plot swath 

@@ -3,7 +3,7 @@ function [Targetlat,Targetlon]= F03_GenerateTargets(latSawthL1,lonSwathL1,latSaw
 % points (arc) between the two edges of the swath based on the great cricle
 % connecting the two edges.
 
-% creat the variable tamplate
+% Creat the variable tamplate
 Targetlat=zeros(Param.NtargetsAz,Param.NtargetsRange);
 Targetlon=zeros(Param.NtargetsAz,Param.NtargetsRange);
 

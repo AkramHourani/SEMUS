@@ -1,5 +1,4 @@
 %% Noise calculation
-% Received Power
 % % Method 1
 Pr = 10*log10(sum((abs(sqd_ref)).^2,'all')/size(sqd_ref,1));                    % Received power [dB] using reference signal from all the dwell at GRP
 
