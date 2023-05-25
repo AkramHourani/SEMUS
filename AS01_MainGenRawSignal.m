@@ -11,8 +11,6 @@ A01_Parameters
 etaTotal=length(DateVector);                            % Total numeber of slow time steps
 %% Finding the swath 
 [latSwathMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,slantrange1,slantrange2]=F02_FindSwath(Satlla,RadPar,E);
-%% Check the Doppler frequency by checking the maximu velocity of the swath corners
-[V_max] = F00_VelocityCheck(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Satlla,R,Param);
 %% This will find the GRP in the middle of the swath
 %find the range migration of the middle of the swath
 % This is the index of the mid of the swath across the dwell time
@@ -21,6 +19,8 @@ MidEta = round(length(lonSwathL2)/2);
 [~,~,R] = geodetic2aer(latSwathMid(MidEta),lonSwathMid(MidEta),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
 GRP = [latSwathMid(MidEta),lonSwathMid(MidEta),0];      % Ground Reference Point (GRP)
 Ro = min(R);                                            % The reference range at the ground refernece point (GRP)
+%% Check the Doppler frequency by checking the maximu velocity of the swath corners
+[V_max] = F03_VelocityCheck(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Satlla,E,R,Param);
 %% Plot swath
 figure(1) 
 geoplot(Satlla(:,1),Satlla(:,2));                       % Satellite subline
@@ -34,9 +34,9 @@ legend('satellite subtrack','swath mid track')
 title('Swath location') 
 drawnow 
 %% Generate spatial sampling points (Tragets) - STEP2.Target Reflectivity Simulator
-[Targetlat,Targetlon]= F03_GenerateTargets(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Param); % This is for optical-based targets
+[Targetlat,Targetlon]= F04_GenerateTargets(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Param); % This is for optical-based targets
 %% Get ground reflectrivity 
-a = F04_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2);
+a = F05_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2);
 figure(2) 
 % Converting to cartisian coordinates for plotting
 [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
@@ -115,7 +115,7 @@ end
 disp ('Generating the reference signal...')
 tauo = 2*Ro/c;                              % Delay of the Ground refernece point
 for eta=1:etaTotal
-    [sqd_ref(eta,:)] = F05_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    [sqd_ref(eta,:)] = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
 %% This is the logest part of the simulations - STEP4.Waveform Generator
 % Scene reflections sqd - reflected signal from the entire swath
@@ -123,7 +123,7 @@ end
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
 for eta=1:etaTotal
-    sqd(eta,:) =F05_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end
 toc

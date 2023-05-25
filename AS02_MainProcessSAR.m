@@ -8,6 +8,23 @@ ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
 % This is a cloumn-wise FFT - Azimuth
 fft1d1 = @ (x) fftshift(fft(fftshift(x,1),[],1),1);
 ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
+%% Add noise and interference to the received signal
+A02_Parameters                                       % Load interference parameters
+% % Add AWGN to the recieved signal
+% NI01_GenerateAWGN
+% sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
+% % Add LORA signal
+% NI02_GenerateLORA
+% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% % Add AM signal
+% F08_GenerateAM
+% sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
+% % Add QPSK signal
+% F09_GenerateQPSK
+% sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
+% % Add Radar signal
+% F14_GenerateRadarTx
+% sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)

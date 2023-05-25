@@ -36,7 +36,7 @@ RadPar.BeamAz    = 5;                           % [deg] Antenna beamwidth in the
 RadPar.SwathWidthDeg = 0.5;                     % [deg] Swath width in degrees
 RadPar.Gain  = 10^(12/10);                      % [dBi] Antenna max gain example
 RadPar.Pt = 10^(46/10);                         % [dBW] Transmitted power example
-RadPar.Left = 1;                                % The scanning on the left side of the satellite trajectory
+RadPar.Left = 0;                                % The scanning on the left side of the satellite trajectory
 %% Noise Parameters
 Noise.Pt = 2400;                                % Assumed Transmitted power [Watt]
 Noise.NESO = -24.5;                             % Noise equivalent sigma naught [dB] 
