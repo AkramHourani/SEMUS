@@ -13,36 +13,43 @@ gt = groundTrack(sat);
 %% Finding the swath - STEP2.Geometric Simulator
 % Plot swath 
 % figure(1)
-Scale = 1.1;
+Scale = 0.8;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
+latLORA = GRP(1) + LORA.latShift;                         % LoRa Tx latitude shift w.r.t GRP
+lonLORA = GRP(2) + LORA.lonShift;                         % LoRa Tx longitude shift w.r.t GRP
 
 % geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
 geoplot((Satlla(:,1)-1.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
 hold on
 geoplot(latSwathMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
-geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));                          % Swath center point GRP
+geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',6,'color',ColorOrder(7,:));                          % Swath center point GRP
 geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
 geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
 
 % Adding LoRa Transmitter to Geoplot
-geoplot(latLORA,lonLORA,'x','LineWidth',1.5,'color',ColorOrder(3,:));                                   % LoRA Transmitter
-legend('satellite subtrack','swath mid track','GRP','Swath','','Interferer Tx','Location','northwest','NumColumns',2,'FontSize',10,'interpreter','latex')
-
+geoplot(latLORA,lonLORA,'x','LineWidth',1,'MarkerSize',6,'color',ColorOrder(3,:));                                   % LoRA Transmitter
+legend('satellite subtrack','swath mid track','GRP','Swath','','Interferer Tx','Location','northeast','NumColumns',2,'FontSize',12,'interpreter','latex')
 % legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
-% geolimits([-38 -37],[144 146])                                                                            % Latitude - Longitude limits
+% geobasemap satellite
+% geotickformat -dd
+geolimits([-38.5 -37.8],[144.7 150])                                                                            % Latitude - Longitude limits
 ax=gca;
 ax.LatitudeAxis.TickValues=[];
 ax.LongitudeAxis.TickValues=[];
 ax.LatitudeAxis.Label.String='Latitude \circ';
 ax.LongitudeAxis.Label.String='Longitude \circ';
 ax.Scalebar.Visible = 'off';
+%ax.LatitudeAxis.TickLabels = '';
+%ax.LongitudeAxis.TickLabels = '';
+grid off
 drawnow
 gx.Box = 'on';
-set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+% gx.Position = '[2 2 5 3]';
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % title('Swath location','FontSize',14,'interpreter','latex')
 
-% Filename1='Figure8';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure9';
+print(h_Fig, '-dpng','-r600',Filename1)
 %% Get ground reflectrivity - STEP3.Reflectivity Simulator
 % Plot satellite swath
 % figure(2)
@@ -50,8 +57,10 @@ Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
 pc =pcolor(xEast/1000,yNorth/1000,a);
-pc.LineStyle='none';
 % scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
+ax=gca;
+pc.LineStyle='none';
+grid on
 colormap bone
 axis equal
 hold on
@@ -60,17 +69,17 @@ hold on
 line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
 hold on
 Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
-line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 2)
+line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
 hold on
 plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
-xlabel('x-axis [km]','FontSize',12,'interpreter','latex')
-ylabel('y-axis [km]','FontSize',12,'interpreter','latex')
+xlabel('x-axis [km]')
+ylabel('y-axis [km]')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
-grid on
 % title('Satellite swath (optical)','FontSize',16,'interpreter','latex')
+box on
 
-% Filename1='Figure9';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure10';
+print(h_Fig, '-dpng','-r600',Filename1)
 %% Test antenna pattern - STEP4.Amplitude Simulator
 % figure(3)
 Scale = 1.2;

@@ -25,7 +25,6 @@ Ro = min(R);                                            % The reference range at
 figure(1) 
 geoplot(Satlla(:,1),Satlla(:,2));                       % Satellite subline
 hold on
- 
 geoplot(latSwathMid,lonSwathMid,'--');                  % Swath center line
 geoplot(GRP(1),GRP(2),'x');                             % Swath center point
 geoplot(latSwathL1,lonSwathL1,'color',ColorOrder(2,:)); % Swath edge line 1
@@ -52,7 +51,7 @@ title('Satellite swath (optical)')
 figure(3)
 [OffBoreSightRange, OffBoreSightAz] = meshgrid(-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
 % The zeta is added such that half the power is matching the beamwidth
-zeta = 50.76;                                                                               % Empirically calculated
+zeta = 0.886;                                                                               % Empirically calculated
 AntennaGain = RadPar.Gain * (sinc(OffBoreSightRange*pi/180*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAz*pi/180*zeta/RadPar.BeamAz)).^2;
 pc =pcolor(OffBoreSightAz,OffBoreSightRange,AntennaGain);
 pc.LineStyle='none'; 
@@ -73,7 +72,7 @@ PulseWidthSamples = round(RadPar.T/(FastTime(end)-FastTime(1))*TimeLength);
 %%   Generate base chrip (not nessasry step, just for testing)
 tau = 0;
 sb = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
-    .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));%.*Window;
+    .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));
 figure(4)
 plot(FastTime/1e-6,real(sb))
 xlabel('Time [\mus]')
@@ -82,7 +81,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image12.mat';
+FileName = 'SAR_Image20.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
@@ -105,7 +104,7 @@ if Testing==3            % This will force the reflectivity to unity
     FileName = 'Test03.mat';
 end
 %% Approx azimuth of the satellite to clauclate the antenna pattern
-if RadPar.Left == 1
+if RadPar.Left == 0
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) +90;
 else
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) -90;
@@ -114,19 +113,33 @@ end
 %% Reference sqd_ref that will be used as template for matched filter
 disp ('Generating the reference signal...')
 tauo = 2*Ro/c;                              % Delay of the Ground refernece point
+% Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in GPU mode
 for eta=1:etaTotal
     [sqd_ref(eta,:)] = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 end
+% % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
+% parfor eta=1:etaTotal
+%     [sqd_ref(eta,:)] = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+% end
 %% This is the logest part of the simulations - STEP4.Waveform Generator
 % Scene reflections sqd - reflected signal from the entire swath
 % the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
+% Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in GPU mode
 for eta=1:etaTotal
     sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end
+% % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
+% parfor eta=1:etaTotal
+%     sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+%     disp(eta)
+% end
 toc
+% %% Convert GPU array back to regular array if you used GPU for generation 
+% sqd_ref = gather(sqd_ref);
+% sqd = gather(sqd);
 %% Plot the raw unfocused SAR signal (Optional)
 figure(5)
 pc =pcolor(FastTime/1e-6,1:etaTotal,abs(sqd));

@@ -1,7 +1,6 @@
 clc; clear; close all
 close all hidden;
-load('SAR_Image12')
-% sqd_ref = gather(sqd_ref);
+load('SAR_Image20')
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -9,7 +8,7 @@ ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
 fft1d1 = @ (x) fftshift(fft(fftshift(x,1),[],1),1);
 ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% Add noise and interference to the received signal
-A02_Parameters                                       % Load interference parameters
+% A02_Parameters                                       % Load interference parameters
 % % Add AWGN to the recieved signal
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
@@ -104,7 +103,7 @@ figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
 % Img = Img.^2;
-Img = imadjust(Img,[0 0.3]);
+Img = imadjust(Img,[0 0.5]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -173,7 +172,7 @@ RangeM  = repmat(RangeEq,etaTotal,1);
 % Transfrom from Lat/Lon to NEC
 [xImg,yImg,~] = latlon2local(LatImg,LonImg,0,GRP);
 %scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
-hold on
+% hold on
 axis equal
 pc =pcolor(xImg/1000,yImg/1000,Img);
 % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
@@ -186,20 +185,17 @@ hold on
 line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
 hold on
 Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
-line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 2)
+line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
 hold on
 plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
-
-% colormap copper
-% colormap jet
-% colormap turbo
 colormap bone
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
+box on
 xlabel('North-axis [km]')
 ylabel('East-axis [km]')
 % title('Corrected geo image')
-set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
-% xlim([-4 4])
-% Filename1='Figure101';
-% print(h_Fig, '-dpng','-r600',Filename1)
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
+% xlim([-6 6])
+Filename1='Figure11';
+print(h_Fig, '-dpng','-r600',Filename1)

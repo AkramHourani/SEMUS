@@ -1,4 +1,4 @@
-%% Antenna Dimensions
+%% Additional Parameters
 % System Parameters Calculation
 % STEP.0 Angles calculation
 [~,~,R1] = geodetic2aer(latSwathL1(MidEta),lonSwathL1(MidEta),0,Satlla(MidEta,1),Satlla(MidEta,2),Satlla(MidEta,3),E);     % Reference range at near edge of the swath and the center of the dwell
