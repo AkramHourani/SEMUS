@@ -1,6 +1,6 @@
 %% Noise and Interferers Parameters
 %% AWGN signal parameter
-Noise.SNR = 20;                         % Assumed Signal to noise ratio  [dB]
+Noise.SNR = 15;                         % Assumed Signal to noise ratio  [dB]
 %% LoRa Signal Parameters
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
 % SF ∈ {7, 8, 9, 10, 11, 12}.           % Generate 0.16s of LORA data ==> Controlled by the SF=9
