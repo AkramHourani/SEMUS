@@ -1,0 +1,256 @@
+clc;close all;
+Param.NtargetsAz = 11; % number of targets in each eta bin
+Param.NtargetsRange = 11; % number of targets in each eta bin
+
+SLRrg = zeros(length(etaTotal),2);
+SLRaz = zeros(length(etaTotal),2);
+peak_range = zeros(length(etaTotal),Param.NtargetsRange);
+peak_az = zeros(length(FastTime),Param.NtargetsAz);
+alpha = 0.99;
+w = 1;
+va = 1;
+Img = J;
+ttlsz = 10;
+
+%% SLR Range Compression
+for j = 1:etaTotal
+    mag = 10*log10(Img(j,:));
+    idx_mg = 1:2*length(FastTime);
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %find peak threshold
+    [pks_temp,locs_temp] = findpeaks(mag,idx_mg,'SortStr', 'descend','NPeaks',Param.NtargetsRange);
+    
+    %location of peaks
+    locs_rg = zeros(length(locs_temp),1);
+    locs_rg(1:end) = sort(locs_temp);
+    
+    %store peak
+    peak_range(j,:) = locs_rg;
+
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    [PSLRrg,maxslr,mlloc,slloc,slpk,beg_idx,sto_idx] = CalcSLR(locs_rg,mag,idx_mg,Param.NtargetsRange) ;
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    
+    %Plot first
+    
+    loc_sz = round((80/800)*Param.NtargetsAz);
+    loc_mz = round((400/800)*Param.NtargetsAz);
+    loc_fz = round((720/800)*Param.NtargetsAz);
+
+    v = [loc_sz loc_mz loc_fz];
+    vt = ["Start Scan" "Mid Scan" "Finish Scan"];
+    
+    if ismember(j,v) 
+        
+        if w==1
+            Scale = 1.2;
+            h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[1000 150 800 800/1.618*Scale]);
+            t = tiledlayout(3,2,'TileSpacing','Compact','Padding','Compact');
+        end
+
+        %% PLOT all peaks
+        nexttile %subplot(length(v),2,w);
+        xSpline = interp1(idx_mg,mag,idx_mg(1):0.001:idx_mg(end),'spline');
+        plot(idx_mg(1):0.001:idx_mg(end),xSpline,'-')
+        xlim tight
+        
+        %% Define the "shading"
+        % Note how each x_points(i) corresponds to y_points(i)
+        x_points = [beg_idx,  beg_idx, sto_idx, sto_idx ];  
+        y_points = [min(ylim), max(ylim), max(ylim), min(ylim)];
+        color = [0, 0, 1];
+
+        hold on;
+        a = fill(x_points, y_points, color);
+        a.FaceAlpha = 0.1;
+        %%
+        
+        FilenameP0 = sprintf('Range Compressed at %s',vt(va));
+        
+       % title(FilenameP0)
+       % xticks([])
+       % yticks([])
+
+        set(gca,'LooseInset',get(gca,'TightInset'));
+        %title(FilenameP0)
+        subtt = sprintf('%s at All Target Points',vt(va));
+         u = title(subtt, 'Units', 'normalized', 'Position', [0.04, 0.1, 0],'horizontalAlignment', 'left','interpreter','latex','FontSize',10,'BackgroundColor','w','EdgeColor','k');
+
+        if w == 3
+            %xlabel('Fast time (t)')
+            ylabel('Magnitude(dB)','interpreter','latex')
+        end 
+
+        if w == 5
+            xlabel('Fast time (t)','interpreter','latex')
+            %ylabel('Magnitude(dB)')
+        end 
+
+       % ax = gca;
+        %ax.FontSize = ttlsz;
+        % title(['\fontsize{16}black {\color{magenta}magenta '...
+        % '\color[rgb]{0 .5 .5}teal \color{red}red} black again'])
+
+        w = w+1;
+        %% PLOT mid peak
+        nexttile %subplot(length(v),2,w);
+        xSpline = interp1(beg_idx:sto_idx,mag(beg_idx:sto_idx),beg_idx:0.001:sto_idx,'spline');
+        plot(beg_idx:0.001:sto_idx,xSpline,'-')
+        xlim tight
+        FilenameP0 = sprintf('Range Compressed at %s',vt(va));
+
+       % xticks([])
+       % yticks([])
+        %set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+
+        subtt = sprintf('%s at Center Target Point\nPSLR = %.1f dB',vt(va),maxslr);
+        u = title(subtt, 'Units', 'normalized', 'Position',  [0.04, 0.1, 0],'horizontalAlignment', 'left','interpreter','latex','FontSize',10,'BackgroundColor','w','EdgeColor','k');
+
+        
+        w = w+1;
+        va = va + 1;
+        sgtitle('Range Compressed','interpreter','latex');
+        
+        if w==(length(v)*2+1)
+            print(h_Fig, '-dpng','-r600','Fig SLR Range Compressed')
+        end
+
+     end
+end
+
+% w = 1;
+% va = 1;
+% %% SLR Azimuth Compression
+% for j = 1:length(FastTime)
+%     mag = 10*log10(Img(:,j));
+%     idx_mg = 1:2*etaTotal;
+%     
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     %find peak threshold
+%     [pks_temp,locs_temp] = findpeaks(mag,idx_mg,'SortStr', 'descend','NPeaks',Param.NtargetsAz-2);
+%     %fprintf('%d. %d\n', j, length(pks_temp));
+% 
+%     %for plotting, new pks and locs, since it doesnt capture the first and last value
+%     pks = zeros(length(locs_temp)+2,1);
+%     pks(1) = mag(1);
+%     pks(2:end-1) = pks_temp;
+%     pks(end) = mag(end);
+%   
+%     locs_az = zeros(length(locs_temp)+2,1);
+%     locs_az(1) = idx_mg(1);
+%     locs_az(2:end-1) = sort(locs_temp);
+%     locs_az(end) = idx_mg(end);
+% 
+%     %store peak
+%     peak_az(j,:) = locs_az;
+%     [PSLRaz,maxslr,mlloc,slloc,slpk,beg_idx,sto_idx] = CalcSLR(locs_az,mag,idx_mg,Param.NtargetsAz) ;
+%     %SLRaz(j,1) =  maxslr;%get max slr
+%     %SLRaz(j,2) =  mlloc;%get location middle peak = mainlobe
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    
+%     %Plot first
+%     loc_ne = round((40/450)*Param.NtargetsRange);
+%     loc_ms = round((225/450)*Param.NtargetsRange);
+%     loc_fe = round((415/450)*Param.NtargetsRange);
+% 
+%     v = [loc_ne loc_ms loc_fe];
+%     vt = ["Near Edge" "Mid Swath" "Far Edge"];
+%     
+%     if ismember(j,v) 
+%         if w==1
+%             Scale = 1.2;
+%             h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[1000 150 800 800/1.618*Scale]);
+%             t = tiledlayout(3,2,'TileSpacing','Compact','Padding','Compact');
+%         end
+% 
+%         %% PLOT all peaks
+%         nexttile % subplot(length(v),2,w);
+%         xSpline = interp1(idx_mg,mag,idx_mg(1):0.001:idx_mg(end),'spline');
+%         plot(idx_mg(1):0.001:idx_mg(end),xSpline,'-')
+%         xlim tight
+%          %% Define the "shading"
+%         % Note how each x_points(i) corresponds to y_points(i)
+% %         x_points = [beg_idx,  beg_idx, sto_idx, sto_idx ];  
+% %         y_points = [min(ylim), 0,0, min(ylim)];
+% %         
+% %         color = [0, 0, 1];
+% % 
+% %         hold on;
+% %         a = fill(x_points, y_points, color);
+% %         a.FaceAlpha = 0.1;
+%         %%
+%         FilenameP0 = sprintf('Azimuth Compressed at %s',vt(va));
+% 
+%         %xticks([])
+%         %yticks([])
+%         set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+% 
+%         %title(FilenameP0)
+%         subtt = sprintf('%s at All Target Points',vt(va));
+%         
+%          u = title(subtt, 'Units', 'normalized', 'Position',  [0.04, 0.1, 0],'horizontalAlignment', 'left','interpreter','latex','FontSize',10,'BackgroundColor','w','EdgeColor','k');
+% 
+%        
+%         ax = gca;
+%         
+%         if w == 3
+%             %xlabel('Slow time (\eta)')
+%             ylabel('Magnitude(dB)','interpreter','latex')
+%         end 
+%         
+%         if w == 5
+%             xlabel('Slow time','interpreter','latex')
+%             %ylabel('Magnitude(dB)','interpreter','latex')
+%         end 
+%         
+%        % ax.FontSize = ttlsz;
+%         w = w+1;
+%         %% PLOT mid peak
+%         nexttile %subplot(length(v),2,w);
+%         
+%         xSpline = interp1(beg_idx:sto_idx,mag(beg_idx:sto_idx),beg_idx:0.001:sto_idx,'spline');
+%         plot(beg_idx:0.001:sto_idx,xSpline,'-')
+%         xlim tight
+%         ylim([min(mag) 0]);
+%         FilenameP0 = sprintf('Azimuth Compressed at %s ',vt(va));
+%         %title(FilenameP0)
+% 
+%        
+%         set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+% 
+%         subtt = sprintf('%s at Center Target Point \nPSLR = %.1f dB',vt(va),maxslr);
+%         u = title(subtt, 'Units', 'normalized', 'Position',  [0.04, 0.1, 0],'horizontalAlignment', 'left','interpreter','latex','FontSize',10,'BackgroundColor','w','EdgeColor','k');
+% 
+%        
+%         
+% %         str = sprintf("PSLR = %.1f dB", maxslr);
+% %         text(sto_idx,0.5*max(mag),str,'HorizontalAlignment','right','VerticalAlignment','top')
+%       
+%        %xlabel('Slow time (\eta)')
+%        %ylabel('Magnitude(dB)')
+%        
+%         %xticks([])
+%         %yticks([])
+% 
+% %         ax=gca;
+% %         ax.LatitudeAxis.TickValues=[];
+% %         ax.LongitudeAxis.TickValues=[];
+% %         ax.LatitudeAxis.Label.String='Latitude \circ';
+% %         ax.LongitudeAxis.Label.String='Longitude \circ';
+% %         ax.Scalebar.Visible = 'off';
+% 
+%         ax = gca;
+%        % ax.FontSize = ttlsz;
+%         w = w+1;
+%         va = va + 1;
+%         sgtitle('Azimuth Compressed','interpreter','latex');
+%         if w==(length(v)*2+1)
+%             print(h_Fig, '-dpng','-r600','Fig SLR Azimuth Compressed')
+%         end
+% 
+%      end
+% end
