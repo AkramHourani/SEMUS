@@ -26,5 +26,5 @@ SatECI(:,end)=[]; % Trim the last reading it has some errors. SatECI = Earth cen
 % converts Earth-centered inertial (ECI) coordinates, specified by position, to latitude, longitude, altitude (LLA) geodetic coordinates.
 % The conversion is based on the Coordinated Universal Time (UTC) you specify.
 Satlla = eci2lla(SatECI',DateVector);
-%Satlla(:,3) = ones(size(Satlla,1),1)*Param.h; % Assume an ideal sphere, added 2023 to simplify the range migration process (it makes the approach distance to the center of the swath symetrical)
+% Satlla(:,3) = ones(size(Satlla,1),1)*Param.h; % Assume an ideal sphere, added 2023 to simplify the range migration process (it makes the approach distance to the center of the swath symetrical)
 end

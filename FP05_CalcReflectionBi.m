@@ -12,22 +12,22 @@ OffBoreSightRange = elev+90 - RadPar.AntOffNadir;
 
 OffBoreSightAz = az - satazSrc;
 
-%AntennaGainSrc = gpuArray(single(RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6))));
-AntennaGainSrc = single(RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6)));
+AntennaGainSrc = gpuArray(single(RadPar.Gain * abs(sinc(OffBoreSightRange*pi/180/RadPar.BeamRange*0.6)).^2 .* abs(sinc(OffBoreSightAz*pi/180/RadPar.BeamAz*0.6)).^2));
+% AntennaGainSrc = single(RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6)));
 
 % Target to destination distance
 [az,elev,slantRangeDist] = geodetic2aer(Targetlat,Targetlon,0,SatllaDist(1),SatllaDist(2),SatllaDist(3),E);
 OffBoreSightRange = elev+90 - RadPar.AntOffNadir;
 OffBoreSightAz = az - satazDist;
-AntennaGainDist =single(RadPar.Gain * abs(sinc(OffBoreSightRange/RadPar.BeamRange*0.6)) .* abs(sinc(OffBoreSightAz/RadPar.BeamAz*0.6)));
+AntennaGainDist =gpuArray(single(RadPar.Gain * abs(sinc(OffBoreSightRange*pi/180/RadPar.BeamRange*0.6)).^2 .* abs(sinc(OffBoreSightAz*pi/180/RadPar.BeamAz*0.6)).^2));
 
-%tau = gpuArray(single((slantRangeSrc+slantRangeDist)/c - tauoBi)); % relative delay w. r. t. the middle of the swath (i.e to the reference point)
-tau = single((slantRangeSrc+slantRangeDist)/c - tauoBi); % relative delay w. r. t. the middle of the swath (i.e to the reference point)
+tau = gpuArray(single((slantRangeSrc+slantRangeDist)/c - tauoBi)); % relative delay w. r. t. the middle of the swath (i.e to the reference point)
+% tau = single((slantRangeSrc+slantRangeDist)/c - tauoBi); % relative delay w. r. t. the middle of the swath (i.e to the reference point)
 
 % Process reflections from all points in the scene 
 % from equation 2.20 (fg)
-%Pulses = gpuArray(exp(1j*pi*(-2*RadPar.fo * tau(:) + RadPar.K*(FastTime-tau(:)).^2)) .*(FastTime>(-RadPar.T/2+tau(:))).*(FastTime<(RadPar.T/2+tau(:))));
-Pulses = exp(1j*pi*(-2*RadPar.fo * tau(:) + RadPar.K*(FastTime-tau(:)).^2)) .*(FastTime>(-RadPar.T/2+tau(:))).*(FastTime<(RadPar.T/2+tau(:)));
+Pulses = gpuArray(exp(1j*pi*(-2*RadPar.fo * tau(:) + RadPar.K*(FastTime-tau(:)).^2)) .*(FastTime>(-RadPar.T/2+tau(:))).*(FastTime<(RadPar.T/2+tau(:))));
+% Pulses = exp(1j*pi*(-2*RadPar.fo * tau(:) + RadPar.K*(FastTime-tau(:)).^2)) .*(FastTime>(-RadPar.T/2+tau(:))).*(FastTime<(RadPar.T/2+tau(:)));
 
 
 Reflection = sum(a(:).*AntennaGainSrc(:).*AntennaGainDist(:)./...

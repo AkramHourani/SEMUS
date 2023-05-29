@@ -1,6 +1,7 @@
 clc; clear; close all
 %load('Mesh_Bi.mat')
-load('Sydney.mat')
+% load('Sydney.mat')
+load('SAR_Image1P.mat')
 close all hidden;
 ttlsz = 8;
 
@@ -182,7 +183,7 @@ sSLC = ifft1d1(S3);
 %CalibrationAz = 160;
 %Img = abs(sSLC)./max(abs(sSLC),[],"all");
 
-Scale = 1;
+Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[1000 150 800 800/1.618*Scale]);
 
 Range =(-(numel(FastTime)/2)*RangeBin:RangeBin:(numel(FastTime)/2-1)*RangeBin);
@@ -197,7 +198,7 @@ J = abs(sSLC);
 J = J./max(J,[],"all");
 J = imresize(J,2);
 J = imgaussfilt(J ,2); % Smoothing filter
-J = imadjust(J,[0 0.6]);
+J = imadjust(J,[0 0.7]);
 
 imagesc(RangeGround/1000,CrossRange,J)
 
