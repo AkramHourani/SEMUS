@@ -3,7 +3,7 @@ clc; clear; close all
 % load('Sydney.mat')
 load('SAR_Image1P.mat')
 close all hidden;
-ttlsz = 8;
+% ttlsz = 8;
 
 %% This is a raw-wise FFT / IFFT
 
@@ -163,7 +163,7 @@ title('(f)', 'Units', 'normalized', 'Position',  [0.05,0.4,0],'interpreter','lat
 set(gca,'LooseInset',get(gca,'TightInset'));
 
 drawnow
-colormap bone
+colormap sky
 FilenameP5='Figure7';
 print(h_Fig, '-dpng','-r600',FilenameP5)
 %movefile([FilenameP5 '.png'],'Figures')
@@ -198,7 +198,7 @@ J = abs(sSLC);
 J = J./max(J,[],"all");
 J = imresize(J,2);
 J = imgaussfilt(J ,2); % Smoothing filter
-J = imadjust(J,[0 0.7]);
+J = imadjust(J,[0 0.5]);
 
 imagesc(RangeGround/1000,CrossRange,J)
 

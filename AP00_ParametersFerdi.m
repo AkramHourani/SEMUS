@@ -22,7 +22,7 @@ Param.Margin = 1.2;                              % Range margin factor. This is 
 %% Time
 startTime = datetime('01-Jan-2022 08:00:00');   % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ; % [s] Set up the end time
-Delta_t = seconds(0.5);
+Delta_t = seconds(0.07);
 %% Radar Paramters
 RadPar.fo = (1e9);                            % [Hz] Carrier frequency
 RadPar.Lambda = freq2wavelen(RadPar.fo);        % [m] Wavelength
