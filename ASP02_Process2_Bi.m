@@ -1,7 +1,7 @@
 clc; clear; close all
-%load('Mesh_Bi.mat')
+load('Points.mat')
 % load('Sydney.mat')
-load('SAR_Image1P.mat')
+%load('SAR_Image1P.mat')
 close all hidden;
 % ttlsz = 8;
 
@@ -163,10 +163,10 @@ title('(f)', 'Units', 'normalized', 'Position',  [0.05,0.4,0],'interpreter','lat
 set(gca,'LooseInset',get(gca,'TightInset'));
 
 drawnow
-colormap sky
+colormap bone
 FilenameP5='Figure7';
 print(h_Fig, '-dpng','-r600',FilenameP5)
-%movefile([FilenameP5 '.png'],'Figures')
+movefile([FilenameP5 '.png'],'Figures')
 
 %% Step 4/5 Azimuth compression
 
@@ -233,7 +233,7 @@ xlim([-1 1]*SwathwidthSoI/2/1000);%% I changed Swathwidth to SwathwidthSoI
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 FilenameP6='Figure9b';
 print(h_Fig, '-dpng','-r600',FilenameP6)
-%movefile([FilenameP6 '.png'],'Figures')
+movefile([FilenameP6 '.png'],'Figures')
 
 %%
 

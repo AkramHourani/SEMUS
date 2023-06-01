@@ -3,8 +3,8 @@ clc; clear; close all hidden
 %% Load paratmers
 %addpath("D:\AKFS\OneDrive - RMIT University\0. Main Research\145. Hybrid SAR\Matlab\SEMUS")
 AP00_ParametersFerdi
-% Param.NtargetsAz = 11; % number of targets in each eta bin
-% Param.NtargetsRange = 11; % number of targets in each eta bin
+Param.NtargetsAz = 11; % number of targets in each eta bin
+Param.NtargetsRange = 11; % number of targets in each eta bin
 %% Create Geometry setup (SoI / Satellite of Interest)
 % This Script/function create the satellite orbit
 [SatECISoI,SatllaSoI,DateVector] = FP01_CreateSatGeometry(startTime,stopTime,Param,Elem);
@@ -212,7 +212,7 @@ sb = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
 % print(h_Fig, '-dpng','-r600',FilenameG3)
 % movefile([FilenameG3 '.png'],'Figures')
 %% (Optional) you can select the Testing value for testing the script
-Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
+Testing=3; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
 FileName = 'SAR_Image1P.mat';
 
 if Testing==1 % this is for single targets testing
@@ -290,7 +290,7 @@ set(gca,'LooseInset',get(gca,'TightInset'));
 drawnow
 FilenameG4='Figure8';
 print(h_Fig, '-dpng','-r600',FilenameG4)
-% % movefile([FilenameG4 '.png'],'Figures')
+movefile([FilenameG4 '.png'],'Figures')
 %%
-save(FileName)
-% save('Sydney.mat')
+%save(FileName)
+ save('Points.mat')
