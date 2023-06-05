@@ -56,8 +56,8 @@ print(h_Fig, '-dpng','-r600',Filename1)
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 
-pc =pcolor(xEast/1000,yNorth/1000,a);
-% scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
+pc =pcolor(xEast/1000,yNorth/1000,sigma);
+% scatter(xEast(:)/1000,yNorth(:)/1000,2,sigma(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
 ax=gca;
 pc.LineStyle='none';
 grid on

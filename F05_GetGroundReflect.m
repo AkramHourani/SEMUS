@@ -1,4 +1,4 @@
-function [a] = F05_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2)
+function [sigma] = F05_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2)
 % Here we get the gournd reflectivity based on the optical data 
 % Extact the edges of the swath region
 latEdge = [min([latSwathL1;latSwathL2]), max([latSwathL1;latSwathL2])];
@@ -21,4 +21,4 @@ latVec = linspace(latEdge(1),latEdge(2),size(Optical,1));
 lonVec = linspace(lonEdge(1),lonEdge(2),size(Optical,2));
 [lonVec,latVec]=meshgrid(lonVec,latVec);
 latVec = flipud(latVec);
-a = double(interp2(lonVec,latVec,Optical,Targetlon,Targetlat,'nearest'));
+sigma = double(interp2(lonVec,latVec,Optical,Targetlon,Targetlat,'nearest'));

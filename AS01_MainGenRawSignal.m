@@ -35,11 +35,11 @@ drawnow
 %% Generate spatial sampling points (Tragets) - STEP2.Target Reflectivity Simulator
 [Targetlat,Targetlon]= F04_GenerateTargets(latSwathL1,lonSwathL1,latSwathL2,lonSwathL2,Param); % This is for optical-based targets
 %% Get ground reflectrivity 
-a = F05_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2);
+sigma = F05_GetGroundReflect(Targetlat,Targetlon,latSwathL1,lonSwathL1,latSwathL2,lonSwathL2);
 figure(2) 
 % Converting to cartisian coordinates for plotting
 [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
-scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
+scatter(xEast(:)/1000,yNorth(:)/1000,2,sigma(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
 colormap bone
 axis equal
 hold on
@@ -85,7 +85,7 @@ FileName = 'SAR_Image20.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
-    a = 1;
+    sigma = 1;
     FileName = 'Test01.mat';
 
 end
@@ -95,12 +95,12 @@ if Testing==2           % This is for Ntesting targets
     ToPick =randsample(numel(Targetlat),NTesting) ;
     Targetlat = Targetlat(ToPick);
     Targetlon = Targetlon(ToPick);
-    a = ones(NTesting,1);
+    sigma = ones(NTesting,1);
     FileName = 'Test02.mat';
 end
 
 if Testing==3            % This will force the reflectivity to unity
-    a = 1;
+    sigma = 1;
     FileName = 'Test03.mat';
 end
 %% Approx azimuth of the satellite to clauclate the antenna pattern
@@ -128,7 +128,7 @@ tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
 % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in GPU mode
 for eta=1:etaTotal
-    sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    sqd(eta,:) =F06_CalcReflection(sigma,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end
 % % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
