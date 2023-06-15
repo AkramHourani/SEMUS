@@ -12,7 +12,7 @@ Elem.TA  = -127.47;                             % [deg] True Anomaly - Satalliet
 Elem.RAAN = -25.38;                             % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravitational parameter
 Param.Tf = 2*pi*sqrt(Elem.a^3/Param.mu);        % [s] Orbital period
-Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
+Param.PRF = 1e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.tg = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 %% Timing Parameters
 Param.ScanDuration = seconds(1);                % [s] Flight duration - along azimuth direction
