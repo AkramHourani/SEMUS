@@ -104,7 +104,7 @@ if Testing==3            % This will force the reflectivity to unity
     FileName = 'Test03.mat';
 end
 %% Approx azimuth of the satellite to clauclate the antenna pattern
-if RadPar.Left == 0
+if RadPar.Left == 0 % for the case from South to North - RadPar.Left == 1 for the case from North to South 
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) +90;
 else
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) -90;

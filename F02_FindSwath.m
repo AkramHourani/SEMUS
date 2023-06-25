@@ -3,7 +3,7 @@ function [latSawthMid,lonSwathMid,slantrangeMid,Swathwidths_m,latSwathL1,lonSwat
 
 % This is to compute the azimuth for each point of the satellite motion
 for eta=1:size(Satlla,1)-10 
-    if RadPar.Left == 0
+    if RadPar.Left == 0  % for the case from South to North - RadPar.Left == 1 for the case from North to South 
         % Adding 90deg if the scanning on the left side of the trajectory
         sataz(eta) = azimuth(Satlla(eta,1),Satlla(eta,2),Satlla(eta+1,1),Satlla(eta+1,2),E) +90;
     else
