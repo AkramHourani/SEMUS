@@ -30,7 +30,7 @@ nexttile
 %pc = pcolor(FastTime/1e-6,1:etaTotal,real(sqd));
 %pc.LineStyle='none';
 imagesc(real(sqd))
-colormap sky
+colormap bone
 xlabel('Fast time [\mus]')
 ylabel('Azimuth index')
 %xticklabels('')
@@ -163,7 +163,7 @@ title('(f)', 'Units', 'normalized', 'Position',  [0.05,0.4,0],'interpreter','lat
 set(gca,'LooseInset',get(gca,'TightInset'));
 
 drawnow
-colormap sky
+colormap bone
 FilenameP5='Figure7';
 print(h_Fig, '-dpng','-r600',FilenameP5)
 movefile([FilenameP5 '.png'],'Figures')
@@ -208,7 +208,7 @@ ax.XAxis.Direction = 'reverse';
 xlabel('Ground distance (approx.) [km]')
 ylabel('Azimuth [km]')
 title('Compressed image')
-colormap sky
+colormap bone
 axis equal
 xlim([-1 1]*SwathwidthSoI/2/1000);%% I changed Swathwidth to SwathwidthSoI
 
