@@ -1,6 +1,7 @@
 clc; clear; close all
 close all hidden;
-load('SAR_Image22')
+% load('SAR_Image1a')                     % That is my final image
+load('SAR_Image1b')                     % That is image with smaller Azimuth
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -10,11 +11,11 @@ ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% Add noise and interference to the received signal
 A02_Parameters                                       % Load interference parameters
 % % Add AWGN to the recieved signal
-% NI01_GenerateAWGN
-% sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
+NI01_GenerateAWGN
+sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % % Add LORA signal
-NI02_GenerateLORA
-sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% NI02_GenerateLORA
+% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add AM signal
 % F08_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR

@@ -12,10 +12,10 @@ Elem.TA  = -127.47;                             % [deg] True Anomaly - Satalliet
 Elem.RAAN = -25.38;                             % [deg] Right Ascension Of Ascending Node - Ω angle is measured eastwards from x axis to ascending node on nodal line
 Param.mu = 3.986e14;                            % [m3/s2] Earth's standard gravitational parameter
 Param.Tf = 2*pi*sqrt(Elem.a^3/Param.mu);        % [s] Orbital period
-Param.PRF = 1e3;                                % [Hz] Pulse Repeatition Frequency - PRF
+Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.tg = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 %% Timing Parameters
-Param.ScanDuration = seconds(1);                % [s] Flight duration - along azimuth direction
+Param.ScanDuration = seconds(100);                % [s] Flight duration - along azimuth direction
 startTime = datetime('01-Jan-2022 6:00:00');    % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ;    % [s] Set up the end time
 %% Targets' Parameters
@@ -32,7 +32,7 @@ RadPar.T = 5e-6;                                % [s] Pulse width
 RadPar.K = (RadPar.bw /RadPar.T);               % [Hz/s] Ramp (chirp) rate
 RadPar.AntOffNadir = 35;                        % [deg] Antenna Off-Nadir angle (pointing angle)
 RadPar.BeamRange = 5;                           % [deg] Antenna beamwidth in the range direction
-RadPar.BeamAz    = 5;                           % [deg] Antenna beamwidth in the azimuth direction
+RadPar.BeamAz    = 2;                           % [deg] Antenna beamwidth in the azimuth direction
 RadPar.SwathWidthDeg = 0.5;                     % [deg] Swath width in degrees
 RadPar.Left = 1;                                % The scanning on the left side of the satellite trajectory
 %% Power Parameters
