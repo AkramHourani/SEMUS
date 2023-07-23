@@ -1,7 +1,8 @@
 clc; clear; close all
 close all hidden;
 % load('SAR_Image1a')                     % That is my final image
-load('SAR_Image1b')                     % That is image with smaller Azimuth
+% load('SAR_Image1b')                     % That is image with smaller Azimuth
+load('SAR_Image2')                     % That is image with smaller Azimuth
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -11,19 +12,19 @@ ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% Add noise and interference to the received signal
 A02_Parameters                                       % Load interference parameters
 % % Add AWGN to the recieved signal
-NI01_GenerateAWGN
-sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
-% % Add LORA signal
+% NI01_GenerateAWGN
+% sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
+% Add LORA signal
 % NI02_GenerateLORA
 % sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add AM signal
-% F08_GenerateAM
+% NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
 % % Add QPSK signal
-% F09_GenerateQPSK
-% sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
+NI04_GenerateQPSK
+sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % % Add Radar signal
-% F14_GenerateRadarTx
+% NI05_GenerateRadarTx
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 %% plotting raw time domain signal
 figure(1);
@@ -42,8 +43,8 @@ tau = 0;
 sb = exp(1j*pi *   (-2*RadPar.fo * tau + RadPar.K*(FastTime-tau).^2   )    ) ...
     .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));
 G = conj(fftshift(fft(fftshift(sb))));           % Range matched filter
-Src  = repmat(G,size(So,1),1).*So;               % Equation 5.5 - Multiplying the filter by So (Frequency Domain Multiplication)
-src  = ifft1d2(Src);                             % Equation 5.6 - Inverse Fourier transform along each pulse to put the data back into range
+Src  = repmat(G,size(So,1),1).*So;               % Multiplying the filter by So (Frequency Domain Multiplication)
+src  = ifft1d2(Src);                             % Inverse Fourier transform along each pulse to put the data back into range
 %% Generate the reference signal based on the ground referene point
 So_ref = fft1d2(sqd_ref);                        
 Src_ref  = repmat(G,size(So_ref,1),1).*So_ref; 

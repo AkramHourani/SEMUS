@@ -12,5 +12,6 @@ V4 = diff(Rcr4)/Param.tg;               % Velocity of the second corner of the f
 V = cat(1,Vo(:),V1(:),V2(:),V3(:),V4(:));
 V_max = max(V,[],1);
 % plot(abs([Vo,V1,V2,V3,V4]))
-% f_D_max = 2 * V_max * RadPar.fo /c;
+% f_D_max = 2 * 2 * pi * V_max * RadPar.fo /c;
+% f_D_max = -2 * 2 * pi * max(Vo) * RadPar.fo /c;
 end

@@ -1,4 +1,4 @@
-function [signal_mod] = F13_LoRaTx(message,Bandwidth,SF,Pt,Fs,df,varargin)
+function [signal_mod] = NI02b_LoRaTx(message,Bandwidth,SF,Pt,Fs,df,varargin)
 % LoRa_Tx emulates a Lora transmission
 %
 %   in:  message      payload message

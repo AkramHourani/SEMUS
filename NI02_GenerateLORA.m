@@ -27,5 +27,5 @@ for i = 1 : LORA.NumberofLoRa
 end
 sLORA = sLORA .* sqrt(PLORA);
 % rr= sLORA.';
-% spectrogram(rr(:),500,0,500,fs,'yaxis','centered')
+% spectrogram(rr(:),500,0,500,LORA.fs ,'yaxis','centered')
 % imagesc(real(sLORA))
