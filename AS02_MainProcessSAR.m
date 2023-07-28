@@ -1,8 +1,8 @@
 clc; clear; close all
 close all hidden;
-% load('SAR_Image1a')                     % That is my final image
-% load('SAR_Image1b')                     % That is image with smaller Azimuth
-load('SAR_Image2')                     % That is image with smaller Azimuth
+% load('SAR_Image1')                     % That is my final image with azimuth 5°
+% load('SAR_Image2')                     % That is image with smaller Azimuth 1°
+load('SAR_Image3a')                     % That is image with Azimuth 0.1°
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -11,21 +11,22 @@ fft1d1 = @ (x) fftshift(fft(fftshift(x,1),[],1),1);
 ifft1d1 = @ (x) ifftshift(ifft(ifftshift(x,1),[],1),1);
 %% Add noise and interference to the received signal
 A02_Parameters                                       % Load interference parameters
+% load('sLORA.mat')
 % % Add AWGN to the recieved signal
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
-% Add LORA signal
-% NI02_GenerateLORA
-% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% % Add LORA signal
+NI02_GenerateLORA
+sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add AM signal
 % NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
 % % Add QPSK signal
-NI04_GenerateQPSK
-sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
-% % Add Radar signal
+% NI04_GenerateQPSK
+% sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
+% Add Radar signal
 % NI05_GenerateRadarTx
-% sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
+% sqd = 0 + sInfR;                                   % Signal to interference = IR.SIR
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)
@@ -93,6 +94,8 @@ drawnow
 Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
 subplot(2,3,6)
 plot(real(Haz))
+% Haz = exp(-1j*pi*DeltaR*2*RadPar.fo/c);           % Azimuth Analytical Matched Filter
+% S3 = S2 .* repmat(Haz,1,size(S2,2));              % Compressed data after azimuth compression using analytical method
 
 %%% Empirical Method %%%%
 midpoint = round(size(S2_ref,2)/2)+1;
@@ -105,7 +108,7 @@ figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
 % Img = Img.^2;
-Img = imadjust(Img,[0 0.5]);
+Img = imadjust(Img,[0 0.75]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -199,5 +202,5 @@ ylabel('East-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-3.5 5])
-Filename1='Figure11';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure12';
+print(h_Fig, '-dpng','-r600',Filename1)

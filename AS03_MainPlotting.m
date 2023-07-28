@@ -19,20 +19,22 @@ latLORA = GRP(1) + LORA.latShift;                         % LoRa Tx latitude shi
 lonLORA = GRP(2) + LORA.lonShift;                         % LoRa Tx longitude shift w.r.t GRP
 
 % geoplot(Satlla(:,1),Satlla(:,2),'LineWidth',1);                                                       % Satellite subline
-geoplot((Satlla(:,1)-1.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
-hold on
+% geoplot((Satlla(:,1)-1.3),Satlla(:,2),'LineWidth',1.5);                                                   % Satellite subline
+% hold on
 geoplot(latSwathMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
-geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',6,'color',ColorOrder(7,:));                          % Swath center point GRP
+hold on
+geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(7,:));                          % Swath center point GRP
 geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
 geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
 
 % Adding LoRa Transmitter to Geoplot
-geoplot(latLORA,lonLORA,'x','LineWidth',1,'MarkerSize',6,'color',ColorOrder(3,:));                                   % LoRA Transmitter
-legend('satellite subtrack','swath mid track','GRP','Swath','','Interferer Tx','Location','northeast','NumColumns',2,'FontSize',12,'interpreter','latex')
-% legend('satellite subtrack','swath mid track','FontSize',10,'interpreter','latex')
+geoplot(latLORA,lonLORA,'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(1,:));                                   % LoRA Transmitter
+legend('Swath mid track','GRP','Swath','','Interferer Tx','Location','northwest','NumColumns',2,'FontSize',12,'interpreter','latex')
+% legend('Satellite subtrack','Swath mid track','GRP','Swath','','Interferer Tx','Location','northwest','NumColumns',2,'FontSize',12,'interpreter','latex')
+% legend('Satellite subtrack','Swath mid track','FontSize',10,'interpreter','latex')
 % geobasemap satellite
 % geotickformat -dd
-geolimits([-38.5 -37.8],[144.7 150])                                                                            % Latitude - Longitude limits
+% geolimits([-38.5 -37.8],[144.7 150])                                                                            % Latitude - Longitude limits
 ax=gca;
 ax.LatitudeAxis.TickValues=[];
 ax.LongitudeAxis.TickValues=[];
@@ -241,7 +243,7 @@ figure(9)
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 subplot(2,1,1)
-spectrogram(signalIQ,500,0,500,fs,'yaxis','centered')
+spectrogram(signalIQ,500,0,500,LORA.fs,'yaxis','centered')
 title('LoRa signal injected to the SAR signal');
 subplot(2,1,2)
 spectrogram(signal_IQ,500,0,500,fs,'yaxis','centered')

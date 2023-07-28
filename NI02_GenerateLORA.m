@@ -1,6 +1,6 @@
 %% Define LORA Message
-NI02a_LoRaGain                                                        % Generate the LoRa gain and power according to the required SIR
-message = "Hello World!" ;
+NI02a_LoRaGain                                                      % Generate the LoRa gain and power according to the required SIR
+message = "Hello World! Hello World! " ;
 %% Transmit Signal
 signalIQ = NI02b_LoRaTx(message,LORA.BW,LORA.SF,LORAPowerdB,LORA.fs,LORA.Delta_f) ;
 %% Define LORA Timing
@@ -26,6 +26,8 @@ for i = 1 : LORA.NumberofLoRa
     sLORA = sLORAi +sLORA;
 end
 sLORA = sLORA .* sqrt(PLORA);
+phase_LoRa = exp(-1i*2*pi*RadPar.Lambda/slantRangeLORA);
+sLORA = sLORA .* repmat(phase_LoRa.',1,size(sLORA,2));
 % rr= sLORA.';
 % spectrogram(rr(:),500,0,500,LORA.fs ,'yaxis','centered')
 % imagesc(real(sLORA))

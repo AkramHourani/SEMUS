@@ -32,7 +32,7 @@ RadPar.T = 6e-6;                                % [s] Pulse width
 RadPar.K = (RadPar.bw /RadPar.T);               % [Hz/s] Ramp (chirp) rate
 RadPar.AntOffNadir = 35;                        % [deg] Antenna Off-Nadir angle (pointing angle)
 RadPar.BeamRange = 5;                           % [deg] Antenna beamwidth in the range direction
-RadPar.BeamAz  = 1;                             % [deg] Antenna beamwidth in the azimuth direction
+RadPar.BeamAz  = 0.1;                             % [deg] Antenna beamwidth in the azimuth direction
 RadPar.SwathWidthDeg = 0.5;                     % [deg] Swath width in degrees
 RadPar.Left = 1;                                % The scanning on the left side of the satellite trajectory
 %% Power Parameters
