@@ -2,20 +2,20 @@
 NI02a_LoRaGain                                                      % Generate the LoRa gain and power according to the required SIR
 message = "Hello World! Hello World! " ;
 %% Transmit Signal
-signalIQ = NI02b_LoRaTx(message,LORA.BW,LORA.SF,LORAPowerdB,LORA.fs,LORA.Delta_f) ;
+LoRaIQ = NI02b_LoRaTx(message,LORA.BW,LORA.SF,LORAPowerdB,LORA.fs,LORA.Delta_f) ;
 %% Define LORA Timing
 RxTime = abs(min(FastTime,[],"all")) + abs(max(FastTime,[],"all")); % Receiving window
 TxTime = Param.tg-RxTime;                                           % Transmitting window= Pulse Repetition Interval (PRI)-Receiving window 
 
-LORATime = length(signalIQ)/LORA.fs;                                % LoRa signal transmission time
-Discard = round(length(signalIQ)* TxTime/LORATime);                 % Number of samples on LORA data to be removed
-Keep = round(length(signalIQ)* RxTime/LORATime);                    % Number of samples on LORA data to be considered
+LORATime = length(LoRaIQ)/LORA.fs;                                % LoRa signal transmission time
+Discard = round(length(LoRaIQ)* TxTime/LORATime);                 % Number of samples on LORA data to be removed
+Keep = round(length(LoRaIQ)* RxTime/LORATime);                    % Number of samples on LORA data to be considered
 %% Creat LORA Interference Matrix
 % First define Numbers of section in LORA data
-sections = round(length(signalIQ) / (Discard + Keep));
+sections = round(length(LoRaIQ) / (Discard + Keep));
 % Creat Matrix
 for i = 1: sections-1
-  slora(i,:) = signalIQ(i+(i*Discard)+((i-1)*Keep):i+(i*Discard)+(i*Keep));
+  slora(i,:) = LoRaIQ(i+(i*Discard)+((i-1)*Keep):i+(i*Discard)+(i*Keep));
 end
 % Adjust size of LORA signal to match the SAR raw data
 sLORA = zeros(size(sqd,1),size(sqd,2));
