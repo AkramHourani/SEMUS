@@ -1,8 +1,8 @@
 clc; clear; close all
 close all hidden;
 % load('SAR_Image1')                     % That is my final image with azimuth 5°
-% load('SAR_Image2')                     % That is image with smaller Azimuth 1°
-load('SAR_Image3a')                     % That is image with Azimuth 0.1°
+% load('SAR_Image3a')                     % That is image with smaller Azimuth 1°
+load('SAR_Image4a')                     % That is image with Azimuth 0.1°
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -15,9 +15,9 @@ A02_Parameters                                       % Load interference paramet
 % % Add AWGN to the recieved signal
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
-% % Add LORA signal
-% NI02_GenerateLORA
-% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% Add LORA signal
+NI02_GenerateLORA
+sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add AM signal
 % NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
@@ -103,108 +103,105 @@ S2_ref = repmat(S2_ref(:,midpoint),1,size(S2,2));
 S3 = S2 .* conj(S2_ref);
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
+%% Plotting Focused SAR Image (An approximate projection of the swath)
+figure(2)
+clf
+Img=abs(sSLC)./max(abs(sSLC),[],"all");
+% Img = Img.^2;
+Img = imadjust(Img,[0 0.75]);
+Calibration = 1;
 
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
+CrossRange = (1:etaTotal)*Param.tg*speed;
 
+% Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
+RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
+ax=gca;
+pc =pcolor(RangeEq/1000,CrossRange/1000,Img);
+% pc =pcolor(RangeEq/1000,(1:size(Img,1))/1000,Img);
+pc.LineStyle='none';
+ax.YAxis.Direction = 'reverse';
+ax.XAxis.Direction = 'reverse';
+xlabel('Slant Range [km]')
+ylabel('Cross Range [km]')
+title('Step 5: Compressed image')
+% colormap turbo
+colormap bone
+%axis equal
+drawnow
+%% Geographic projection for the SAR image
+%% First: Create transformation control points in Lat/Lon domain
+Scale = 1.2;
+h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
+ResAz = 8;                                          % Control points in the Azimuth direction
+ResR  = 8;                                          % Control points in the Range direction
+if etaTotal> ResAz
+    n = round(etaTotal/ResAz);
+    etaVec = downsample(1:etaTotal,n);              % Take a subsample from the slow time vector
+    ResAz = length(etaVec);
+else 
+    ResAz=etaTotal;
+end
 
-% %% Plotting Focused SAR Image (An approximate projection of the swath)
-% figure(2)
-% clf
-% Img=abs(sSLC)./max(abs(sSLC),[],"all");
-% % Img = Img.^2;
-% Img = imadjust(Img,[0 0.75]);
-% Calibration = 1;
-% 
-% speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
-% CrossRange = (1:etaTotal)*Param.tg*speed;
-% 
-% % Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
-% RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
-% ax=gca;
-% pc =pcolor(RangeEq/1000,CrossRange/1000,Img);
-% % pc =pcolor(RangeEq/1000,(1:size(Img,1))/1000,Img);
-% pc.LineStyle='none';
-% ax.YAxis.Direction = 'reverse';
-% ax.XAxis.Direction = 'reverse';
-% xlabel('Slant Range [km]')
-% ylabel('Cross Range [km]')
-% title('Step 5: Compressed image')
-% % colormap turbo
-% colormap bone
-% %axis equal
-% drawnow
-% %% Geographic projection for the SAR image
-% %% First: Create transformation control points in Lat/Lon domain
-% Scale = 1.2;
-% h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
-% ResAz = 8;                                          % Control points in the Azimuth direction
-% ResR  = 8;                                          % Control points in the Range direction
-% if etaTotal> ResAz
-%     n = round(etaTotal/ResAz);
-%     etaVec = downsample(1:etaTotal,n);              % Take a subsample from the slow time vector
-%     ResAz = length(etaVec);
-% else 
-%     ResAz=etaTotal;
-% end
-% 
-% for AzCtr =1:ResAz                                  % Create the points based on the swath
-%     eta =etaVec(AzCtr);
-%     % Build conneting lines between the swath points
-%     [CLat(AzCtr,:),CLon(AzCtr,:)] = gcwaypts(latSwathL1(eta),lonSwathL1(eta),latSwathL2(eta),lonSwathL2(eta),ResR-1);
-% end
-% %% Second: Calculate the transformation control points in Az/Range domain based on given Lat/Lon
-% for Ctr=1:length(CLat(:))
-%     % Find the disance profile of the target over the entire acquisition period
-%     [~,~,RTemp]=geodetic2aer(CLat(Ctr),CLon(Ctr),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
-%     [row,col] = ind2sub(size(CLat),Ctr);            % Find the row column indices of the control point
-%     [Rmin, etaMin] = min(RTemp);                    % Find the closest approach  
-%     ContAz(row,col) = etaMin;                       % This is the slow-time of the closest approach
-%     ContR(row,col)  = Rmin - Ro;                    % This is the SAR distance to the control point
-% end
-% 
-% % Create the inverse transformation function Az/Range -> Lat/Lon
-% AzR2LatLon = fitgeotform2d([CLat(:),CLon(:)],[ContAz(:),ContR(:)],"polynomial",4);
-% LatLon2AzR = fitgeotform2d([ContAz(:),ContR(:)],[CLat(:),CLon(:)],"polynomial",4);
-% 
-% % Test the tranformation
-% Output1 = transformPointsInverse(LatLon2AzR,[Targetlat(:), Targetlon(:)]);
+for AzCtr =1:ResAz                                  % Create the points based on the swath
+    eta =etaVec(AzCtr);
+    % Build conneting lines between the swath points
+    [CLat(AzCtr,:),CLon(AzCtr,:)] = gcwaypts(latSwathL1(eta),lonSwathL1(eta),latSwathL2(eta),lonSwathL2(eta),ResR-1);
+end
+%% Second: Calculate the transformation control points in Az/Range domain based on given Lat/Lon
+for Ctr=1:length(CLat(:))
+    % Find the disance profile of the target over the entire acquisition period
+    [~,~,RTemp]=geodetic2aer(CLat(Ctr),CLon(Ctr),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
+    [row,col] = ind2sub(size(CLat),Ctr);            % Find the row column indices of the control point
+    [Rmin, etaMin] = min(RTemp);                    % Find the closest approach  
+    ContAz(row,col) = etaMin;                       % This is the slow-time of the closest approach
+    ContR(row,col)  = Rmin - Ro;                    % This is the SAR distance to the control point
+end
+
+% Create the inverse transformation function Az/Range -> Lat/Lon
+AzR2LatLon = fitgeotform2d([CLat(:),CLon(:)],[ContAz(:),ContR(:)],"polynomial",4);
+LatLon2AzR = fitgeotform2d([ContAz(:),ContR(:)],[CLat(:),CLon(:)],"polynomial",4);
+
+% Test the tranformation
+Output1 = transformPointsInverse(LatLon2AzR,[Targetlat(:), Targetlon(:)]);
+hold on
+%scatter(Output1(:,2)/1000,Output(:,1),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
+%% Third: Transform to local cartisian coordiantes
+figure(3)
+clf
+% Transform from AzR to Lat/Lon
+etaVecM = repmat((1:etaTotal)',1,length(RangeEq));
+RangeM  = repmat(RangeEq,etaTotal,1);
+[LatImg, LonImg] = transformPointsInverse(AzR2LatLon,etaVecM, RangeM);
+
+% Transfrom from Lat/Lon to NEC
+[xImg,yImg,~] = latlon2local(LatImg,LonImg,0,GRP);
+%scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
 % hold on
-% %scatter(Output1(:,2)/1000,Output(:,1),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
-% %% Third: Transform to local cartisian coordiantes
-% figure(3)
-% clf
-% % Transform from AzR to Lat/Lon
-% etaVecM = repmat((1:etaTotal)',1,length(RangeEq));
-% RangeM  = repmat(RangeEq,etaTotal,1);
-% [LatImg, LonImg] = transformPointsInverse(AzR2LatLon,etaVecM, RangeM);
-% 
-% % Transfrom from Lat/Lon to NEC
-% [xImg,yImg,~] = latlon2local(LatImg,LonImg,0,GRP);
-% %scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
-% % hold on
-% axis equal
-% pc =pcolor(xImg/1000,yImg/1000,Img);
-% % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
-% % scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
-% pc.LineStyle='none';
-% grid on
-% hold on
-% line(xEast(1,:)/1000,yNorth(1,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
-% hold on
-% line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
-% hold on
-% Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
-% line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
-% hold on
-% plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
-% colormap bone
-% ax.YAxis.Direction = 'reverse';
-% ax.XAxis.Direction = 'reverse';
-% box on
-% xlabel('North-axis [km]')
-% ylabel('East-axis [km]')
-% % title('Corrected geo image')
-% set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
-% % xlim([-3.5 5])
-% % Filename1='Figure12';
-% % print(h_Fig, '-dpng','-r600',Filename1)
-close all hidden
+axis equal
+pc =pcolor(xImg/1000,yImg/1000,Img);
+% scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
+% scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
+pc.LineStyle='none';
+grid on
+hold on
+line(xEast(1,:)/1000,yNorth(1,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
+hold on
+line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
+hold on
+Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
+line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
+hold on
+plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
+colormap bone
+ax.YAxis.Direction = 'reverse';
+ax.XAxis.Direction = 'reverse';
+box on
+xlabel('North-axis [km]')
+ylabel('East-axis [km]')
+% title('Corrected geo image')
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
+% xlim([-3.5 5])
+% Filename1='Figure12';
+% print(h_Fig, '-dpng','-r600',Filename1)
+% close all hidden

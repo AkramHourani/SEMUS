@@ -2,13 +2,13 @@
 latLORA = GRP(1) + LORA.latShift;                         % LoRa Tx latitude shift w.r.t GRP
 lonLORA = GRP(2) + LORA.lonShift;                         % LoRa Tx longitude shift w.r.t GRP
 [azLORA,elevLORA,slantRangeLORA] = geodetic2aer(latLORA,lonLORA,0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
-OffBoreSightRLORA = elevLORA+90 - RadPar.AntOffNadir;
+OffBoreSightRLORA = elevLORA + 90 - RadPar.AntOffNadir;
 OffBoreSightAzLORA = azLORA - sataz;
-
+% The zeta is added such that half the power is matching the beamwidth
 zeta = 0.886;             
-
 % Recieved power at SAR antenna from LoRa Tx
-RxGainLORA = single(RadPar.Gain * (sinc(OffBoreSightRLORA*pi/180*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAzLORA*pi/180*zeta/RadPar.BeamAz)).^2);
+RxGainLORA = single(RadPar.Gain * (sinc(OffBoreSightRLORA*zeta/RadPar.BeamRange)).^2 ...
+    .* (sinc(OffBoreSightAzLORA*zeta/RadPar.BeamAz)).^2);
 
 % % Received Power from the signal
 PrdB = 10*log10(sum((abs(sqd)).^2,'all')/size(sqd,1));                   % Received power [dB] using reference signal from all the dwell at GRP

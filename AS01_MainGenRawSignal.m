@@ -49,10 +49,10 @@ ylabel('y-axis [km]')
 title('Satellite swath (optical)')
 %% Test antenna pattern (optional part of the script) - STEP3.Waveform Amplitude Simulator
 figure(3)
-[OffBoreSightRange, OffBoreSightAz] = meshgrid(-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.1:RadPar.BeamAz);
+[OffBoreSightRange, OffBoreSightAz] = meshgrid(-RadPar.BeamRange:0.1:RadPar.BeamRange,-RadPar.BeamAz:0.01:RadPar.BeamAz);
 % The zeta is added such that half the power is matching the beamwidth
 zeta = 0.886;                                                                               % Empirically calculated
-AntennaGain = RadPar.Gain * (sinc(OffBoreSightRange*pi/180*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAz*pi/180*zeta/RadPar.BeamAz)).^2;
+AntennaGain = RadPar.Gain * (sinc(OffBoreSightRange*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAz*zeta/RadPar.BeamAz)).^2;
 pc =pcolor(OffBoreSightAz,OffBoreSightRange,AntennaGain);
 pc.LineStyle='none'; 
 axis equal;
@@ -81,7 +81,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image3a.mat';
+FileName = 'SAR_Image4a.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
