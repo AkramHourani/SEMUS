@@ -2,7 +2,7 @@ clc; clear; close all
 close all hidden;
 % load('SAR_Image1')                     % That is my final image with azimuth 5°
 % load('SAR_Image3a')                     % That is image with smaller Azimuth 1°
-load('SAR_Image4a')                     % That is image with Azimuth 0.1°
+load('SAR_Image')                     % That is image with Azimuth 0.1°
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);

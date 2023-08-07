@@ -4,7 +4,7 @@ Noise.SNR = 60;                         % Assumed Signal to noise ratio  [dB]
 %% LoRa Signal Parameters
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
 % SF ∈ {7, 8, 9, 10, 11, 12}.           % Generate 0.16s of LORA data ==> Controlled by the SF=9
-LORA.SF = 10;                           % Spreading factor
+LORA.SF = 9;                           % Spreading factor
 LORA.BW = 2e6 ;                         % Signal bandwidth of LoRa transmission [Hz]
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]
 LORA.Delta_f = 1e6 ;                    % Frequency Shift [Hz]
@@ -12,7 +12,7 @@ LORA.NumberofLoRa = 1;                  % Number of LoRa signals
 LORA.latShift = 0.02;                   % Shift of LoRa Transmitter from GRP latitude
 LORA.lonShift = 0.02;                   % Shift of LoRa Transmitter from GRP longitude
 LORA.Gain = 1;                          % Asumme omin-directional isotropic LORA transmitter G = 1
-LORA.SIR = 31;                          % Assumed SIR in [dB]
+LORA.SIR = 30;                          % Assumed SIR in [dB]
 %% AM Signal Parameters
 AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
 AM.fs = 2*RadPar.fo;                    % Sampling frequency same higher than SAR sampling frequency [Hz]
