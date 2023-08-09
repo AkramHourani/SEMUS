@@ -9,6 +9,8 @@ zeta = 0.886;
 % Recieved power at SAR antenna from LoRa Tx
 RxGainLORA = single(RadPar.Gain * (sinc(OffBoreSightRLORA*zeta/RadPar.BeamRange)).^2 ...
     .* (sinc(OffBoreSightAzLORA*zeta/RadPar.BeamAz)).^2);
+% imagesc(OffBoreSightRLORA(:),OffBoreSightAzLORA(:),RxGainLORA)
+Interf_ind = find(RxGainLORA >= 1);
 
 % % Received Power from the signal
 PrdB = 10*log10(sum((abs(sqd)).^2,'all')/size(sqd,1));                   % Received power [dB] using reference signal from all the dwell at GRP
