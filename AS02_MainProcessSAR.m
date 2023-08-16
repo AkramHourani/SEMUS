@@ -108,7 +108,7 @@ figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
 % Img = Img.^2;
-Img = imadjust(Img,[0 0.75]);
+Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -127,11 +127,12 @@ ylabel('Cross Range [km]')
 title('Step 5: Compressed image')
 % colormap turbo
 colormap bone
-%axis equal
+% axis equal
+xlim([-2.7 2.7])
 drawnow
 %% Geographic projection for the SAR image
 %% First: Create transformation control points in Lat/Lon domain
-Scale = 1.2;
+Scale = 1;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 ResAz = 8;                                          % Control points in the Azimuth direction
 ResR  = 8;                                          % Control points in the Range direction
@@ -176,9 +177,10 @@ RangeM  = repmat(RangeEq,etaTotal,1);
 
 % Transfrom from Lat/Lon to NEC
 [xImg,yImg,~] = latlon2local(LatImg,LonImg,0,GRP);
+[IxImg,IyImg,~] = latlon2local(latLORA,lonLORA,0,GRP);
 %scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
 % hold on
-axis equal
+% axis equal
 pc =pcolor(xImg/1000,yImg/1000,Img);
 % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
 % scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
@@ -193,6 +195,7 @@ Idx = round(length(xEast)/2);                                                   
 line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
 hold on
 plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
+plot(IxImg/1000,IyImg/1000,'+','LineWidth',3,'color',ColorOrder(1,:),'MarkerSize', 25);                           % Mid point (reference)
 colormap bone
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
@@ -201,7 +204,7 @@ xlabel('North-axis [km]')
 ylabel('East-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
-% xlim([-3.5 5])
-% Filename1='Figure12';
-% print(h_Fig, '-dpng','-r600',Filename1)
+xlim([-4.8 4.8])
+Filename1='Figure12';
+print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden

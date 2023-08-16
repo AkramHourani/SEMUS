@@ -17,9 +17,12 @@ PrdB = 10*log10(sum((abs(sqd)).^2,'all')/size(sqd,1));                   % Recei
 % % For a required SIR
 PLORA_RxRef = PrdB - LORA.SIR;                                                % The desired reference value of LoRa Power in dBm - considered at the min distance
 LoRa_DistRef = min(slantRangeLORA);
+% LoRa_DistRef =slantRangeLORA;
 % LORAPower is adjustable  according to the desired SIR
 LORAPower = 10^(PLORA_RxRef/20) .* fspl(LoRa_DistRef,RadPar.Lambda) ./ LORA.Gain * max(sqrt(RxGainLORA)); 
 % % Convert to dB
 LORAPowerdB = 20*log10(LORAPower);
 % Received power at SAR radar from LORA tx in watts
 PLORA = LORAPower * LORA.Gain * sqrt(RxGainLORA)  ./ fspl(slantRangeLORA,RadPar.Lambda);
+% PLORA =flip(PLORA);
+% imagesc(abs(PLORA))

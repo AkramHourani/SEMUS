@@ -9,10 +9,10 @@ LORA.BW = 2e6 ;                         % Signal bandwidth of LoRa transmission 
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]
 LORA.Delta_f = 1e6 ;                    % Frequency Shift [Hz]
 LORA.NumberofLoRa = 1;                  % Number of LoRa signals
-LORA.latShift = 0.02;                   % Shift of LoRa Transmitter from GRP latitude
-LORA.lonShift = 0.02;                   % Shift of LoRa Transmitter from GRP longitude
+LORA.latShift = 0.015;                   % Shift of LoRa Transmitter from GRP latitude
+LORA.lonShift = -0.026;                   % Shift of LoRa Transmitter from GRP longitude
 LORA.Gain = 1;                          % Asumme omin-directional isotropic LORA transmitter G = 1
-LORA.SIR = 30;                          % Assumed SIR in [dB]
+LORA.SIR = 32;                          % Assumed SIR in [dB]
 %% AM Signal Parameters
 AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
 AM.fs = 2*RadPar.fo;                    % Sampling frequency same higher than SAR sampling frequency [Hz]
