@@ -81,7 +81,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image4a.mat';
+FileName = 'SAR_Image1a.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
@@ -104,7 +104,7 @@ if Testing==3            % This will force the reflectivity to unity
     FileName = 'Test03.mat';
 end
 %% Approx azimuth of the satellite to clauclate the antenna pattern
-if RadPar.Left == 0 % for the case from South to North - RadPar.Left == 1 for the case from North to South 
+if RadPar.Left == 0 % RadPar.Left == 0 for the case from South to North - RadPar.Left == 1 for the case from North to South 
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) +90;
 else
     sataz = azimuth(Satlla(1,1),Satlla(1,2),Satlla(end,1),Satlla(end,2),E) -90;
@@ -121,15 +121,28 @@ end
 % parfor eta=1:etaTotal
 %     [sqd_ref(eta,:)] = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 % end
+%% Defining the Sliding widow for faster capturing process
+NofScans =  etaTotal / Param.NtargetsAz;
 %% This is the logest part of the simulations - STEP4.Waveform Generator
 % Scene reflections sqd - reflected signal from the entire swath
 % the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
 % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in GPU mode
-for eta=1:etaTotal
-    sqd(eta,:) =F06_CalcReflection(sigma,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+ii = 1;
+for eta=1:NofScans+1:etaTotal
+    Targetlat_s = Targetlat((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);     
+    Targetlon_s = Targetlon((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);
+    sigma_s = sigma((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);
+    for i = 1 : NofScans+1
+        s(i,:) =F06_CalcReflection(sigma_s,Targetlat_s,Targetlon_s,Satlla((eta+i-1),:),RadPar,E,sataz,c,tauo,FastTime);
+    end
+    sqd((eta:eta+NofScans),:)= s;
+    ii = ii+1;
     disp(eta)
+    if ii == NofScans * Param.NtargetsAz / (NofScans+1) +1
+        break
+    end
 end
 % % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
 % parfor eta=1:etaTotal
