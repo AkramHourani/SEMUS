@@ -7,15 +7,7 @@ IRpulses = exp(1j*pi * IR.K * IR.t.^2  )  .*(IR.t>(-IR.T/2)).*(IR.t<(IR.T/2));
 % Repeat this transmitted chirp for the duration of the SAR flight
 RepeatFactor = round(time2num(Param.ScanDuration)/IR.T);
 IRadarIQ = repmat(IRpulses,1,RepeatFactor);
-% window_length = round(0.5e-6*RadPar.fs);          % Length of each window (50 ms)
-% overlap = 0;                                % Overlap between consecutive windows (25 ms)
-% nfft = 2^nextpow2(window_length);           % Number of points used for the FFT
-% spectrogram(Pulses_I, window_length, overlap, nfft, RadPar.fs, 'yaxis','centered');
-% spectrogram(IRadarIQ, window_length, overlap, nfft, RadPar.fs, 'yaxis','centered');
-% spectrogram(Pulses_I)
-% spectrogram(Pulses_I, 10, overlap, 50, RadPar.fs, 'yaxis','centered');
-% imagesc(real(IRpulses))
-IRadarIQ = IRadarIQ.';
+% IRadarIQ = IRadarIQ.';
 % imagesc(real(IRadarIQ))
 %% Define LORA Timing
 RxTime = abs(min(FastTime,[],"all")) + abs(max(FastTime,[],"all")); % Receiving window

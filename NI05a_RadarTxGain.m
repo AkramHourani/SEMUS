@@ -23,3 +23,4 @@ IRPower = 10^(PIR_RxRef/20) .* fspl(IR_DistRef,RadPar.Lambda) ./ IR.Gain * max(s
 IRPowerdB = 20*log10(IRPower);
 % Received power at SAR radar from IR tx in watts
 PIR = IRPower * IR.Gain * sqrt(RxGainIR)  ./ fspl(slantRangeIR,RadPar.Lambda);
+% imagesc(abs(PIR))
