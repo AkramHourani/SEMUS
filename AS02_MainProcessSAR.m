@@ -16,8 +16,8 @@ A02_Parameters                                       % Load interference paramet
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % Add LORA signal
-% NI02_GenerateLORA
-% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+NI02_GenerateLORA
+sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % % Add AM signal
 % NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
@@ -27,6 +27,7 @@ A02_Parameters                                       % Load interference paramet
 % Add Radar signal
 % NI05_GenerateRadarTx
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
+% figure,imagesc(abs(sqd))
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)

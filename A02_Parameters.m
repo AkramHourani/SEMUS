@@ -12,7 +12,7 @@ LORA.NumberofLoRa = 1;                  % Number of LoRa signals
 LORA.latShift = 0.02;                   % Shift of LoRa Transmitter from GRP latitude
 LORA.lonShift = 0.02;                   % Shift of LoRa Transmitter from GRP longitude
 LORA.Gain = 1;                          % Asumme omin-directional isotropic LORA transmitter G = 1
-LORA.SIR = 40;                          % Assumed SIR in [dB]
+LORA.SIR = 30;                          % Assumed SIR in [dB]
 %% AM Signal Parameters
 AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
 AM.fs = 2*RadPar.fo;                    % Sampling frequency same higher than SAR sampling frequency [Hz]

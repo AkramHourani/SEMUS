@@ -23,3 +23,4 @@ LORAPower = 10^(PLORA_RxRef/20) .* fspl(LoRa_DistRef,RadPar.Lambda) ./ LORA.Gain
 LORAPowerdB = 20*log10(LORAPower);
 % Received power at SAR radar from LORA tx in watts
 PLORA = LORAPower * LORA.Gain * sqrt(RxGainLORA)  ./ fspl(slantRangeLORA,RadPar.Lambda);
+% imagesc(abs(PLORA))
