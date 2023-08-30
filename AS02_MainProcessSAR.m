@@ -190,7 +190,7 @@ line(xEast(1,:)/1000,yNorth(1,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:),
 hold on
 line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
 hold on
-Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
+Idx = round(size(xEast,1)/2);                                                                   % Index of mid point of the dwell
 line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
 hold on
 plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
