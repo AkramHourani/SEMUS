@@ -4,15 +4,15 @@ Noise.SNR = 60;                         % Assumed Signal to noise ratio  [dB]
 %% LoRa Signal Parameters
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
 % SF ∈ {7, 8, 9, 10, 11, 12}.           % Generate 0.16s of LORA data ==> Controlled by the SF=9
-LORA.SF = 9;                           % Spreading factor
+LORA.SF = 11;                           % Spreading factor
 LORA.BW = 2e6 ;                         % Signal bandwidth of LoRa transmission [Hz]
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]
 LORA.Delta_f = 1e6 ;                    % Frequency Shift [Hz]
 LORA.NumberofLoRa = 1;                  % Number of LoRa signals
-LORA.latShift = 0.02;                   % Shift of LoRa Transmitter from GRP latitude
-LORA.lonShift = 0.02;                   % Shift of LoRa Transmitter from GRP longitude
+LORA.latShift = 0.05;                   % Shift of LoRa Transmitter from GRP latitude
+LORA.lonShift = -0.01;                   % Shift of LoRa Transmitter from GRP longitude
 LORA.Gain = 1;                          % Asumme omin-directional isotropic LORA transmitter G = 1
-LORA.SIR = 30;                          % Assumed SIR in [dB]
+LORA.SIR = -110;                          % Assumed SIR in [dB]
 %% AM Signal Parameters
 AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
 AM.fs = 2*RadPar.fo;                    % Sampling frequency same higher than SAR sampling frequency [Hz]
@@ -38,11 +38,11 @@ IR.ts = RadPar.ts;                      % [s] Sample time same as SAR
 IR.bw = RadPar.bw;                      % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
 IR.T = RadPar.T;                        % [s] Pulse width
 IR.K =  (IR.bw /IR.T);                  % [Hz/s] Ramp (chirp) rate
-IR.t = -IR.T/2:IR.ts:IR.T/2;            % Time base vector for the carrier modulated signal
+% IR.t = -IR.T/2:IR.ts:IR.T/2;            % Time base vector for the carrier modulated signal
 % IR.t = -time2num(Param.ScanDuration)/2:IR.ts:(time2num(Param.ScanDuration)/2);    % Time base vector for the carrier modulated signal
-% IR.t = FastTime;              % Time base vector for the carrier modulated signal
+IR.t = FastTime;              % Time base vector for the carrier modulated signal
 IR.NumberofIR = 1;                      % Number of Radar signals
-IR.latShift = 0.02;                      % Shift of Radar Transmitter from GRP latitude
-IR.lonShift = 0.02;                      % Shift of Radar Transmitter from GRP longitude
+IR.latShift = 0.05;                      % Shift of Radar Transmitter from GRP latitude
+IR.lonShift = -0.012;                      % Shift of Radar Transmitter from GRP longitude
 IR.Gain = 1;                            % Asumme omin-directional isotropic Radar transmitter G = 1
-IR.SIR = 40;                            % Assumed SIR in [dB]
+IR.SIR = -50;                            % Assumed SIR in [dB]
