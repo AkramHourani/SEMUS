@@ -1,6 +1,6 @@
 clc; clear; close all
 close all hidden;
-load('SAR_Image5')                     % That is my final image with azimuth 5°
+load('SAR_Image')                     % That is my final image with azimuth 5°
 % load('SAR_Image3a')                     % That is image with smaller Azimuth 1°
 % load('SAR_Image')                     % That is image with Azimuth 0.1°
 %% This is a raw-wise FFT / IFFT
@@ -109,7 +109,7 @@ figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
 % Img = Img.^2;
-Img = imadjust(Img,[0 0.6]);
+Img = imadjust(Img,[0 0.7]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -133,7 +133,7 @@ colormap bone
 drawnow
 %% Geographic projection for the SAR image
 %% First: Create transformation control points in Lat/Lon domain
-Scale = 1;
+Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 ResAz = 16;                                          % Control points in the Azimuth direction
 ResR  = 16;                                          % Control points in the Range direction
@@ -181,7 +181,7 @@ RangeM  = repmat(RangeEq,etaTotal,1);
 %scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
 % hold on
 % axis equal
-pc =pcolor(xImg/1000,yImg/1000,Img);
+pc =pcolor(xImg(:,140:1570)/1000,yImg(:,140:1570)/1000,Img(:,140:1570));
 % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
 % scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
 pc.LineStyle='none';

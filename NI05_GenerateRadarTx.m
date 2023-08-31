@@ -1,17 +1,16 @@
 %% Define radar signal
 NI05a_RadarTxGain
 % Generate basic chirp for the pulse duration
-IRpulses = exp(1j*pi * IR.K * (IR.t-tauoIR).^2  )  .*(IR.t>(-IR.T/2) + tauoIR).*(IR.t<(IR.T/2) + tauoIR);
-% IRpulses = exp(1j*pi * (-2 *IR.fc * IR.t + IR.K * IR.t.^2  ))  .*(IR.t>(-IR.T/2)).*(IR.t<(IR.T/2));
-% imagesc(abs(IRpulses))
-% Repeat this transmitted chirp for the duration of the SAR flight
-RepeatFactor = round(time2num(Param.ScanDuration)/IR.T);
-IRadarIQ = repmat(IRpulses.',1,RepeatFactor);
+IRpulses = exp(1j*pi * IR.K * IR.t.^2  ) .*(IR.t > -IR.T/2).*(IR.t < IR.T/2);
+% figure;imagesc(abs(IRpulses))
+%% Repeat this transmitted chirp for the duration of the SAR flight
+RepeatFactor = round(time2num(Param.ScanDuration)/(IR.NumberofIR*IR.T));
+IRadarIQ = repmat(IRpulses,1,RepeatFactor);
 % spectrogram(Pulses_I)
 % spectrogram(Pulses_I, 10, 0, 50, RadPar.fs, 'yaxis','centered');
 % imagesc(real(IRpulses))
-IRadarIQ = IRadarIQ.';
-% imagesc(abs(IRadarIQ))
+% IRadarIQ = IRadarIQ.';
+% figure;imagesc(abs(IRadarIQ))
 %% Define Timing
 RxTime = abs(min(FastTime,[],"all")) + abs(max(FastTime,[],"all")); % Receiving window
 TxTime = Param.tg-RxTime;                                           % Transmitting window= Pulse Repetition Interval (PRI)-Receiving window 
@@ -28,7 +27,7 @@ for i = 1: sections-1
 end
 % imagesc(real(IRadarsignal))
 % IRSignal = IRadarsignal(1:size(sqd,1),1:size(sqd,2));
-% speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);       % Platform speed = sqrt(Param.mu/(h+Re))
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);       % Platform speed = sqrt(Param.mu/(h+Re))
 Azimuthindex = linspace(-etaTotal*Param.tg*speed/2,etaTotal*Param.tg*speed/2,etaTotal);
 [IR_Imgx, IR_Imgy, ~] = latlon2local(latIR,lonIR,0,GRP);
 
@@ -44,7 +43,7 @@ sIR1 = zeros(Index_before,size(sqd,2));
 sIR2 = zeros(size(sqd,1)-Index_after,size(sqd,2));
 sIRadar = cat(1,sIR1,IRadarsignal,sIR2);
 IRSignal = sIRadar(1:size(sqd,1),:);
-figure,imagesc(abs(IRSignal).^2)
+% figure,imagesc(abs(IRSignal).^2)
 sInfR = IRSignal .* sqrt(PIR);
 %% Adjust Interference phase
 % phase_IR = exp(-1i*2*pi*RadPar.Lambda/slantRangeIR);

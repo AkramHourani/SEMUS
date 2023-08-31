@@ -38,11 +38,10 @@ IR.ts = RadPar.ts;                      % [s] Sample time same as SAR
 IR.bw = RadPar.bw;                      % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
 IR.T = RadPar.T;                        % [s] Pulse width
 IR.K =  (IR.bw /IR.T);                  % [Hz/s] Ramp (chirp) rate
-% IR.t = -IR.T/2:IR.ts:IR.T/2;            % Time base vector for the carrier modulated signal
-% IR.t = -time2num(Param.ScanDuration)/2:IR.ts:(time2num(Param.ScanDuration)/2);    % Time base vector for the carrier modulated signal
-IR.t = FastTime;              % Time base vector for the carrier modulated signal
-IR.NumberofIR = 1;                      % Number of Radar signals
-IR.latShift = 0.05;                      % Shift of Radar Transmitter from GRP latitude
-IR.lonShift = -0.012;                      % Shift of Radar Transmitter from GRP longitude
+IR.t = -IR.T:IR.ts:IR.T;            % Time base vector for a single signal
+% IR.t = FastTime;                        % Time base vector for signal
+IR.NumberofIR = 2^5;                      % Number of Radar signals
+IR.latShift = 0.02;                      % Shift of Radar Transmitter from GRP latitude
+IR.lonShift = -0.01;                      % Shift of Radar Transmitter from GRP longitude
 IR.Gain = 1;                            % Asumme omin-directional isotropic Radar transmitter G = 1
-IR.SIR = -50;                            % Assumed SIR in [dB]
+IR.SIR = 90;                            % Assumed SIR in [dB]
