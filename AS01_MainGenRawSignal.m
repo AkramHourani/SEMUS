@@ -69,6 +69,7 @@ FastTime = (-SwathWidthTime/2*Param.Margin:RadPar.ts:SwathWidthTime/2*Param.Marg
 TimeLength = length(FastTime);                                                              % Fasttime length
 sqd=(zeros(etaTotal,TimeLength));                                                           % Initialize the reflection matrix
 PulseWidthSamples = round(RadPar.T/(FastTime(end)-FastTime(1))*TimeLength);
+SlowTime = - time2num(Param.ScanDuration)/2 : Param.tg : (time2num(Param.ScanDuration)/2) - Param.tg;
 %%   Generate base chrip (not nessasry step, just for testing)
 tau = 0;
 sb = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
@@ -81,7 +82,7 @@ title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
 Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
-FileName = 'SAR_Image1b.mat';
+FileName = 'SAR_Image5.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
     Targetlon = GRP(2);
@@ -122,7 +123,6 @@ end
 %     [sqd_ref(eta,:)] = F06_CalcReflection(1,GRP(1),GRP(2),Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 % end
 %% Defining the Sliding widow for faster capturing process
-% scan_jump =  round(etaTotal / Param.NtargetsAz);
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);
 Azimuth_Beamwidth_distance = mean(R) * RadPar.BeamAz * pi /180;
 window = round(Param.NtargetsAz * Azimuth_Beamwidth_distance / (speed * time2num(Param.ScanDuration) ) );                                    % Ground swath length across Azimuth direction
@@ -133,14 +133,15 @@ window_step = 1;  % If Step = 1 ==> Sliding window
 % the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
-% Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
+
+% % Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
 % for eta=1:etaTotal
 %     sqd(eta,:) =F06_CalcReflection(sigma,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 %     disp(eta)
 % end
-% Sliding window-Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
+
+% %Sliding window-Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
 figure
-% window_center = 1;
 for eta=1:etaTotal
     window_center = ((eta -1) * (Param.NtargetsAz -1) / (etaTotal-1)) + 1;
     window_center = ceil(window_center / window_step ) * (window_step);
@@ -154,25 +155,7 @@ for eta=1:etaTotal
     sqd(eta,:) =F06_CalcReflection(sigma_w,Targetlat_w,Targetlon_w,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end
- 
-% ii = 1;
-% for eta=1:NofScans+1:etaTotal
-%     if eta+ +NofScans > etaTotal 
-%         break
-%     end    
-%     Targetlat_s = Targetlat((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);     
-%     Targetlon_s = Targetlon((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);
-%     sigma_s = sigma((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);
-%     for i = 1 : NofScans+1
-%         s(i,:) =F06_CalcReflection(sigma_s,Targetlat_s,Targetlon_s,Satlla((eta+i-1),:),RadPar,E,sataz,c,tauo,FastTime);
-%     end
-%     sqd((eta:eta+NofScans),:)= s;
-%     ii = ii+1;
-%     disp(eta)
-%     if ii == round(NofScans * Param.NtargetsAz / (NofScans+1) -1)
-%         break
-%     end
-% end
+
 % % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
 % parfor eta=1:etaTotal
 %     sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);

@@ -1,14 +1,14 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Main Generation Plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Create Geomtry setup - STEP1.Create Satellite Scenario
-sc  = satelliteScenario(startTime,stopTime,Param.tg);
-sat = satellite(sc,Elem.a,Elem.e,Elem.Inc,Elem.RAAN,Elem.omega,Elem.TA,'OrbitPropagator','two-body-keplerian',...
-    'name','SAR sat');
 [lat, lon]=meshgrid(-37.9292:0.001:-37.8681,144.448:0.01:144.74111);
 for i= 1: size(lat,1)
     for j=1:size(lat,2)
     gs(i,j) = groundStation(sc, lat(i,j), lon(i,j));
     end
 end
+sc  = satelliteScenario(startTime,stopTime,Param.tg);
+sat = satellite(sc,Elem.a,Elem.e,Elem.Inc,Elem.RAAN,Elem.omega,Elem.TA,'OrbitPropagator','two-body-keplerian',...
+    'name','SAR sat');
 play(sc)
 sc.Viewers.CameraReferenceFrame='Inertial';
 % ac = access(sat, gs(:));
@@ -84,7 +84,7 @@ set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 box on
 
 Filename1='Figure10';
-print(h_Fig, '-dpng','-r600',Filename1)
+% print(h_Fig, '-dpng','-r600',Filename1)
 %% Test antenna pattern - STEP4.Amplitude Simulator
 % figure(3)
 Scale = 1.2;
