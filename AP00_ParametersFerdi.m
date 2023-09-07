@@ -1,5 +1,4 @@
 % Orbital Paramters / Elements
-
 c=physconst('LightSpeed');                      % [m/s] Speed of light C 
 ColorOrder =colororder;
 E=referenceSphere('Earth');                     % Reference ideal sphere
