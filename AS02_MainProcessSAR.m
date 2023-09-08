@@ -25,8 +25,8 @@ A02_Parameters                                       % Load interference paramet
 % NI04_GenerateQPSK
 % sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % Add Radar signal
-NI05_GenerateRadarTx
-sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
+% NI05_GenerateRadarTx
+% sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 % figure,imagesc(real(sqd))
 %% plotting raw time domain signal
 figure(1);
@@ -95,6 +95,9 @@ drawnow
 Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
 subplot(2,3,6)
 plot(real(Haz))
+xlabel('Fast time [\mus]')
+ylabel('Azimuth index')
+title('Step 4: Azimuth analytical filter')
 % Haz = exp(-1j*pi*DeltaR*2*RadPar.fo/c);           % Azimuth Analytical Matched Filter
 % S3 = S2 .* repmat(Haz,1,size(S2,2));              % Compressed data after azimuth compression using analytical method
 
@@ -181,7 +184,12 @@ RangeM  = repmat(RangeEq,etaTotal,1);
 %scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
 % hold on
 % axis equal
-pc =pcolor(xImg(:,140:1570)/1000,yImg(:,140:1570)/1000,Img(:,140:1570));
+[~,column_indx_min] = find(xImg(1,:) < max(xEast,[],'all'));
+[~,column_indx_max] = find(xImg(end,:) > min(xEast,[],'all'));
+pc =pcolor(xImg(:,min(column_indx_min):max(column_indx_max))/1000,...
+    yImg(:,min(column_indx_min):max(column_indx_max))/1000,...
+    Img(:,min(column_indx_min):max(column_indx_max)));
+% pc =pcolor(xImg(:,140:1570)/1000,yImg(:,140:1570)/1000,Img(:,140:1570));
 % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
 % scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
 pc.LineStyle='none';
@@ -209,6 +217,6 @@ ylabel('East-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-4.8 4.8])
-% Filename1='Figure12';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure12';
+print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden

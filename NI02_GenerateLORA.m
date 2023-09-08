@@ -19,7 +19,7 @@ sections = round(length(LoRaIQ) / (Discard + Keep));
 for i = 1: sections-1
   slora(i,:) = LoRaIQ(i+(i*Discard)+((i-1)*Keep):i+(i*Discard)+(i*Keep));
 end
-% speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);       % Platform speed = sqrt(Param.mu/(h+Re))
+speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);       % Platform speed = sqrt(Param.mu/(h+Re))
 Azimuthindex = linspace(-etaTotal*Param.tg*speed/2,etaTotal*Param.tg*speed/2,etaTotal);
 [LORAImgx, LORAImgy, ~] = latlon2local(latLORA,lonLORA,0,GRP);
 
