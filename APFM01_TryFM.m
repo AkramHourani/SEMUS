@@ -40,7 +40,7 @@ sigma       = 0.1; % radar cross section in m squared
 b           = 5.0e+6; % radar operating bandwidth in Hz
 nf          = 3.0; % noise figure in dB
 loss        = 6.0; % radar losses in dB
-range       = linspace(25e3,165e3,1000);
+range       = linspace(5e3,150e3,1000);%range : 5 km to 150 km
 [pr, snr]   = radar_eq(pt, freq, g, sigma, b, nf, loss, range);
 rangekm     = range ./ 1000;
 
@@ -50,11 +50,11 @@ grid;
 xlabel ('Detection range in km');
 ylabel ('Pr in dBm');
 
-%% 1. Passive SAR (FM Receiver)
+%% 1. Active SAR (FM Transmitter) 
 %FP01_CreateSatGeometry
 %FP02_FindSwath
 
-%% 2. Active SAR (FM Transmitter)
+%% 2. Passive SAR (FM Receiver)
 %FP01_CreateSatGeometry
 %FP02_FindSwath
 
@@ -68,7 +68,7 @@ ylabel ('Pr in dBm');
 %FP04_GetGroundReflect
 
 %% 6. Define the source waveform
-
+% this will be FM 
 
 %% 7. Generate base chirp 
 %sb = 
