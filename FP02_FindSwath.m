@@ -16,7 +16,7 @@ end
 % for the data in y. The coefficients in p are in descending powers, and the length of p is n+1
 p = polyfit(1:size(Satlla,1)-10,sataz,1);
 sataz = p(1) *(1:size(Satlla,1))+ p(2);
-sataz=sataz';
+sataz = sataz';
  
 % [lat,lon,slantrange] = lookAtSpheroid(lat0,lon0,h0,az,tilt,spheroid) computes the latitude and longitude (lat and lon) 
 % of the first point of intersection of the line-of-sight from a viewpoint in space with the surface of an oblate spheroid. 

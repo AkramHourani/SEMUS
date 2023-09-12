@@ -3,7 +3,6 @@ load('Points.mat')
 % load('Sydney.mat')
 %load('SAR_Image1P.mat')
 close all hidden;
-% ttlsz = 8;
 
 %% This is a raw-wise FFT / IFFT
 

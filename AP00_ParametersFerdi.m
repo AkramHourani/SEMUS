@@ -1,7 +1,7 @@
-% Orbital Paramters / Elements
-c=physconst('LightSpeed');                      % [m/s] Speed of light C 
+%% 1. Orbital Parameters / Elements
+c = physconst('LightSpeed');                      % [m/s] Speed of light C 
 ColorOrder =colororder;
-E=referenceSphere('Earth');                     % Reference ideal sphere
+E = referenceSphere('Earth');                     % Reference ideal sphere
 Param.h= 514e3;                                 % [m] Height of the platform 
 Re = earthRadius;                               % Store Earth radius into Re variable
 Elem.a = Re+Param.h;                            % [m] Semi-major axis of the platform
@@ -15,15 +15,18 @@ Param.T = 2*pi*sqrt(Elem.a^3/Param.mu);         % [s] Orbital period
 Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.ts = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 Param.ScanDuration = seconds(0.8);              % [s] Flight duration - along azimuth direction
-%% Targets
+
+%% 2. Targets
 Param.NtargetsAz = 400;                          % Number of targets in each eta bin
 Param.NtargetsRange = 300;                       % Number of targets in each range bin
 Param.Margin = 1.2;                              % Range margin factor. This is a margin to include targets farther than swatch width, i.e. for larger squinet angle targets
-%% Time
+
+%% 3. Time
 startTime = datetime('01-Jan-2022 08:00:00');   % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ; % [s] Set up the end time
 Delta_t = seconds(0.07);
-%% Radar Paramters
+
+%% 4. Radar Paramters
 RadPar.fo = (1e9);                            % [Hz] Carrier frequency
 RadPar.Lambda = freq2wavelen(RadPar.fo);        % [m] Wavelength
 RadPar.AntOffNadir = 30;                        % [deg] Antenna Off-Nadir angle (pointing angle)
