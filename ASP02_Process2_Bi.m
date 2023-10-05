@@ -331,7 +331,7 @@ movefile([FilenameP6 '.png'],'Figures')
 
 
 
-VidFilename='4Image Processing';
+VidFilename='[4] Image Processing';
 v = VideoWriter(VidFilename,'MPEG-4');
 v.FrameRate = 15;
 v.Quality = 100;
@@ -343,6 +343,8 @@ src2 = zeros(etaTotal,length(FastTime));
 sSLC2 = zeros(etaTotal,length(FastTime));
 n = 50;
 figure
+
+%from blank to scanning unfocused sar image
 for i = 0:(etaTotal/n)-1 %0:1600/16 
     
     sqd2((i*n)+1:((i+1)*n),:) = abs(sqd((i*n)+1:((i+1)*n),:)); 
@@ -360,6 +362,7 @@ for i = 0:(etaTotal/n)-1 %0:1600/16
     writeVideo(v,Frame);
 end
 
+%from scanning unfocused sar image to range compressed
 for i = 0:(etaTotal/n)-1 %0:1600/16 
     
     src2((i*n)+1:((i+1)*n),:) = real(src((i*n)+1:((i+1)*n),:)); 
@@ -379,6 +382,7 @@ for i = 0:(etaTotal/n)-1 %0:1600/16
     writeVideo(v,Frame);
 end
 
+%from range compressed 
 for i = 0:(etaTotal/n)-1 %0:1600/16 
     
     sSLC2((i*n)+1:((i+1)*n),:) = abs(sSLC((i*n)+1:((i+1)*n),:)); 

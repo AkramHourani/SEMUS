@@ -1,4 +1,4 @@
-function FP07_LinePlot(type,fl_azr, Img, azr, idx_mg,mag,o_ptsx,o_ptsy,subtt,xl_flag, yl_flag, shd0, shd1,p_sl,ymax, ymin,loct)
+function FP07_LinePlot(type,fl_azr, Img, azr, idx_mg,o_ptsx,o_ptsy,subtt,xl_flag, yl_flag, shd0, shd1,p_sl,ymax, ymin,loct)
 
 %idx_mg = 1:length(FastTime);
 if fl_azr ==1

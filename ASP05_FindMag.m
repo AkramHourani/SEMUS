@@ -5,7 +5,6 @@ close all;
 %% 1. Test update Using fast peak find
 
 figure
-
 %1.a Load the input image and determine the size
 Imgslc = abs(sSLC);
 [br,bc] = size(Imgslc);
@@ -225,22 +224,22 @@ h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition'
 tiledlayout(3,2,'TileSpacing','Compact','Padding','Compact');
 
 nexttile %subplot(3,2,1)
-FP07_LinePlot(1,1,Img,a_az,1:length(FastTime),mag,MagArr(1,8),MagArr(1,11),sprintf('$L_1$'),0,0,0,0,0,0,0,[0.5, 0.1, 0])
+FP07_LinePlot(1,1,Img,a_az,1:length(FastTime),MagArr(1,8),MagArr(1,11),sprintf('$L_1$'),0,0,0,0,0,0,0,[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,2)
-FP07_LinePlot(2,1,Img,a_az,a_rg_0:a_rg_1,mag,MagArr(1,8),MagArr(1,11),sprintf('$P_1$ PSLR = %.1f dB',MagArr(1,16)),0,0, MagArr(1,7), MagArr(1,9), MagArr(1,15), MagArr(1,17), MagArr(1,18),[0.5, 0.1, 0])
+FP07_LinePlot(2,1,Img,a_az,a_rg_0:a_rg_1,MagArr(1,8),MagArr(1,11),sprintf('$P_1$ PSLR = %.1f dB',MagArr(1,16)),0,0, MagArr(1,7), MagArr(1,9), MagArr(1,15), MagArr(1,17), MagArr(1,18),[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,3)
-FP07_LinePlot(1,1,Img,grp_az,1:length(FastTime),mag,MagArr(2,8),MagArr(2,11),sprintf('$LGRP_{r}$'),0,1,0,0,0,0,0,[0.45, 0.1, 0])
+FP07_LinePlot(1,1,Img,grp_az,1:length(FastTime),MagArr(2,8),MagArr(2,11),sprintf('$LGRP_{r}$'),0,1,0,0,0,0,0,[0.45, 0.1, 0])
 
 nexttile %subplot(3,2,4)
-FP07_LinePlot(2,1,Img,grp_az,grp_rg_0:grp_rg_1,mag,MagArr(2,8),MagArr(2,11),sprintf('$GRP_{r}$ PSLR = %.1f dB',MagArr(2,16)),0,0, MagArr(2,7), MagArr(2,9), MagArr(2,15), MagArr(2,17), MagArr(2,18),[0.5, 0.1, 0])
+FP07_LinePlot(2,1,Img,grp_az,grp_rg_0:grp_rg_1,MagArr(2,8),MagArr(2,11),sprintf('$GRP_{r}$ PSLR = %.1f dB',MagArr(2,16)),0,0, MagArr(2,7), MagArr(2,9), MagArr(2,15), MagArr(2,17), MagArr(2,18),[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,5)
-FP07_LinePlot(1,1,Img,b_az,1:length(FastTime),mag,MagArr(3,8),MagArr(3,11),sprintf('$L_2$'),1,0,0,0,0,0,0,[0.5, 0.1, 0])
+FP07_LinePlot(1,1,Img,b_az,1:length(FastTime),MagArr(3,8),MagArr(3,11),sprintf('$L_2$'),1,0,0,0,0,0,0,[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,6)
-FP07_LinePlot(2,1,Img,b_az,b_rg_0:b_rg_1,mag,MagArr(3,8),MagArr(3,11),sprintf('$P_2$ PSLR = %.1f dB',MagArr(3,16)),1,0, MagArr(3,7), MagArr(3,9), MagArr(3,15), MagArr(3,17), MagArr(3,18),[0.5, 0.1, 0])
+FP07_LinePlot(2,1,Img,b_az,b_rg_0:b_rg_1,MagArr(3,8),MagArr(3,11),sprintf('$P_2$ PSLR = %.1f dB',MagArr(3,16)),1,0, MagArr(3,7), MagArr(3,9), MagArr(3,15), MagArr(3,17), MagArr(3,18),[0.5, 0.1, 0])
 
 print(h_Fig, '-dpng','-r600','Figure11')
 movefile('Figure11.png','Figures')
@@ -251,22 +250,22 @@ h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition'
 tiledlayout(3,2,'TileSpacing','Compact','Padding','Compact');
 
 nexttile %subplot(3,2,1)
-FP071_LinePlot(1,2,Img,c_rg,1:etaTotal,mag,MagArr(4,8),MagArr(4,11),sprintf('$L_3$'),0,0,0,0,0,0,0,[0.5, 0.1, 0])
+FP071_LinePlot(1,    2,    Img, c_rg, 1:etaTotal,MagArr(4,8),MagArr(4,11),sprintf('$L_3$'),0,0,0,0,0,0,0,[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,2)
-FP071_LinePlot(2,2,Img,c_rg,c_az_0:c_az_1,mag,MagArr(4,8),MagArr(4,11),sprintf('$P_3$'),0,0, MagArr(4,7), MagArr(4,9), MagArr(4,15), MagArr(4,17), MagArr(4,18),[0.5, 0.1, 0])
+FP071_LinePlot(2,2,Img,c_rg,c_az_0:c_az_1,MagArr(4,8),MagArr(4,11),sprintf('$P_3$'),0,0, MagArr(4,7), MagArr(4,9), MagArr(4,15), MagArr(4,17), MagArr(4,18),[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,3)
-FP07_LinePlot(1,2,Img,grp_rg,1:etaTotal,mag,MagArr(5,8),MagArr(5,11),sprintf('$LGRP_a$'),0,1,0,0,0,0,0,[0.45, 0.1, 0])
+FP07_LinePlot(1,2,Img,grp_rg,1:etaTotal,MagArr(5,8),MagArr(5,11),sprintf('$LGRP_a$'),0,1,0,0,0,0,0,[0.45, 0.1, 0])
 
 nexttile %subplot(3,2,4)
-FP071_LinePlot(2,2,Img,grp_rg,grp_az_0:grp_az_1,mag,MagArr(5,8),MagArr(5,11),sprintf('$GRP_{a}$'),0,0, MagArr(5,7), MagArr(5,9), MagArr(5,15), MagArr(5,17), MagArr(5,18),[0.45, 0.1, 0])
+FP071_LinePlot(2,2,Img,grp_rg,grp_az_0:grp_az_1,MagArr(5,8),MagArr(5,11),sprintf('$GRP_{a}$'),0,0, MagArr(5,7), MagArr(5,9), MagArr(5,15), MagArr(5,17), MagArr(5,18),[0.45, 0.1, 0])
 
 nexttile %subplot(3,2,5)
-FP071_LinePlot(1,2,Img,d_rg,1:etaTotal,mag,MagArr(6,8),MagArr(6,11),sprintf('$L_4$'),2,0,0,0,0,0,0,[0.5, 0.1, 0])
+FP071_LinePlot(1,2,Img,d_rg,1:etaTotal,MagArr(6,8),MagArr(6,11),sprintf('$L_4$'),2,0,0,0,0,0,0,[0.5, 0.1, 0])
 
 nexttile %subplot(3,2,6)
-FP071_LinePlot(2,2,Img,d_rg,d_az_0:d_az_1,mag,MagArr(6,8),MagArr(6,11),sprintf('$P_4$'),2,0, MagArr(6,7), MagArr(6,9), MagArr(6,15), MagArr(6,17), MagArr(6,18),[0.5, 0.1, 0])
+FP071_LinePlot(2,2,Img,d_rg,d_az_0:d_az_1,MagArr(6,8),MagArr(6,11),sprintf('$P_4$'),2,0, MagArr(6,7), MagArr(6,9), MagArr(6,15), MagArr(6,17), MagArr(6,18),[0.5, 0.1, 0])
 
 print(h_Fig, '-dpng','-r600','Figure10')
 movefile('Figure10.png','Figures')
