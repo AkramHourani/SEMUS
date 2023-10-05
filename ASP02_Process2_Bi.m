@@ -71,15 +71,15 @@ xlim tight
 drawnow
 
 %% Generate the reference signal based on the ground reference point
-So = fft1d2(sqd_ref); % FFT the time domain signal (FFT along each eta row)
+So      = fft1d2(sqd_ref); % FFT the time domain signal (FFT along each eta row)
 % This is the template for the Match Filter : complex conjugate of the
 % input signal
-tau = 0;
-sb = exp(1j*pi *   (-2*RadPar.fo * tau + RadPar.K*(FastTime-tau).^2   )    ) ...
+tau     = 0;
+sb      = exp(1j*pi *   (-2*RadPar.fo * tau + RadPar.K*(FastTime-tau).^2   )    ) ...
     .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));
-G = conj(fftshift(fft(fftshift(sb))));  % G(f)
-Src  = repmat(G,size(So,1),1).*So; %Equation 5.5
-src_ref  = ifft1d2(Src); %Equation 5.6 
+G       = conj(fftshift(fft(fftshift(sb))));  % G(f)
+Src     = repmat(G,size(So,1),1).*So; %Equation 5.5
+src_ref = ifft1d2(Src); %Equation 5.6 
 
 %% Plotting the range-compressed image
 %subplot(2,3,3)
@@ -324,9 +324,90 @@ movefile([FilenameP6 '.png'],'Figures')
 
 %% start - create video
 
+% sqd --> unfocused, 1600 x 1618
+% src --> range compressed, 1600 x 1618, imagesc(real(src));
+% sSLC --> azimuth compressed, 1600 x 1618, J = abs(sSLC);
+% imagesc(RangeGround/1000,CrossRange,J)
 
 
 
+VidFilename='4Image Processing';
+v = VideoWriter(VidFilename,'MPEG-4');
+v.FrameRate = 15;
+v.Quality = 100;
+open(v)
+% 
+% inside a loop
+sqd2 = zeros(etaTotal,length(FastTime));% initiate array for draw figure
+src2 = zeros(etaTotal,length(FastTime));
+sSLC2 = zeros(etaTotal,length(FastTime));
+n = 50;
+figure
+for i = 0:(etaTotal/n)-1 %0:1600/16 
+    
+    sqd2((i*n)+1:((i+1)*n),:) = abs(sqd((i*n)+1:((i+1)*n),:)); 
+    pc2 = pcolor(FastTime/1e-6,1:etaTotal,sqd2);% sqd = 1600 x 1618
+    pc2.LineStyle='none';
+   
+    colormap bone
+    xlabel('Fast time [\mus]','interpreter','Tex')
+    ylabel('Azimuth index','interpreter','Tex')
+    gx.Box = 'on';
+    set(gca,'LooseInset',get(gca,'TightInset'));
+    drawnow
+
+    Frame = getframe(gcf);
+    writeVideo(v,Frame);
+end
+
+for i = 0:(etaTotal/n)-1 %0:1600/16 
+    
+    src2((i*n)+1:((i+1)*n),:) = real(src((i*n)+1:((i+1)*n),:)); 
+    src2(((i+1)*n)+1:etaTotal,:) = abs(sqd(((i+1)*n)+1:etaTotal,:));
+    
+    pc2 = pcolor(FastTime/1e-6,1:etaTotal,src2);% sqd = 1600 x 1618
+    pc2.LineStyle='none';
+   
+    colormap bone
+    xlabel('Fast time [\mus]','interpreter','Tex')
+    ylabel('Azimuth index','interpreter','Tex')
+    gx.Box = 'on';
+    set(gca,'LooseInset',get(gca,'TightInset'));
+    drawnow
+
+    Frame = getframe(gcf);
+    writeVideo(v,Frame);
+end
+
+for i = 0:(etaTotal/n)-1 %0:1600/16 
+    
+    sSLC2((i*n)+1:((i+1)*n),:) = abs(sSLC((i*n)+1:((i+1)*n),:)); 
+    sSLC2(((i+1)*n)+1:etaTotal,:) = real(src(((i+1)*n)+1:etaTotal,:));
+
+    pc2 = pcolor(FastTime/1e-6,1:etaTotal,sSLC2);% sqd = 1600 x 1618
+    pc2.LineStyle='none';
+   
+    colormap bone
+    xlabel('Fast time [\mus]','interpreter','Tex')
+    ylabel('Azimuth index','interpreter','Tex')
+    gx.Box = 'on';
+    set(gca,'LooseInset',get(gca,'TightInset'));
+    drawnow
+
+    Frame = getframe(gcf);
+    writeVideo(v,Frame);
+end
+
+
+
+
+
+
+
+
+close (v);
+hold off
+% %%%%%%%%%
 %%end - create video
 
 
