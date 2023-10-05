@@ -151,7 +151,7 @@ for gy = 1:11
 		hold on
        
         Imgs = Img(hbin4y(gy,3):hbin4y(gy,4),hbin4x(gx,3):hbin4x(gx,4)); 
-	    ptest = FP08_FastPeakFind(Imgs);
+	    ptest = FP08_FastPeakFind(Imgs);% re-run the fast peak find to find the local peaks
 	    x_cell = hbin4x(gx,3) + ptest(1:2:end);%range, odd numbered is x axis
 	    y_cell = hbin4y(gy,3) + ptest(2:2:end);%azimuth, even numbered is y axis
 
