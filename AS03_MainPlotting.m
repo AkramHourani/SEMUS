@@ -1,11 +1,11 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Main Generation Plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Create Geomtry setup - STEP1.Create Satellite Scenario
-[lat, lon]=meshgrid(-37.9292:0.001:-37.8681,144.448:0.01:144.74111);
-for i= 1: size(lat,1)
-    for j=1:size(lat,2)
-    gs(i,j) = groundStation(sc, lat(i,j), lon(i,j));
-    end
-end
+% [lat, lon]=meshgrid(-37.9292:0.001:-37.8681,144.448:0.01:144.74111);
+% for i= 1: size(lat,1)
+%     for j=1:size(lat,2)
+%     gs(i,j) = groundStation(sc, lat(i,j), lon(i,j));
+%     end
+% end
 sc  = satelliteScenario(startTime,stopTime,Param.tg);
 sat = satellite(sc,Elem.a,Elem.e,Elem.Inc,Elem.RAAN,Elem.omega,Elem.TA,'OrbitPropagator','two-body-keplerian',...
     'name','SAR sat');

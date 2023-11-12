@@ -15,7 +15,7 @@ Param.Tf = 2*pi*sqrt(Elem.a^3/Param.mu);        % [s] Orbital period
 Param.PRF = 2e3;                                % [Hz] Pulse Repeatition Frequency - PRF
 Param.tg = 1/Param.PRF;                         % [s] Orbit time step - Geometric-sampling period - Slowtime sampling
 %% Timing Parameters
-Param.ScanDuration = seconds(1);                % [s] Flight duration - along azimuth direction
+Param.ScanDuration = seconds(100);                % [s] Flight duration - along azimuth direction
 startTime = datetime('01-Jan-2023 6:00:00');    % [s] Set up the start time
 stopTime  = startTime + Param.ScanDuration ;    % [s] Set up the end time
 %% Targets' Parameters

@@ -7,8 +7,8 @@ Q = ak(2:2:end);                                                % Q: Even bit st
 I = repmat(I,1,L).'; Q=repmat(Q,1,L).';                         % Even/odd streams at 1/2Tb baud
 I = I(:).'; Q = Q(:).';                                         % Serialize
 t = 0:1/RadPar.fs:(length(I)-1)/RadPar.fs;                      % Time base vector for the carrier modulated signal
-% iChannel = I.*cos(2*pi*QPSK.fc*t);                              % In-phase channel
-% qChannel = -Q.*sin(2*pi*QPSK.fc*t);                             % Quadrature-phase channel
+iChannel = I.*cos(2*pi*QPSK.fc*t);                              % In-phase channel
+qChannel = -Q.*sin(2*pi*QPSK.fc*t);                             % Quadrature-phase channel
 % signal_IQ = iChannel + 1i* qChannel;                            % QPSK modulated signal with carrier
 signal_IQ = iChannel + 1i* qChannel;                            % QPSK modulated signal with carrier
 signal_IQ = signal_IQ.';
