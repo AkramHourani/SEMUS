@@ -134,7 +134,7 @@ window_step = 1;  % If Step = 1 ==> Sliding window
 % the script will step through the azimuth (slow time) and generate the reflected signal from the entire swath
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
-% Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
+% Use this loop in case using GPU processing ==> Update F06_CalcReflection to work in GPU mode
 % for eta=1:etaTotal
 %     sqd(eta,:) =F06_CalcReflection(sigma,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
 %     disp(eta)
@@ -155,25 +155,6 @@ for eta=1:etaTotal
     sqd(eta,:) =F06_CalcReflection(sigma_w,Targetlat_w,Targetlon_w,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end
- 
-% ii = 1;
-% for eta=1:NofScans+1:etaTotal
-%     if eta+ +NofScans > etaTotal 
-%         break
-%     end    
-%     Targetlat_s = Targetlat((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);     
-%     Targetlon_s = Targetlon((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);
-%     sigma_s = sigma((ii:Param.NtargetsAz/(NofScans+1)+ii-1),:);
-%     for i = 1 : NofScans+1
-%         s(i,:) =F06_CalcReflection(sigma_s,Targetlat_s,Targetlon_s,Satlla((eta+i-1),:),RadPar,E,sataz,c,tauo,FastTime);
-%     end
-%     sqd((eta:eta+NofScans),:)= s;
-%     ii = ii+1;
-%     disp(eta)
-%     if ii == round(NofScans * Param.NtargetsAz / (NofScans+1) -1)
-%         break
-%     end
-% end
 % % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
 % parfor eta=1:etaTotal
 %     sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);

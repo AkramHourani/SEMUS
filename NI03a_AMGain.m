@@ -8,14 +8,14 @@ OffBoreSightAzAM = azAM - sataz;
 % Recieved power at SAR antenna from AM Tx
 RxGainAM = single(RadPar.Gain * (sinc(OffBoreSightRAM*zeta/RadPar.BeamRange)).^2 .* (sinc(OffBoreSightAzAM*zeta/RadPar.BeamAz)).^2);
 
-% % Received Power from the signal
-PrdB = 10*log10(sum((abs(sqd)).^2,'all')/size(sqd,1));         % Received power [dB] using reference signal from all the dwell at GRP
+%% Received Power from the signal
+PrdB = 20*log10(rms(sqd,2));                    % Received power [dB] using reference signal from all the dwell at GRP
 % % For a required SIR
 PAM_RxRef = PrdB - AM.SIR;                                     % The desired reference value of AM Power in dBm - considered at the min distance
 AM_DistRef = min(slantRangeAM);
 % AMPower is adjustable  according to the desired SIR
-AMPower = 10^(PAM_RxRef/10) .* fspl(AM_DistRef,RadPar.Lambda) ./ AM.Gain * max(sqrt(RxGainAM)); 
+AMPower = 10^(PAM_RxRef/10) .* 10^(fspl(AM_DistRef,RadPar.Lambda)/10) ./ (AM.Gain *RxGainAM); 
 % % Convert to dB
 AMPowerdB = 10*log10(AMPower);
 % Received power at SAR radar from AM tx in watts
-PAM = AMPower * AM.Gain * sqrt(RxGainAM)  ./ fspl(slantRangeAM,RadPar.Lambda);
+PAM = AMPower * AM.Gain * RxGainAM  ./ 10^(fspl(slantRangeAM,RadPar.Lambda)/10);
