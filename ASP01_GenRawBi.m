@@ -9,8 +9,8 @@ Param.NtargetsRange = 11; % number of targets in each eta bin
 %% 1. Passive SAR
 %1a. Create Geometry setup (SoI / Satellite of Interest)
 % This Script/function create the satellite orbit
-[SatECISoI,SatllaSoI,DateVector] = FP01_CreateSatGeometry(startTime,stopTime,Param,Elem,'Passive_SAR');
-etaTotal=length(DateVector); % Total number of slow time steps
+[SatECISoI,SatllaSoI,DateVector]=   FP01_CreateSatGeometry(startTime,stopTime,Param,Elem,'Passive_SAR');
+etaTotal                        =   length(DateVector); % Total number of slow time steps
 
 %1b. Finding the swath
 [latSwathMidSoI,lonSwathMidSoI,slantrangeMidSoI,SwathwidthSoI,latSwathL1SoI,lonSwathL1SoI,latSwathL2SoI,lonSwathL2SoI]=FP02_FindSwath(SatllaSoI,RadPar,E);
@@ -22,8 +22,6 @@ stopTime  = startTime + Param.ScanDuration ;
 %Elem.TA  = Elem.TA+0.015;  %  in degrees
 %Elem.omega  = Elem.omega+0.015;
 [SatECII,SatllaI,~] = FP01_CreateSatGeometry(startTime,stopTime,Param,Elem,'Active_SAR'); % This Script/function create the satellite orbit
-%SatECII = circshift(SatECISoI,20);
-%SatllaI = circshift(SatllaSoI,20);
 
 %2b. Finding the swath of the SoI / Interferer
 [latSwathMidI,lonSwathMidI,slantrangeMidI,Swathwidths_mI,latSwathL1I,lonSwathL1I,latSwathL2I,lonSwathL2I] = FP02_FindSwath(SatllaI,RadPar,E);
@@ -50,127 +48,13 @@ V_max = F10_VelocityCheck(latSwathL1SoI,lonSwathL1SoI,latSwathL2SoI,lonSwathL2So
 %% Plotting
 % Plot the Swath Center line of Passive SAR and Active SAR
 % Plot the Swath Edge for Passive SAR and Active SAR
-% close all hidden
-Scale = 2.5;
 figure(1)
-h_Fig = figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2*(2.5/8)/1.618*Scale],'Position',[200 300 800 800*(1.5/8)/1.618*Scale]);
-
-geoplot((SatllaSoI(:,1)),SatllaSoI(:,2),'LineWidth',1.5);  % Satellite subline
-hold on
-geoplot(latSwathMidSoI,lonSwathMidSoI,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));% Swath center line (mid swath)
-hold on
-geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));   % Swath center point GRP
-hold on
-geoplot(latSwathL1SoI,lonSwathL1SoI,'LineWidth',1.5,'color',ColorOrder(7,:));   % Swath edge line 1
-hold on
-geoplot(latSwathL2SoI,lonSwathL2SoI,'LineWidth',1.5,'color',ColorOrder(7,:)); 
-hold on
-geotickformat -dd
-%geolimits([-33.55  -33.45],[151 154]) % focus on swath
-
-legend('satellite subtrack','swath mid track','GRP','Swath edges','FontSize',10,'interpreter','latex')
-ax=gca;
-%ax.LatitudeAxis.TickValues=[];
-%ax.LongitudeAxis.TickValues=[];
-ax.LatitudeAxis.Label.String='Latitude \circ';
-ax.LongitudeAxis.Label.String='Longitude \circ';
-ax.Scalebar.Visible = 'on';
-%ax.LatitudeAxis.TickLabels = '';
-%ax.LongitudeAxis.TickLabels = '';
-grid off
-drawnow
-gx.Box = 'off';
-set(gca,'LooseInset',get(gca,'TightInset'));
-%title('Swath and Satellite Plot','interpreter','latex','FontSize',14);
-
-FilenameG1='Figure4';
-print(h_Fig, '-dpng','-r600',FilenameG1)
-movefile([FilenameG1 '.png'],'Figures')
-
-%% %%create video - Video 1%%%%%%%%%
-% % Create video
-% VidFilename='[1] Swath and Satellite';
-% v = VideoWriter(VidFilename,'MPEG-4');
-% v.FrameRate = 25;
-% v.Quality = 100;
-% open(v)
-% 
-% inside a loop
-% n = 10;
-% figure
-% for i = 0:(etaTotal/n)-1 %0:1600/16 
-%     % geolimits([-34  -33],[151.2 154.6]) % focus on swath
-%     % hold on
-%     geoplot((SatllaSoI((i*n)+1:((i+1)*n),1)),SatllaSoI((i*n)+1:((i+1)*n),2),'LineWidth',1.5);  % Satellite subline
-%     hold on
-%     geoplot(latSwathMidSoI((i*n)+1:((i+1)*n)),lonSwathMidSoI((i*n)+1:((i+1)*n)),'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));% Swath center line (mid swath)
-%     hold on
-%     geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',5,'color',ColorOrder(7,:));   % Swath center point GRP
-%     hold on
-%     geoplot(latSwathL1SoI((i*n)+1:((i+1)*n)),lonSwathL1SoI((i*n)+1:((i+1)*n)),'LineWidth',1.5,'color',ColorOrder(7,:));   % Swath edge line 1
-%     hold on
-%     geoplot(latSwathL2SoI((i*n)+1:((i+1)*n)),lonSwathL2SoI((i*n)+1:((i+1)*n)),'LineWidth',1.5,'color',ColorOrder(7,:)); 
-%     hold on
-%     geotickformat -dd
-%     legend('satellite subtrack','swath mid track','GRP','Swath edges','FontSize',10,'interpreter','latex')
-%     ax = gca;
-%     ax.LatitudeAxis.Label.String='Latitude \circ';
-%     ax.LongitudeAxis.Label.String='Longitude \circ';
-%     ax.Scalebar.Visible = 'on';
-%     grid off
-%     drawnow
-%     gx.Box = 'off';
-%     set(gca,'LooseInset',get(gca,'TightInset'));
-% 
-%     Frame = getframe(gcf);
-%     writeVideo(v,Frame);
-% end
-% close (v);
-% movefile([VidFilename '.mp4'],'Videos')
-% hold off
-%% %%%%%%%%%%%%%%%%%%%%%%
-
+figure_1
+% create_vid_1
 
 %% Plot the Swath Edge for Passive SAR and Active SAR
-Scale = 1.2;
 figure(2)
-h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
-
-geoplot(latSwathMidSoI,lonSwathMidSoI,'--','LineWidth',1,'MarkerSize',2,'color','w');               % Swath center line (mid swath)
-% geobasemap satellite
-hold on
-geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',10,'color','w');                          % Swath center point GRP
-geoplot(latSwathL1SoI,lonSwathL1SoI,'LineWidth',1.5,'color','w');                                   % Swath edge line 1
-geoplot(latSwathL2SoI,lonSwathL2SoI,'LineWidth',1.5,'color','w');                                   % Swath edge line 2
-geotickformat -dd
-txt1 = {'- - -','$\times$','------'};
-text('Units', 'Normalized', 'Position', [0.79, 0.9, 0], 'string',txt1, 'interpreter','latex','FontSize',11,'BackgroundColor','black','EdgeColor','none','Color','white','horizontalAlignment', 'center' )
-txt2 = {'Swath mid-track','GRP','Swath edges'};
-text('Units', 'Normalized', 'Position', [0.82, 0.9, 0], 'string',txt2, 'interpreter','latex','FontSize',10,'BackgroundColor','black','EdgeColor','none','Color','white','horizontalAlignment', 'left' )
-%legend('Swath mid-track','GRP','Swath edges','FontSize',10,'interpreter','latex')
-ax = gca;
-%ax.LatitudeAxis.TickValues=[];
-%ax.LongitudeAxis.TickValues=[];
-ax.Scalebar.Visible = 'on';
-%ax.LatitudeAxis.TickLabels = '';
-%ax.LongitudeAxis.TickLabels = '';
-%ax.Legend.TextColor = 'white';
-%ax.Legend.Color = 'black';
-%ax.AxisColor = [1 1 1];
-ax.LatitudeAxis.Label.String='Latitude \circ';
-ax.LongitudeAxis.Label.String='Longitude \circ';
-ax.LatitudeAxis.Label.Color = 'k';
-ax.LongitudeAxis.Label.Color = 'k';
-grid off
-
-drawnow
-gx.Box = 'on';
-set(gca,'LooseInset',get(gca,'TightInset'));
-%title('Swath Plot','interpreter','latex','FontSize',14);
-FilenameG1='Figure5';
-print(h_Fig, '-dpng','-r600',FilenameG1)
-movefile([FilenameG1 '.png'],'Figures')
-% 
+figure_2
 hold on
 
 %% 4. Generate spatial sampling points (Targets)
@@ -181,133 +65,8 @@ hold on
 a = FP04_GetGroundReflect(Targetlat,Targetlon,latSwathL1SoI,lonSwathL1SoI,latSwathL2SoI,lonSwathL2SoI);
 
 figure(3)
-Scale = 1.2;
-h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
-
-% 5.a Converting to cartesian coordinates for plotting
-[xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
-scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
-%scatter(xEast(:)/1000,yNorth(:)/1000,20,a(:),'MarkerEdgeColor','k','MarkerFaceColor','none','LineWidth',1)
-
-% 5.b Plot geoscatter over the swath
-geoplot(latSwathMidSoI,lonSwathMidSoI,'--','LineWidth',1,'MarkerSize',2,'color','w');               % Swath center line (mid swath)
-geobasemap satellite
-hold on
-geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',20,'color','r');                          % Swath center point GRP
-geoplot(latSwathL1SoI,lonSwathL1SoI,'LineWidth',1.5,'color','w');                                   % Swath edge line 1
-geoplot(latSwathL2SoI,lonSwathL2SoI,'LineWidth',1.5,'color','w'); 
-geotickformat -dd
-for i = 1:Param.NtargetsAz
-   hold on % Swath edge line 2
-   geoscatter(Targetlat(:,i), Targetlon(:,i),'MarkerEdgeColor','y','MarkerFaceColor','none','LineWidth',1)
-end
-
-txt1 = {'- - -','$\times$','------','O'};
-text('Units', 'Normalized', 'Position', [0.77, 0.9, 0], 'string',txt1, 'interpreter','latex','FontSize',10,'BackgroundColor','black','EdgeColor','none','Color','white','horizontalAlignment', 'center' )
-txt2 = {'Swath mid-track','GRP','Swath edges','Testing target points'};
-text('Units', 'Normalized', 'Position', [0.80, 0.9, 0], 'string',txt2, 'interpreter','latex','FontSize',9,'BackgroundColor','black','EdgeColor','none','Color','white','horizontalAlignment', 'left' )
-
-ax = gca;
-%ax.LatitudeAxis.TickValues=[];
-%ax.LongitudeAxis.TickValues=[];
-ax.Scalebar.Visible = 'on';
-%ax.LatitudeAxis.TickLabels = '';
-%ax.LongitudeAxis.TickLabels = '';
-%ax.Legend.TextColor = 'white';
-%ax.Legend.Color = 'black';
-ax.LatitudeAxis.Label.String='Latitude \circ';
-ax.LongitudeAxis.Label.String='Longitude \circ';
-ax.LatitudeAxis.Label.Color = 'k';
-ax.LongitudeAxis.Label.Color = 'k';
-grid off
-%end here
-% 
-%comment if overlay
-% colormap bone
-% axis equal
-% hold on
-% plot(0,0,'+'); % Mid point (reference)
-% xlabel('x-axis [km]','interpreter','latex')
-% ylabel('y-axis [km]','interpreter','latex')
-% % xticklabels('')
-% % yticklabels('')
-% % xticks([])
-% % yticks([])
-% % title('Satellite swath (target points)','interpreter','latex','FontSize',14);
-%end here 
-gx.Box = 'on';
-set(gca,'LooseInset',get(gca,'TightInset'));
-drawnow
-FilenameG1='Figure6';
-print(h_Fig, '-dpng','-r600',FilenameG1)
-movefile([FilenameG1 '.png'],'Figures')
-
-
-% %% create video - Video 2 %%%%%%%%%%%%%%%%%%%%
-% figure
-% 
-% % 5.a Converting to cartesian coordinates for plotting
-% [xEast,yNorth,~] = latlon2local(Targetlat,Targetlon,0,GRP);
-% scatter(xEast(:)/1000,yNorth(:)/1000,2,a(:),'MarkerEdgeColor','none','MarkerFaceColor','flat')
-% 
-% % 5.b Plot geoscatter over the swath
-
-% % %% %%create video%%%%%%%%%
-% % % Create video
-% VidFilename='[2] Target Points';
-% v = VideoWriter(VidFilename,'MPEG-4');
-% v.FrameRate = 15;
-% v.Quality = 100;
-% open(v)
-% % 
-% % inside a loop
-% n = 10;
-% figure
-% geobasemap satellite
-% for i = 0:(etaTotal/n)-1 %0:1600/16 
-% 
-%     geoplot(latSwathMidSoI((i*n)+1:((i+1)*n)),lonSwathMidSoI((i*n)+1:((i+1)*n)),'--','LineWidth',1,'MarkerSize',2,'color','w');               % Swath center line (mid swath)
-%     hold on
-%     geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',20,'color','r');                          % Swath center point GRP
-%     geoplot(latSwathL1SoI((i*n)+1:((i+1)*n)),lonSwathL1SoI((i*n)+1:((i+1)*n)),'LineWidth',1.5,'color','w');                                   % Swath edge line 1
-%     geoplot(latSwathL2SoI((i*n)+1:((i+1)*n)),lonSwathL2SoI((i*n)+1:((i+1)*n)),'LineWidth',1.5,'color','w'); 
-%     geotickformat -dd
-% 
-%     txt1 = {'- - -','$\times$','------','O'};
-%     text('Units', 'Normalized', 'Position', [0.77, 0.9, 0], 'string',txt1, 'interpreter','latex','FontSize',10,'BackgroundColor','black','EdgeColor','none','Color','white','horizontalAlignment', 'center' )
-%     txt2 = {'Swath mid-track','GRP','Swath edges','Testing target points'};
-%     text('Units', 'Normalized', 'Position', [0.80, 0.9, 0], 'string',txt2, 'interpreter','latex','FontSize',9,'BackgroundColor','black','EdgeColor','none','Color','white','horizontalAlignment', 'left' )
-% 
-%     ax = gca;
-%     ax.Scalebar.Visible = 'on';
-%     ax.LatitudeAxis.Label.String='Latitude \circ';
-%     ax.LongitudeAxis.Label.String='Longitude \circ';
-%     ax.LatitudeAxis.Label.Color = 'k';
-%     ax.LongitudeAxis.Label.Color = 'k';
-%     grid off
-%     % % title('Satellite swath (target points)','interpreter','latex','FontSize',14);
-%     gx.Box = 'on';
-%     set(gca,'LooseInset',get(gca,'TightInset'));
-% 
-%     Frame = getframe(gcf);
-%     writeVideo(v,Frame);
-% end
-% % 
-% % inside a loop
-% for i = 1:Param.NtargetsAz
-%     hold on % Swath edge line 2
-%     geoscatter(Targetlat(:,i), Targetlon(:,i),'MarkerEdgeColor','y','MarkerFaceColor','none','LineWidth',1)
-% 
-%     Frame = getframe(gcf);
-%     writeVideo(v,Frame);
-% end
-% close (v);
-% hold off
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
+figure_3
+% create_vid_2
 
 %% 6. Define The source satellite waveform
 %
@@ -332,10 +91,6 @@ movefile([FilenameG1 '.png'],'Figures')
 %   TimeLength = 1618
 %   PulseWidthSamples = 300
 %
-%
-%
-%
-%
 [~,~,Edge1] = geodetic2aer(latSwathL1SoI(MidEta),lonSwathL1SoI(MidEta),0,SatllaSoI(MidEta,1),SatllaSoI(MidEta,2),SatllaSoI(MidEta,3),E);
 [~,~,Edge2] = geodetic2aer(latSwathL2SoI(MidEta),lonSwathL2SoI(MidEta),0,SatllaSoI(MidEta,1),SatllaSoI(MidEta,2),SatllaSoI(MidEta,3),E);
 % Then calculate Distance and Time
@@ -348,25 +103,12 @@ PulseWidthSamples = round(RadPar.T/(FastTime(end)-FastTime(1))*TimeLength);
 
 %% 7. Generate base chirp (not necessary step, just for testing)
 tau = 0;
-sb = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
+sb  = exp(-1j*pi *   (2*RadPar.fo * tau - RadPar.K*(FastTime-tau).^2   )    ) ...
     .*(FastTime>(-RadPar.T/2+tau)).*(FastTime<(RadPar.T/2+tau));%.*Window; % 1 x 1618
 
 % Plotting the chirp
 figure(4)
-Scale = 1.2;
-h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
-plot(FastTime/1e-6,real(sb))
-xlabel('Time [\mus]','interpreter','Tex')
-ylabel('Real part','interpreter','Tex')
-xticks([])
-yticks([])
-title('Reference Pulse [mid swath point]','interpreter','latex','FontSize',12);
-gx.Box = 'on';
-set(gca,'LooseInset',get(gca,'TightInset'));
-drawnow
-FilenameG3='FigureG3';
-print(h_Fig, '-dpng','-r600',FilenameG3)
-movefile([FilenameG3 '.png'],'Figures')
+figure_4
 
 %% 8. (Optional) you can select the Testing value for testing the script
 % 0 = optical processing 
@@ -409,7 +151,6 @@ end
 %   satazI = azimuth(-33.8653,154.5328,-33.9160,154.5320,E) +90;
 %   satazI = 270.7711
 %
-%
 if RadPar.Left == 1
     satazSoI = azimuth(SatllaSoI(1,1),SatllaSoI(1,2),SatllaSoI(end,1),SatllaSoI(end,2),E) +90;
     satazI = azimuth(SatllaI(1,1),SatllaI(1,2),SatllaI(end,1),SatllaI(end,2),E) +90;
@@ -425,9 +166,6 @@ end
 % tauoBi =  0.0040 s
 % reference sqd is at GRP
 %
-%
-%
-%
 tauoBi  = (Ro)/c;% bi-static delay of the reference point
 sqd_ref = zeros(etaTotal,TimeLength);% initialize the reflection matrix, 1600 x 1618
 sqd     = (zeros(etaTotal,TimeLength));
@@ -441,13 +179,7 @@ end
 % This is the longest part of the simulations
 % the script will step through the azimuth (slow time) and generate the
 % reflected signal from the entire swath
-%
-%
-%
-%
-%
-%
-%
+% sqd --> 1600 x 1618
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
 for etaIdx=1:etaTotal
@@ -455,15 +187,6 @@ for etaIdx=1:etaTotal
     disp(etaIdx)
 end
 toc
-
-
-%
-% sqd --> 1600 x 1618 
-%
-
-
-
-
 
 %%
 % close all
@@ -477,53 +200,7 @@ toc
 
 %% 12. Plot the raw unfocused SAR signal (Optional)
 figure(5)
-%close all hidden
-Scale = 1.2;
-h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
-pc = pcolor(FastTime/1e-6,1:etaTotal,abs(sqd));
-pc.LineStyle='none';
-colormap bone
-xlabel('Fast time [\mus]','interpreter','Tex')
-ylabel('Azimuth index','interpreter','Tex')
-%xticks([])
-%yticks([])
-%title('Raw time domain (magnitude)','interpreter','latex','FontSize',14);
-gx.Box = 'on';
-set(gca,'LooseInset',get(gca,'TightInset'));
-drawnow
-FilenameG4='Figure8';
-print(h_Fig, '-dpng','-r600',FilenameG4)
-movefile([FilenameG4 '.png'],'Figures')
-
-% %% Create video - Video 3
-% VidFilename='[3] Unfocused SAR Signal';
-% v = VideoWriter(VidFilename,'MPEG-4');
-% v.FrameRate = 25;
-% v.Quality = 100;
-% open(v)
-% % 
-% % inside a loop
-% sqd2 = zeros(etaTotal,length(FastTime));% initiate array for draw figure
-% n = 10;
-% figure
-% for i = 0:(etaTotal/n)-1 %0:1600/16 
-%     sqd2((i*n)+1:((i+1)*n),:) = sqd((i*n)+1:((i+1)*n),:); 
-%     pc2 = pcolor(FastTime/1e-6,1:etaTotal,abs(sqd2));% sqd = 1600 x 1618
-%     pc2.LineStyle='none';
-%     colormap bone
-%     xlabel('Fast time [\mus]','interpreter','Tex')
-%     ylabel('Azimuth index','interpreter','Tex')
-%     gx.Box = 'on';
-%     set(gca,'LooseInset',get(gca,'TightInset'));
-%     drawnow
-% 
-%     Frame = getframe(gcf);
-%     writeVideo(v,Frame);
-% end
-% close (v);
-% hold off
-% % %%%%%%%%%
-
-%%
+figure_5
+% create_vid_3
 save(FileName)
 %save('Points.mat')
