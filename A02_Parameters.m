@@ -34,15 +34,16 @@ QPSK.Gain = 1;                          % Asumme omin-directional isotropic QPSK
 QPSK.SIR = 30;                          % Assumed SIR in [dB]
 %% Interfering Radar Signal Parameters
 IR.fc = 0.1*RadPar.fo;                  % Carrier frequency same as SAR [Hz]
-IR.ts = RadPar.ts;                      % [s] Sample time same as SAR
-IR.bw = RadPar.bw;                      % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
-IR.T = RadPar.T;                        % [s] Pulse width
-IR.K =  (IR.bw /IR.T);                  % [Hz/s] Ramp (chirp) rate
-IR.t = -IR.T/2:IR.ts:IR.T/2;            % Time base vector for the carrier modulated signal
-% IR.t = -time2num(Param.ScanDuration)/2:IR.ts:(time2num(Param.ScanDuration)/2);    % Time base vector for the carrier modulated signal
-% IR.t = FastTime;              % Time base vector for the carrier modulated signal
-IR.NumberofIR = 1;                      % Number of Radar signals
-IR.latShift = 0.02;                      % Shift of Radar Transmitter from GRP latitude
-IR.lonShift = 0.02;                      % Shift of Radar Transmitter from GRP longitude
-IR.Gain = 1;                            % Asumme omin-directional isotropic Radar transmitter G = 1
-IR.SIR = 40;                            % Assumed SIR in [dB]
+IR.freqShift = RadPar.fo - IR.fc;       % Define the freq shift to the chirp signal
+IR.Lambda = freq2wavelen(IR.fc);        % [m] Wavelength
+IR.bw = 2e-2*RadPar.bw;                 % [Hz] Bandwidth of the RF signal to calcualte the ramp rate
+IR.duty = 0.8;                          % Duty cycle
+IR.PRF = 17.7e3;                         % [Hz] Pulse Repetition Frequency - PRF
+IR.T = IR.duty / IR.PRF;                % [s] Pulse width
+IR.K =  IR.bw /IR.T;                    % [Hz/s] Ramp (chirp) rate
+IR.t = -1/(2*IR.PRF):RadPar.ts:1/(2*IR.PRF)-RadPar.ts/2;% Time base vector for a single signal with IR.PRI = 2 * IR.T
+IR.NumberofIR = round((Param.Margin) * (max(IR.t)/ IR.T ));   % Number of Radar signals in case using FastTime
+IR.latShift = 0.015;                    % Shift of Radar Transmitter from GRP latitude
+IR.lonShift = -0.025;                   % Shift of Radar Transmitter from GRP longitude
+IR.Gain = 1;                            % Gain in linear scale, asumme omin-directional isotropic Radar transmitter G = 0dB
+IR.SIR = -10;                           % Assumed SIR in [dB]
