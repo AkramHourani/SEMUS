@@ -1,8 +1,6 @@
 clc; clear; close all
 close all hidden;
 load('SAR_Image')                     % That is my final image with azimuth 5°
-% load('SAR_Image3a')                     % That is image with smaller Azimuth 1°
-% load('SAR_Image')                     % That is image with Azimuth 0.1°
 %% This is a raw-wise FFT / IFFT
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
@@ -28,6 +26,8 @@ A02_Parameters                                       % Load interference paramet
 % NI05_GenerateRadarTx
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 % figure,imagesc(real(sqd))
+% sqdT = sqd.';
+% figure;pwelch(sqdT(:),size(sqd,1),[],size(sqd,1),RadPar.fs,'centered')
 %% plotting raw time domain signal
 figure(1);
 subplot(2,3,1)
@@ -112,7 +112,7 @@ figure(2)
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
 % Img = Img.^2;
-Img = imadjust(Img,[0 0.7]);
+Img = imadjust(Img,[0 0.6]);
 Calibration = 1;
 
 speed= mean(sqrt(sum((diff(SatECI,[],2)).^2)) /Param.tg);   % Platform speed = sqrt(Param.mu/(h+Re))
@@ -217,6 +217,6 @@ ylabel('East-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-4.8 4.8])
-Filename1='Figure12';
-print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure11';
+% print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden
