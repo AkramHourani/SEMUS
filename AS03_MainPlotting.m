@@ -27,10 +27,8 @@ lonLORA = GRP(2) + LORA.lonShift;                         % LoRa Tx longitude sh
 geoplot(latSwathMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
 hold on
 geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(3,:));                          % Swath center point GRP
-% text(GRP(1),GRP(2),'  \bfGRP','color', ColorOrder(3,:), 'FontSize', 12)
 geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
 geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
-% text((latLORA)+0.1,(lonLORA/1000),'  \bfRFI','color', ColorOrder(7,:), 'FontSize', 12)
 
 % Adding LoRa Transmitter to Geoplot
 geoplot(latLORA,lonLORA,'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(7,:));                                   % LoRA Transmitter
