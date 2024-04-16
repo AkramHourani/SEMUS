@@ -1,26 +1,33 @@
 %% Define the Message  - Method 2
 NI02a_LoRaGain                                                      % Generate the transmitter gain and power according to the required SIR
-message = char(randi([33 126],1,1e4));
+message = char(randi([22 126],1,1e4));
 %% Transmit Signal
 LoRaIQ = NI02b_LoRaTx(message,LORA.BW,LORA.SF,PrLORATxdB,RadPar.fs,LORA.Delta_f) ;
-% imagesc(abs(LoRaIQ).^2)
+% figure;imagesc(abs(LoRaIQ))
 % spectrogram(LoRaIQ(:),500,0,500,RadPar.fs ,'yaxis','centered')
+LoRaIQ = LoRaIQ.';
 %% Define acquisition window and Chopping the signal according to the acquisition window
 HopStopWindow = round(seconds(Param.ScanDuration) / size(sqd,1) * RadPar.fs);  % The number of samples in the whole window
 BasicFilter = [ones(1,size(sqd,2)) zeros(1, HopStopWindow-size(sqd,2))];
 % figure;plot(BasicFilter)
 Filterstream = logical(repmat(BasicFilter,1,size(sqd,1)));
 % % Chopping the signal according to the acquisition window
-LoRaIQ = LoRaIQ(1:length(Filterstream));
+% % Chopping the signal according to the acquisition window
+if length(LoRaIQ)>= length(Filterstream)
+    LoRaIQ = LoRaIQ(1:length(Filterstream));
+else
+    LoRaIQ = [LoRaIQ,zeros(1, length(Filterstream) - length(LoRaIQ))];  % Pad x with zeros at the end
+end
 % figure;plot(abs(IRstream(1:200000)));hold on; plot(Filterstream(1:200000))
+% figure;imagesc(abs(LoRaIQ))
 sLora = LoRaIQ(Filterstream);
-% figure;plot(real(InterfSignal(1:200)));
+% figure;plot(real(InterfSignal(1:200)));% figure;imagesc(abs(sLora))
 sLora = (reshape(sLora,size(sqd.'))).';
-% imagesc(abs(sLora))
+% figure;imagesc(abs(sLora))
 %%  Apply the power
 % figure,imagesc(abs(sLora).^2)
 sLORA = sLora .* sqrt(PLORA);
-% imagesc(abs(sLORA))
+% figure;imagesc(abs(sLORA))
 %% Adjust Interference phase
 % phase_LoRa = exp(-1i*2*pi*RadPar.Lambda/slantRangeLORA);
 % sLORA = sLORA .* repmat(phase_LoRa.',1,size(sLORA,2));

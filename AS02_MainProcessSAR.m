@@ -14,8 +14,8 @@ A02_Parameters                                       % Load interference paramet
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % Add LORA signal
-% NI02_GenerateLORA
-% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+NI02_GenerateLORA
+sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % Add AM signal
 % NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
@@ -26,17 +26,17 @@ A02_Parameters                                       % Load interference paramet
 % NI05_GenerateRadarTx
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 % figure,imagesc(real(sqd))
-% sqdT = sqd.';
-% figure;pwelch(sqdT(:),size(sqd,1),[],size(sqd,1),RadPar.fs,'centered')
+sqdT = sqd.';
+figure;pwelch(sqdT(:),size(sqd,1),[],size(sqd,1),RadPar.fs,'centered')
 %% plotting raw time domain signal
-figure(1);
-subplot(2,3,1)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(sqd));
-pc.LineStyle='none';
-colormap parula
-xlabel('Fast time [\mus]')
-ylabel('Azimuth index')
-title('Step 0: Raw time domain (magnitude)')
+% figure(1);
+% subplot(2,3,1)
+% pc =pcolor(FastTime/1e-6,1:etaTotal,real(sqd));
+% pc.LineStyle='none';
+% colormap parula
+% xlabel('Fast time [\mus]')
+% ylabel('Azimuth index')
+% title('Step 0: Raw time domain (magnitude)')
 %% STEP5.SAR Image Processing
 %% Step 1: Range Compression
 So = fft1d2(sqd);                                % FFT for the time domain signal (FFT along each eta row)
@@ -52,29 +52,29 @@ So_ref = fft1d2(sqd_ref);
 Src_ref  = repmat(G,size(So_ref,1),1).*So_ref; 
 src_ref  = ifft1d2(Src_ref);
 %% Plotting the range-compressed image
-subplot(2,3,2)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
-pc.LineStyle='none';
-xlabel('Fast time [\mus]')
-ylabel('Azimuth index')
-title('Step 1: Range compression')
-drawnow
+% subplot(2,3,2)
+% pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
+% pc.LineStyle='none';
+% xlabel('Fast time [\mus]')
+% ylabel('Azimuth index')
+% title('Step 1: Range compression')
+% drawnow
 %% Step 2 Azimuth FFT
 S2_ref = fft1d1(src_ref);
 S2 = fft1d1(src);
-subplot(2,3,3)
-pc =pcolor(FastTime/1e-6,1:etaTotal,abs(S2));
-pc.LineStyle='none';
-xlabel('Fast time [ms]')
-ylabel('Azimuth index')
-title('Step 2: Azimuth FFT')
+% subplot(2,3,3)
+% pc =pcolor(FastTime/1e-6,1:etaTotal,abs(S2));
+% pc.LineStyle='none';
+% xlabel('Fast time [ms]')
+% ylabel('Azimuth index')
+% title('Step 2: Azimuth FFT')
 %% Step 3 Range cell migration compensation
 DeltaR = R - Ro;                                    % Difference on range profile due to migration - Based on the GRP
-subplot(2,3,4)
-plot(1:etaTotal,DeltaR);
-xlabel('Azimuth index')
-ylabel('Range compensation [m]')
-title('Step 3.1: Range compensation profile')
+% subplot(2,3,4)
+% plot(1:etaTotal,DeltaR);
+% xlabel('Azimuth index')
+% ylabel('Range compensation [m]')
+% title('Step 3.1: Range compensation profile')
 
 % Shifting the range cells
 RangeBin = RadPar.ts*c/2;                           % This is the slant range bin
@@ -84,20 +84,20 @@ for AzCtr=1:etaTotal
     S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift(AzCtr));
 end
 
-subplot(2,3,5)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));
-pc.LineStyle='none';
-xlabel('Fast time [\mus]')
-ylabel('Azimuth index')
-title('Step 3.2: RCMC')
-drawnow
+% subplot(2,3,5)
+% pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));
+% pc.LineStyle='none';
+% xlabel('Fast time [\mus]')
+% ylabel('Azimuth index')
+% title('Step 3.2: RCMC')
+% drawnow
 %% Step 4 Azimuth compression
 Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
-subplot(2,3,6)
-plot(real(Haz))
-xlabel('Fast time [\mus]')
-ylabel('Azimuth index')
-title('Step 4: Azimuth analytical filter')
+% subplot(2,3,6)
+% plot(real(Haz))
+% xlabel('Fast time [\mus]')
+% ylabel('Azimuth index')
+% title('Step 4: Azimuth analytical filter')
 % Haz = exp(-1j*pi*DeltaR*2*RadPar.fo/c);           % Azimuth Analytical Matched Filter
 % S3 = S2 .* repmat(Haz,1,size(S2,2));              % Compressed data after azimuth compression using analytical method
 
@@ -108,7 +108,7 @@ S3 = S2 .* conj(S2_ref);
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 %% Plotting Focused SAR Image (An approximate projection of the swath)
-figure(2)
+figure;
 clf
 Img=abs(sSLC)./max(abs(sSLC),[],"all");
 % Img = Img.^2;
@@ -153,7 +153,7 @@ for AzCtr =1:ResAz                                  % Create the points based on
     % Build conneting lines between the swath points
     [CLat(AzCtr,:),CLon(AzCtr,:)] = gcwaypts(latSwathL1(eta),lonSwathL1(eta),latSwathL2(eta),lonSwathL2(eta),ResR-1);
 end
-%% Second: Calculate the transformation control points in Az/Range domain based on given Lat/Lon
+% Second: Calculate the transformation control points in Az/Range domain based on given Lat/Lon
 for Ctr=1:length(CLat(:))
     % Find the disance profile of the target over the entire acquisition period
     [~,~,RTemp]=geodetic2aer(CLat(Ctr),CLon(Ctr),0,Satlla(:,1),Satlla(:,2),Satlla(:,3),E);
@@ -171,8 +171,8 @@ LatLon2AzR = fitgeotform2d([ContAz(:),ContR(:)],[CLat(:),CLon(:)],"polynomial",4
 Output1 = transformPointsInverse(LatLon2AzR,[Targetlat(:), Targetlon(:)]);
 hold on
 %scatter(Output1(:,2)/1000,Output(:,1),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
-%% Third: Transform to local cartisian coordiantes
-figure(3)
+% Third: Transform to local cartisian coordiantes
+% figure
 clf
 % Transform from AzR to Lat/Lon
 etaVecM = repmat((1:etaTotal)',1,length(RangeEq));
@@ -182,14 +182,11 @@ RangeM  = repmat(RangeEq,etaTotal,1);
 % Transfrom from Lat/Lon to NEC
 [xImg,yImg,~] = latlon2local(LatImg,LonImg,0,GRP);
 %scatter(xImg(:),yImg(:),"+","MarkerEdgeColor",ax.ColorOrder(2,:))
-% hold on
-% axis equal
 [~,column_indx_min] = find(xImg(1,:) < max(xEast,[],'all'));
 [~,column_indx_max] = find(xImg(end,:) > min(xEast,[],'all'));
 pc =pcolor(xImg(:,min(column_indx_min):max(column_indx_max))/1000,...
     yImg(:,min(column_indx_min):max(column_indx_max))/1000,...
     Img(:,min(column_indx_min):max(column_indx_max)));
-% pc =pcolor(xImg(:,140:1570)/1000,yImg(:,140:1570)/1000,Img(:,140:1570));
 % scatter(xEast(:)/1000,yNorth(:)/1000,"o","MarkerEdgeColor",ax.ColorOrder(2,:))
 % scatter(0,0,"+","MarkerEdgeColor",ax.ColorOrder(7,:))
 pc.LineStyle='none';
@@ -200,23 +197,26 @@ hold on
 line(xEast(end,:)/1000,yNorth(end,:)/1000,'LineStyle', '-', 'Color',ColorOrder(7,:), 'LineWidth', 3)
 hold on
 Idx = round(size(xEast,1)/2);                                                                   % Index of mid point of the dwell
-line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
+% line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
 hold on
-plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
+plot(0,0,'+','LineWidth',1,'color',ColorOrder(3,:),'MarkerSize', 15);                           % Mid point (reference)
+text(0.1,-0.2,'  \bfGRP','color', ColorOrder(3,:), 'FontSize', 12)
 
-% Add LoRa transmitter to the plot
-% [IxImg,IyImg,~] = latlon2local(latLORA,lonLORA,0,GRP);
-% plot(IxImg/1000,IyImg/1000,'+','LineWidth',2,'color',ColorOrder(1,:),'MarkerSize', 25);                          % Mid point (reference)
+% Add RFI transmitter to the plot
+[RFIxImg,RFIyImg,~] = latlon2local( GRP(1) + LORA.latShift, GRP(2) + LORA.lonShift ,0,GRP);
+plot(RFIxImg/1000,RFIyImg/1000,'+','LineWidth',2,'color',ColorOrder(7,:),'MarkerSize', 15);                          % Mid point (reference)
+text((RFIxImg/1000)+0.1,(RFIyImg/1000),'  \bfRFI','color', ColorOrder(7,:), 'FontSize', 12)
 
 colormap bone
 ax.YAxis.Direction = 'reverse';
 ax.XAxis.Direction = 'reverse';
 box on
-xlabel('North-axis [km]')
-ylabel('East-axis [km]')
+xlabel('East-axis [km]')
+ylabel('North-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-4.8 4.8])
-Filename1='Figure11';
-% print(h_Fig, '-dpng','-r600',Filename1)
+axis equal
+Filename1='Figure12';
+print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden

@@ -26,12 +26,14 @@ lonLORA = GRP(2) + LORA.lonShift;                         % LoRa Tx longitude sh
 % hold on
 geoplot(latSwathMid,lonSwathMid,'--','LineWidth',1,'MarkerSize',2,'color',ColorOrder(5,:));               % Swath center line (mid swath)
 hold on
-geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(7,:));                          % Swath center point GRP
+geoplot(GRP(1),GRP(2),'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(3,:));                          % Swath center point GRP
+% text(GRP(1),GRP(2),'  \bfGRP','color', ColorOrder(3,:), 'FontSize', 12)
 geoplot(latSwathL1,lonSwathL1,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 1
 geoplot(latSwathL2,lonSwathL2,'LineWidth',1.5,'color',ColorOrder(7,:));                                   % Swath edge line 2
+% text((latLORA)+0.1,(lonLORA/1000),'  \bfRFI','color', ColorOrder(7,:), 'FontSize', 12)
 
 % Adding LoRa Transmitter to Geoplot
-geoplot(latLORA,lonLORA,'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(1,:));                                   % LoRA Transmitter
+geoplot(latLORA,lonLORA,'x','LineWidth',1,'MarkerSize',12,'color',ColorOrder(7,:));                                   % LoRA Transmitter
 legend('Swath mid track','GRP','Swath','','Interferer Tx','Location','northwest','NumColumns',2,'FontSize',12,'interpreter','latex')
 % legend('Satellite subtrack','Swath mid track','GRP','Swath','','Interferer Tx','Location','northwest','NumColumns',2,'FontSize',12,'interpreter','latex')
 % legend('Satellite subtrack','Swath mid track','FontSize',10,'interpreter','latex')
@@ -76,7 +78,8 @@ hold on
 Idx = round(length(xEast)/2);                                                                   % Index of mid point of the dwell
 line(xEast(Idx,:)/1000,yNorth(Idx,:)/1000,'LineStyle', '--', 'Color',ColorOrder(5,:), 'LineWidth', 3)
 hold on
-plot(0,0,'+','LineWidth',1,'color',ColorOrder(7,:),'MarkerSize', 25);                           % Mid point (reference)
+plot(0,0,'+','LineWidth',1,'color',ColorOrder(3,:),'MarkerSize', 15);                           % Mid point (reference)
+text(0.1,-0.2,'  \bfGRP','color', ColorOrder(3,:), 'FontSize', 12)
 xlabel('x-axis [km]')
 ylabel('y-axis [km]')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
@@ -84,7 +87,7 @@ set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 box on
 
 Filename1='Figure10';
-% print(h_Fig, '-dpng','-r600',Filename1)
+print(h_Fig, '-dpng','-r600',Filename1)
 %% Test antenna pattern - STEP4.Amplitude Simulator
 % figure(3)
 Scale = 1.2;
