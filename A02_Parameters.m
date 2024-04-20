@@ -14,12 +14,11 @@ LORA.lonShift = -0.028;                 % Shift of LoRa Transmitter from GRP lon
 LORA.Gain = 1;                          % Asumme omin-directional isotropic LORA transmitter G = 1
 LORA.SIR = -2;                          % Assumed SIR in [dB]
 %% AM Signal Parameters
-AM.fc = RadPar.fo;                      % Carrier frequency same as SAR [Hz]
-AM.fs = 2*RadPar.fo;                    % Sampling frequency same higher than SAR sampling frequency [Hz]
+AM.fc = 1.01*RadPar.fo;                      % Carrier frequency same as SAR [Hz]
 AM.BW = 0.01e6 ;                         % Signal bandwidth of LoRa transmission [Hz]
-AM.t = 0:1/AM.fs:1;                     % Time base vector for the carrier modulated signal
+AM.t  = 0: 1/RadPar.fs :time2num(Param.ScanDuration); % Time base vector for the carrier modulated signal
 AM.fm = 1.2*RadPar.fo;                           % Modulation frequency [Hz]       
-AM.NumberofAM = 1;                      % Number of AM signals
+AM.Index = 0.8;                      % Number of AM signals
 AM.latShift = 0.01;                     % Shift of AM Transmitter from GRP latitude
 AM.lonShift = -0.028;                     % Shift of AM Transmitter from GRP longitude
 AM.Gain = 1;                            % Asumme omin-directional isotropic AM transmitter G = 1

@@ -1,12 +1,16 @@
 % Define AM Signal
 NI03a_AMGain
+% Generate the carrier signal
+carrier = cos(2 * pi * RadPar.fo * AM.t);
+% Generate the modulating signal
+modulating = cos(2* pi * AM.fm * AM.t);
+% Create the AM modulated signal (standard AM modulation)
+am_signal = (1 + AM.Index * modulating) .* carrier;
+% Create a complex signal by adding a Hilbert transform
+InterfIQ = am_signal + 1i * imag(hilbert(am_signal));
 % x = cos(2*pi*AM.t*AM.fm);
-% signal_IQA = ((1+x) .*cos(2*pi*AM.fc*AM.t)).';
-x = cos(2*pi*AM.t*AM.fm);
-InterfIQ = (1+x).* (cos(2 * pi * AM.fc * AM.t)+ 1i *sin(2 * pi * AM.fc * AM.t));
-% InterfIQ = ammod(x,AM.fc,AM.fs);                            % Double-sideband AM
+% InterfIQ =  100 * (1+x).* (cos(2 * pi * AM.fc * AM.t)+ 1i *sin(2 * pi * AM.fc * AM.t));
 % figure;imagesc(abs(InterfIQ))
-% figure;plot(AM.t, InterfIQ);
 %% Define acquisition window and Chopping the signal according to the acquisition window
 HopStopWindow = round(seconds(Param.ScanDuration) / size(sqd,1) * RadPar.fs);  % The number of samples in the whole window
 BasicFilter = [ones(1,size(sqd,2)) zeros(1, HopStopWindow-size(sqd,2))];

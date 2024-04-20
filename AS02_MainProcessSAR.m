@@ -17,11 +17,11 @@ A02_Parameters                                       % Load interference paramet
 % NI02_GenerateLORA
 % sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % Add AM signal
-% NI03_GenerateAM
-% sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
+NI03_GenerateAM
+sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
 % Add QPSK signal
-NI04_GenerateQPSK
-sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
+% NI04_GenerateQPSK
+% sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % Add Radar signal
 % NI05_GenerateRadarTx
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
@@ -120,20 +120,20 @@ CrossRange = (1:etaTotal)*Param.tg*speed;
 
 % Time equivalent range (i.e. twice the slant range in case of mono-staitic SAR)
 RangeEq =(-(numel(FastTime)/2+Calibration)*RangeBin:RangeBin:(numel(FastTime)/2-Calibration-1)*RangeBin);
-ax=gca;
-pc =pcolor(RangeEq/1000,CrossRange/1000,Img);
-% pc =pcolor(RangeEq/1000,(1:size(Img,1))/1000,Img);
-pc.LineStyle='none';
-% ax.YAxis.Direction = 'reverse';
-% ax.XAxis.Direction = 'reverse';
-xlabel('Slant Range [km]')
-ylabel('Cross Range [km]')
-title('Step 5: Compressed image')
-% colormap turbo
-colormap bone
-% axis equal
-% xlim([-2.7 2.7])
-drawnow
+% ax=gca;
+% pc =pcolor(RangeEq/1000,CrossRange/1000,Img);
+% % pc =pcolor(RangeEq/1000,(1:size(Img,1))/1000,Img);
+% pc.LineStyle='none';
+% % ax.YAxis.Direction = 'reverse';
+% % ax.XAxis.Direction = 'reverse';
+% xlabel('Slant Range [km]')
+% ylabel('Cross Range [km]')
+% title('Step 5: Compressed image')
+% % colormap turbo
+% colormap bone
+% % axis equal
+% % xlim([-2.7 2.7])
+% drawnow
 %% Geographic projection for the SAR image
 %% First: Create transformation control points in Lat/Lon domain
 Scale = 1.2;
@@ -217,6 +217,6 @@ ylabel('North-axis [km]')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-4.8 4.8])
 axis equal
-Filename1='Figure1';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure1';
+% print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden
