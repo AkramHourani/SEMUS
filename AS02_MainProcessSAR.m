@@ -14,14 +14,14 @@ A02_Parameters                                       % Load interference paramet
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % Add LORA signal
-NI02_GenerateLORA
-sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% NI02_GenerateLORA
+% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % Add AM signal
 % NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
-% % Add QPSK signal
-% NI04_GenerateQPSK
-% sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
+% Add QPSK signal
+NI04_GenerateQPSK
+sqd = sqd + sQPSK;                                  % Signal to interference = QPSK.SIR
 % Add Radar signal
 % NI05_GenerateRadarTx
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
@@ -203,7 +203,7 @@ plot(0,0,'+','LineWidth',1,'color',ColorOrder(3,:),'MarkerSize', 15);           
 text(0.1,-0.2,'  \bfGRP','color', ColorOrder(3,:), 'FontSize', 12)
 
 % Add RFI transmitter to the plot
-[RFIxImg,RFIyImg,~] = latlon2local( GRP(1) + LORA.latShift, GRP(2) + LORA.lonShift ,0,GRP);
+[RFIxImg,RFIyImg,~] = latlon2local( latInterf, lonInterf ,0,GRP);
 plot(RFIxImg/1000,RFIyImg/1000,'+','LineWidth',2,'color',ColorOrder(7,:),'MarkerSize', 15);                          % Mid point (reference)
 text((RFIxImg/1000)+0.1,(RFIyImg/1000),'  \bfRFI','color', ColorOrder(7,:), 'FontSize', 12)
 
@@ -217,6 +217,6 @@ ylabel('North-axis [km]')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-4.8 4.8])
 axis equal
-Filename1='Figure12';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure12';
+% print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden

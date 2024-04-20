@@ -1,30 +1,46 @@
 % Define AM Signal
+NI03a_AMGain
 % x = cos(2*pi*AM.t*AM.fm);
 % signal_IQA = ((1+x) .*cos(2*pi*AM.fc*AM.t)).';
-x = sin(2*pi*AM.t*AM.fm);
-signal_IQA = ammod(x,AM.fc,AM.fs);                            % Double-sideband AM
-%% Define AM Timing
-TxTime = Param.tg;
-RxTime = abs(min(FastTime,[],"all")) + abs(max(FastTime,[],"all"));
+x = cos(2*pi*AM.t*AM.fm);
+InterfIQ = (1+x).* (cos(2 * pi * AM.fc * AM.t)+ 1i *sin(2 * pi * AM.fc * AM.t));
+% InterfIQ = ammod(x,AM.fc,AM.fs);                            % Double-sideband AM
+% figure;imagesc(abs(InterfIQ))
+% figure;plot(AM.t, InterfIQ);
+%% Define acquisition window and Chopping the signal according to the acquisition window
+HopStopWindow = round(seconds(Param.ScanDuration) / size(sqd,1) * RadPar.fs);  % The number of samples in the whole window
+BasicFilter = [ones(1,size(sqd,2)) zeros(1, HopStopWindow-size(sqd,2))];
+% figure;plot(BasicFilter)
+Filterstream = logical(repmat(BasicFilter,1,size(sqd,1)));
+% % Chopping the signal according to the acquisition window
+% % Chopping the signal according to the acquisition window
+if length(InterfIQ)>= length(Filterstream)
+    InterfIQ = InterfIQ(1:length(Filterstream));
+else
+    InterfIQ = [InterfIQ,zeros(1, length(Filterstream) - length(InterfIQ))];  % Pad x with zeros at the end
+end
+% figure;plot(abs(IRstream(1:200000)));hold on; plot(Filterstream(1:200000))
+% figure;imagesc(abs(LoRaIQ))
+sInterf = InterfIQ(Filterstream);
+% figure;plot(real(InterfSignal(1:200)));% figure;imagesc(abs(sLora))
+sInterf = (reshape(sInterf,size(sqd.'))).';
+% figure;imagesc(abs(sInterf))
+%%  Apply the power
+% figure,imagesc(abs(sLora).^2)
+sAM = sInterf .* sqrt(PInterf);
+% figure;imagesc(abs(sAM))
 
-AMTime = length(signal_IQA)/AM.fs;
-Discard_Q = round(length(signal_IQA)* TxTime/AMTime);         % Number of samples on LORA data to be removed
-Keep_Q = round(size(sqd,2)* RxTime/AMTime);                   % Number of samples on LORA data to be considered
-%% Creat AM Interference Matrix
-% First define Number of section in AM data
-sections = round(length(signal_IQA) / (Discard_Q + Keep_Q));
-% Creat Matrix
-for i = 1: sections-1
-  sam(i,:) = signal_IQA(i+(i*Discard_Q)+((i-1)*Keep_Q):i+(i*Discard_Q)+(i*Keep_Q));
-end
-% Adjust size of AM signal to match the SAR raw data
-sAM = zeros(size(sqd,1),size(sqd,2));
-for i = 1 : AM.NumberofAM
-scale(i) = 0.25 + (1 - 0.25) * rand(1,1);                     % 0.25 is the min limit of the scale and 1 is the max limit of the scale
-AMi{i}(:,:) = padarray(sam,[(round(size(sqd,1)*scale(i))-size(sam,1)), 0],0,'pre');
-sAMi = padarray(AMi{i}(:,:),[(size(sqd,1)-size(AMi{i}(:,:),1)), 0],0,'post');
-sAM = sAMi +sAM;
-end
-% imagesc(real(sAM))
-NI03a_AMGain
-sAM = sAM .* sqrt(PAM);
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -26,7 +26,7 @@ sLora = (reshape(sLora,size(sqd.'))).';
 % figure;imagesc(abs(sLora))
 %%  Apply the power
 % figure,imagesc(abs(sLora).^2)
-sLORA = sLora .* sqrt(PLORA);
+sLORA = sLora .* sqrt(PInterf);
 % figure;imagesc(abs(sLORA))
 %% Adjust Interference phase
 % phase_LoRa = exp(-1i*2*pi*RadPar.Lambda/slantRangeLORA);
