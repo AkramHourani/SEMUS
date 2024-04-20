@@ -217,6 +217,6 @@ ylabel('North-axis [km]')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % xlim([-4.8 4.8])
 axis equal
-% Filename1='Figure12';
-% print(h_Fig, '-dpng','-r600',Filename1)
+Filename1='Figure1';
+print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden
