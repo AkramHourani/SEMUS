@@ -53,8 +53,8 @@ gx.Box = 'on';
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
 % title('Swath location','FontSize',14,'interpreter','latex')
 
-Filename1='Figure9';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure9';
+% print(h_Fig, '-dpng','-r600',Filename1)
 %% Get ground reflectrivity - STEP3.Reflectivity Simulator
 % Plot satellite swath
 % figure(2)
@@ -247,14 +247,23 @@ figure(9)
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
 subplot(2,1,1)
-spectrogram(signalIQ,500,0,500,LORA.fs,'yaxis','centered')
-title('LoRa signal injected to the SAR signal');
-subplot(2,1,2)
-spectrogram(signal_IQ,500,0,500,fs,'yaxis','centered')
+spectrogram(signal_IQ,500,0,500,RadPar.fs,'yaxis','centered')
 title('QPSK modulated signal injected to the SAR signal');
+subplot(2,1,2)
+spectrogram(LoRaIQ,500,0,500,RadPar.fs,'yaxis','centered')
+% title('LoRa signal injected to the SAR signal');
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
-Filename1='Figure5';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure215';
+% print(h_Fig, '-dpng','-r600',Filename1)
+%% Plot LoRa Signal
+% for plotting clear LoRa SF =9, BW = 0.8MHz
+Scale = 0.9;
+h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
+spectrogram(LoRaIQ,500,0,500,RadPar.fs,'yaxis','centered')
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',10);
+% Filename1='Figure215';
+% print(h_Fig, '-dpng','-r600',Filename1)
 %% Plot QPSK Signal
 plot(t,real(signal_IQ),'r','linewidth',1), grid on;
 title('QPSK modulated signal (sum of inphase and Quadrature phase signal)');

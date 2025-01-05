@@ -27,7 +27,7 @@ sqd = sqd + sLORA;                                   % Signal to interference = 
 % sqd = sqd + sInfR;                                   % Signal to interference = IR.SIR
 % figure,imagesc(real(sqd))
 sqdT = sqd.';
-figure;pwelch(sqdT(:),size(sqd,1),[],size(sqd,1),RadPar.fs,'centered')
+% figure;pwelch(sqdT(:),size(sqd,1),[],size(sqd,1),RadPar.fs,'centered')
 %% plotting raw time domain signal
 % figure(1);
 % subplot(2,3,1)
@@ -215,8 +215,8 @@ xlabel('East-axis [km]')
 ylabel('North-axis [km]')
 % title('Corrected geo image')
 set(gca,'LooseInset',get(gca,'TightInset'),'FontSize',12);
-% xlim([-4.8 4.8])
+xlim([-5 5])
 axis equal
-Filename1='Figure12';
-print(h_Fig, '-dpng','-r600',Filename1)
+% Filename1='Figure12';
+% print(h_Fig, '-dpng','-r600',Filename1)
 % close all hidden

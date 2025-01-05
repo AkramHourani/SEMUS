@@ -14,8 +14,8 @@ PrdB = 20*log10(rms(sqd,2));                    % Received power [dB] using refe
 PAM_RxRef = PrdB - AM.SIR;                                     % The desired reference value of AM Power in dBm - considered at the min distance
 AM_DistRef = min(slantRangeAM);
 % AMPower is adjustable  according to the desired SIR
-AMPower = 10^(PAM_RxRef/10) .* 10^(fspl(AM_DistRef,RadPar.Lambda)/10) ./ (AM.Gain *RxGainAM); 
+AMPower = 10.^(PAM_RxRef/10) .* 10^(fspl(AM_DistRef,RadPar.Lambda)/10) ./ (AM.Gain *RxGainAM); 
 % % Convert to dB
 AMPowerdB = 10*log10(AMPower);
 % Received power at SAR radar from AM tx in watts
-PAM = AMPower * AM.Gain * RxGainAM  ./ 10^(fspl(slantRangeAM,RadPar.Lambda)/10);
+PAM = AMPower .* AM.Gain .* RxGainAM  ./ 10.^(fspl(slantRangeAM,RadPar.Lambda)/10);

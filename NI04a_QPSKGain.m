@@ -15,8 +15,8 @@ PrdB = 20*log10(rms(sqd,2));                    % Received power [dB] using refe
 PQPSK_RxRef = PrdB - QPSK.SIR;                            % The desired reference value of QPSK Power in dBm - considered at the min distance
 QPSK_DistRef = min(slantRangeQPSK);
 % QPSKPower is adjustable  according to the desired SIR
-QPSKPower = 10^(PQPSK_RxRef/10) .* 10^(fspl(QPSK_DistRef,RadPar.Lambda)/10) ./ (QPSK.Gain * RxGainQPSK); 
+QPSKPower = 10.^(PQPSK_RxRef/10) .* 10^(fspl(QPSK_DistRef,RadPar.Lambda)/10) ./ (QPSK.Gain * RxGainQPSK); 
 % % Convert to dB
 QPSKPowerdB = 10*log10(QPSKPower);
 % Received power at SAR radar from QPSK tx in watts
-PQPSK = QPSKPower * QPSK.Gain * RxGainQPSK  ./ 10^(fspl(slantRangeQPSK,RadPar.Lambda)/10);
+PQPSK = QPSKPower .* QPSK.Gain .* RxGainQPSK  ./ 10.^(fspl(slantRangeQPSK,RadPar.Lambda)/10);

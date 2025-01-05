@@ -1,11 +1,11 @@
 %% Noise and Interferers Parameters
 %% AWGN signal parameter
-Noise.SNR = 60;                         % Assumed Signal to noise ratio  [dB]
+Noise.SNR = 20;                         % Assumed Signal to noise ratio  [dB]
 %% LoRa Signal Parameters
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
 % SF ∈ {7, 8, 9, 10, 11, 12}.           % Generate 0.16s of LORA data ==> Controlled by the SF=9
-LORA.SF = 9;                           % Spreading factor
-LORA.BW = 0.08e6 ;                       % Signal bandwidth of LoRa transmission [Hz]
+LORA.SF = 11;                           % Spreading factor
+LORA.BW = 0.8e6 ;                       % Signal bandwidth of LoRa transmission [Hz]
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]
 LORA.Delta_f = 1e6 ;                    % Frequency Shift [Hz]
 LORA.NumberofLoRa = 1;                  % Number of LoRa signals
@@ -22,7 +22,7 @@ AM.NumberofAM = 1;                      % Number of AM signals
 AM.latShift = 0.02;                     % Shift of AM Transmitter from GRP latitude
 AM.lonShift = 0.02;                     % Shift of AM Transmitter from GRP longitude
 AM.Gain = 1;                            % Asumme omin-directional isotropic AM transmitter G = 1
-AM.SIR = 30;                            % Assumed SIR in [dB]
+AM.SIR = -5;                            % Assumed SIR in [dB]
 %% QPSK Signal Parameters
 QPSK.NofBits=2^14;                      % Number of Transmitted bits
 QPSK.fc = RadPar.fo;                    % Carrier frequency same as SAR sampling frequency [Hz]
@@ -31,7 +31,7 @@ QPSK.NumberofQPSK = 1;                  % Number of QPSK signals
 QPSK.latShift = 0.02;                   % Shift of QPSK Transmitter from GRP latitude
 QPSK.lonShift = 0.02;                   % Shift of QPSK Transmitter from GRP longitude
 QPSK.Gain = 1;                          % Asumme omin-directional isotropic QPSK transmitter G = 1
-QPSK.SIR = 30;                          % Assumed SIR in [dB]
+QPSK.SIR = -10;                          % Assumed SIR in [dB]
 %% Interfering Radar Signal Parameters
 IR.fc = 0.1*RadPar.fo;                  % Carrier frequency same as SAR [Hz]
 IR.ts = RadPar.ts;                      % [s] Sample time same as SAR
