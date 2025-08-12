@@ -1,4 +1,4 @@
-function [a] = F04_GetGroundReflect(Targetlat,Targetlon,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2)
+function [a] = F05_GetGroundReflect(Targetlat,Targetlon,latSawthL1,lonSwathL1,latSawthL2,lonSwathL2)
 % here we get the gournd reflectivity based on the optical data 
 % Extact the edges of the swath region
 latEdge = [min([latSawthL1;latSawthL2]), max([latSawthL1;latSawthL2])];
