@@ -1,4 +1,4 @@
-function [Targetlat,Targetlon]= F03_GenerateTargets(latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Param)
+function [Targetlat,Targetlon]= F04_GenerateTargets(latSawthL1,lonSwathL1,latSawthL2,lonSwathL2,Param)
 % This loop will walk step by step along the track (azimuth) to generate the sampling
 % points (arc) between the two edges of the swath based on the great cricle
 % connecting the two edges.
