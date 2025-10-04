@@ -1,7 +1,8 @@
 clc; clear; close all
 close all hidden;
-load('SAR_Image')                     % That is my final image with azimuth 5°
-%% This is a raw-wise FFT / IFFT
+load('SAR_Image2')                     % That is my final image with azimuth 5°
+% load("Test02.mat")
+%% This is a raw-wise FFT / IFFT at range direction
 fft1d2 = @ (x) fftshift(fft(fftshift(x,2),[],2),2);
 ifft1d2 = @ (x) ifftshift(ifft(ifftshift(x,2),[],2),2);
 % This is a cloumn-wise FFT - Azimuth
@@ -14,8 +15,8 @@ A02_Parameters                                       % Load interference paramet
 % NI01_GenerateAWGN
 % sqd = sqd + AWGN;                                    % Signal to interference = Noise.SNR
 % Add LORA signal
-NI02_GenerateLORA
-sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
+% NI02_GenerateLORA
+% sqd = sqd + sLORA;                                   % Signal to interference = LORA.SIR
 % Add AM signal
 % NI03_GenerateAM
 % sqd = sqd + sAM;                                    % Signal to interference = AM.SIR
@@ -29,14 +30,14 @@ sqd = sqd + sLORA;                                   % Signal to interference = 
 sqdT = sqd.';
 % figure;pwelch(sqdT(:),size(sqd,1),[],size(sqd,1),RadPar.fs,'centered')
 %% plotting raw time domain signal
-% figure(1);
-% subplot(2,3,1)
-% pc =pcolor(FastTime/1e-6,1:etaTotal,real(sqd));
-% pc.LineStyle='none';
-% colormap parula
-% xlabel('Fast time [\mus]')
-% ylabel('Azimuth index')
-% title('Step 0: Raw time domain (magnitude)')
+figure(1);
+subplot(2,3,1)
+pc =pcolor(FastTime/1e-6,1:etaTotal,real(sqd));
+pc.LineStyle='none';
+colormap parula
+xlabel('Fast time [\mus]')
+ylabel('Azimuth index')
+title('Step 0: Raw time domain (magnitude)')
 %% STEP5.SAR Image Processing
 %% Step 1: Range Compression
 So = fft1d2(sqd);                                % FFT for the time domain signal (FFT along each eta row)
@@ -52,22 +53,30 @@ So_ref = fft1d2(sqd_ref);
 Src_ref  = repmat(G,size(So_ref,1),1).*So_ref; 
 src_ref  = ifft1d2(Src_ref);
 %% Plotting the range-compressed image
-% subplot(2,3,2)
-% pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
-% pc.LineStyle='none';
-% xlabel('Fast time [\mus]')
-% ylabel('Azimuth index')
-% title('Step 1: Range compression')
-% drawnow
+subplot(2,3,2)
+pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));
+pc.LineStyle='none';
+xlabel('Fast time [\mus]')
+ylabel('Azimuth index')
+title('Step 1: Range compression')
+drawnow
 %% Step 2 Azimuth FFT
 S2_ref = fft1d1(src_ref);
 S2 = fft1d1(src);
-% subplot(2,3,3)
-% pc =pcolor(FastTime/1e-6,1:etaTotal,abs(S2));
-% pc.LineStyle='none';
-% xlabel('Fast time [ms]')
-% ylabel('Azimuth index')
-% title('Step 2: Azimuth FFT')
+fDoppler = linspace(-Param.PRF/2, Param.PRF/2, etaTotal); % Convert azimuth index to Doppler frequency
+%% 
+subplot(2,3,3)
+pc =pcolor(FastTime/1e-6,fDoppler,abs(S2));
+pc.LineStyle='none';
+xlabel('Fast time [\mus]')
+ylabel('Doppler Frequency')
+title('Step 2: Azimuth FFT Doppler Spectrum')
+%%
+plot(fDoppler, abs(S2));
+xlabel('Doppler Frequency (Hz)');
+ylabel('Magnitude');
+title('Doppler Spectrum After Azimuth FFT');
+grid on;
 %% Step 3 Range cell migration compensation
 DeltaR = R - Ro;                                    % Difference on range profile due to migration - Based on the GRP
 % subplot(2,3,4)
@@ -84,13 +93,13 @@ for AzCtr=1:etaTotal
     S2_ref(AzCtr,:) = circshift(S2_ref(AzCtr,:),NbinsShift(AzCtr));
 end
 
-% subplot(2,3,5)
-% pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));
-% pc.LineStyle='none';
-% xlabel('Fast time [\mus]')
-% ylabel('Azimuth index')
-% title('Step 3.2: RCMC')
-% drawnow
+subplot(2,3,5)
+pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));
+pc.LineStyle='none';
+xlabel('Fast time [\mus]')
+ylabel('Azimuth index')
+title('Step 3.2: RCMC')
+drawnow
 %% Step 4 Azimuth compression
 Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched Filter
 % subplot(2,3,6)
@@ -105,6 +114,13 @@ Haz = exp(-1j*pi*R*4*RadPar.fo/c);                  % Azimuth Analytical Matched
 midpoint = round(size(S2_ref,2)/2)+1;
 S2_ref = repmat(S2_ref(:,midpoint),1,size(S2,2));
 S3 = S2 .* conj(S2_ref);
+subplot(2,3,6)
+pc =pcolor(FastTime/1e-6,1:etaTotal,real(S3));
+pc.LineStyle='none';
+xlabel('Fast time [\mus]')
+ylabel('Azimuth index')
+title('Step 4: Azimuth Compression')
+drawnow
 %% Step 5 Azimuth IFFT
 sSLC = ifft1d1(S3);                                 % Final Focused SAR Image
 %% Plotting Focused SAR Image (An approximate projection of the swath)
