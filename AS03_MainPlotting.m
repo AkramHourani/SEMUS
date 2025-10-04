@@ -12,7 +12,7 @@ sat = satellite(sc,Elem.a,Elem.e,Elem.Inc,Elem.RAAN,Elem.omega,Elem.TA,'OrbitPro
 play(sc)
 sc.Viewers.CameraReferenceFrame='Inertial';
 % ac = access(sat, gs(:));
-gt = groundTrack(sat);
+% gt = groundTrack(sat);
 %% Finding the swath - STEP2.Geometric Simulator
 % Plot swath 
 % figure(1)

@@ -5,7 +5,7 @@ Noise.SNR = 20;                         % Assumed Signal to noise ratio  [dB]
 % Generate 0.6595s of LORA data ==> Controlled by the SF=11
 % SF ∈ {7, 8, 9, 10, 11, 12}.           % Generate 0.16s of LORA data ==> Controlled by the SF=9
 LORA.SF = 11;                           % Spreading factor
-LORA.BW = 0.8e6 ;                       % Signal bandwidth of LoRa transmission [Hz]
+LORA.BW = 0.08e6 ;                       % Signal bandwidth of LoRa transmission [Hz]
 % LORA.fc = RadPar.fo + 1e6 ;           % Carrier frequency [Hz]
 LORA.Delta_f = 1e6 ;                    % Frequency Shift [Hz]
 LORA.NumberofLoRa = 1;                  % Number of LoRa signals

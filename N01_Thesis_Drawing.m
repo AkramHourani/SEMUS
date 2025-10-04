@@ -96,54 +96,70 @@ box on
 saveLocation = 'D:\OneDrive - RMIT University\20. My Thesis\0. Images';
 Filename = fullfile(saveLocation, 'Figure212');
 % print(h_Fig, '-dpng','-r600',Filename)
-%% Plot the stages of the compresion Figure212
-Scale = 1.1;
-h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);
-subplot(2,3,1)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(sqd));xticks([]),yticks([])
-pc.LineStyle='none';
-colormap sky
+%% Plot the Image processing stages Figure212
+Scale = 0.9;
+h_Fig = figure('PaperPositionMode', 'manual', 'PaperUnits', 'inches', ...
+    'PaperPosition', [0 0 3.5*2 3.5*2/1.618*Scale], ...
+    'Position', [200 300 800 800/1.618*Scale]);
+% Create a tiled layout for tight plots
+tiledlayout(2, 3, 'Padding', 'tight', 'TileSpacing', 'compact');
+% Subplot 1
+nexttile
+pc = pcolor(FastTime/1e-6, 1:etaTotal, real(sqd));
+pc.LineStyle = 'none';
+colormap bone
+xticks([]); yticks([]);
 xlabel('Fast time [\mus]')
-ylabel('Azimuth index','FontSize',8)
-title('Raw time domain','FontSize',8)
-subplot(2,3,2)
-plot(FastTime/1e-6,real(G));xticks([]),yticks([])
-xlabel('Range Frequency [MHz]','FontSize',8)
-ylabel('Real component','FontSize',8)
-title('Range matched filter','FontSize',8)
-subplot(2,3,3)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(src));xticks([]),yticks([])
-pc.LineStyle='none';
-xlabel('Fast time [\mus]','FontSize',8)
-ylabel('Azimuth index','FontSize',8)
-title('Step 1: Range compression','FontSize',8)
-subplot(2,3,4)
-pc =pcolor(FastTime/1e-6,1:etaTotal,abs(S2));xticks([]),yticks([])
-pc.LineStyle='none';
-xlabel('Fast time [\mus]','FontSize',8)
-ylabel('Azimuth index','FontSize',8)
-title('Step 2: Azimuth FFT','FontSize',8)
-subplot(2,3,5)
-plot(1:etaTotal,DeltaR);xticks([]),yticks([])
-xlabel('Azimuth index','FontSize',8)
-ylabel('Range compensation [m]','FontSize',8)
-title('Step 3.1: Range compensation profile','FontSize',8)
-subplot(2,3,6)
-pc =pcolor(FastTime/1e-6,1:etaTotal,real(S2));xticks([]),yticks([])
-pc.LineStyle='none';
-xlabel('Fast time [\mus]','FontSize',8)
-ylabel('Azimuth index','FontSize',8)
-title('Step 3.2: RCMC','FontSize',8)
-ax=gca;
-pc.LineStyle='none';
-grid on
-set(gca,'LooseInset',get(gca,'TightInset'));
-box on
-xticks([])
-yticks([])
-saveLocation = 'D:\OneDrive - RMIT University\20. My Thesis\0. Images';
+ylabel('Azimuth index', 'FontSize', 8)
+title('Raw time domain', 'FontSize', 8)
+text(0.05, 0.9, '(a)', 'Units', 'normalized', 'FontSize', 10, 'Color', 'white', 'FontWeight', 'bold');
+% Subplot 2
+nexttile
+plot(FastTime/1e-6, real(G), 'k');
+xticks([]); yticks([]);
+xlabel('Range Frequency [MHz]', 'FontSize', 8)
+ylabel('Real component', 'FontSize', 8)
+title('Range matched filter', 'FontSize', 8)
+text(0.05, 0.9, '(b)', 'Units', 'normalized', 'FontSize', 10, 'Color', 'black', 'FontWeight', 'bold');
+% Subplot 3
+nexttile
+pc = pcolor(FastTime/1e-6, 1:etaTotal, real(src));
+pc.LineStyle = 'none';
+xticks([]); yticks([]);
+xlabel('Fast time [\mus]', 'FontSize', 8)
+ylabel('Azimuth index', 'FontSize', 8)
+title('Step 1: Range compression', 'FontSize', 8)
+text(0.05, 0.9, '(c)', 'Units', 'normalized', 'FontSize', 10, 'Color', 'white', 'FontWeight', 'bold');
+% Subplot 4
+nexttile
+pc = pcolor(FastTime/1e-6, 1:etaTotal, abs(S2));
+pc.LineStyle = 'none';
+xticks([]); yticks([]);
+xlabel('Fast time [\mus]', 'FontSize', 8)
+ylabel('Azimuth index', 'FontSize', 8)
+title('Step 2: Azimuth FFT', 'FontSize', 8)
+text(0.05, 0.9, '(d)', 'Units', 'normalized', 'FontSize', 10, 'Color', 'white', 'FontWeight', 'bold');
+% Subplot 5
+nexttile
+plot(1:etaTotal, DeltaR, 'k');
+xticks([]); yticks([]);
+xlabel('Azimuth index', 'FontSize', 8)
+ylabel('Range compensation [m]', 'FontSize', 8)
+title('Step 3.1: Range compensation profile', 'FontSize', 8)
+text(0.05, 0.9, '(e)', 'Units', 'normalized', 'FontSize', 10, 'Color', 'black', 'FontWeight', 'bold');
+% Subplot 6
+nexttile
+pc = pcolor(FastTime/1e-6, 1:etaTotal, real(S2));
+pc.LineStyle = 'none';
+xticks([]); yticks([]);
+xlabel('Fast time [\mus]', 'FontSize', 8)
+ylabel('Azimuth index', 'FontSize', 8)
+title('Step 3.2: RCMC', 'FontSize', 8)
+text(0.05, 0.9, '(f)', 'Units', 'normalized', 'FontSize', 10, 'Color', 'white', 'FontWeight', 'bold');
+% Save the figure
+saveLocation = 'C:\Users\nermi\OneDrive - RMIT University\20. My Thesis\0. Images';
 Filename = fullfile(saveLocation, 'Figure212');
-print(h_Fig, '-dpng','-r600',Filename)
+print(h_Fig, '-dpng', '-r600', Filename);
 %% Plot interfernce signal Figure215
 Scale = 1.2;
 h_Fig=figure('PaperPositionMode', 'manual','PaperUnits','inches','PaperPosition',[0 0 3.5*2 3.5*2/1.618*Scale],'Position',[200 300 800 800/1.618*Scale]);

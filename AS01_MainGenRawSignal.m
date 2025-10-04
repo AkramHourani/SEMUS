@@ -81,7 +81,7 @@ ylabel('Real part')
 title('reference pulse [mid swath point]')
 drawnow
 %% (Optional) you can select the Testing value for testing the script
-Testing=0; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
+Testing=2; % 0 for optical proccessing and 1 for GRP, 2 for few targets testing, and 3 for unity reflection
 FileName = 'SAR_Image2.mat';
 if Testing==1           % This is for single targets testing
     Targetlat = GRP(1);
@@ -91,7 +91,7 @@ if Testing==1           % This is for single targets testing
 
 end
 
-NTesting = 5;           % Defining number of testing targets
+NTesting = 3;           % Defining number of testing targets
 if Testing==2           % This is for Ntesting targets
     ToPick =randsample(numel(Targetlat),NTesting) ; 
     Targetlat = Targetlat(ToPick);
@@ -135,26 +135,26 @@ window_step = 1;  % If Step = 1 ==> Sliding window
 tic
 disp (['Starting simulation, total steps ',num2str(etaTotal)])
 % Use this loop in case using GPU processing ==> Update F06_CalcReflection to work in GPU mode
-% for eta=1:etaTotal
-%     sqd(eta,:) =F06_CalcReflection(sigma,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
-%     disp(eta)
-% end
-% Sliding window-Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
-figure
-% window_center = 1;
 for eta=1:etaTotal
-    window_center = ((eta -1) * (Param.NtargetsAz -1) / (etaTotal-1)) + 1;
-    window_center = ceil(window_center / window_step ) * (window_step);
-    Lower_edge = max(1,round(window_center-window/2));
-    Upper_edge = min(Param.NtargetsAz,round(window_center+window/2));
-    Targetlat_w = Targetlat(Lower_edge:Upper_edge,:);    
-    Targetlon_w = Targetlon(Lower_edge:Upper_edge,:);
-    sigma_w = sigma(Lower_edge:Upper_edge,:);
-    geoplot(Targetlat_w(:),Targetlon_w(:),'.')
-    drawnow
-    sqd(eta,:) =F06_CalcReflection(sigma_w,Targetlat_w,Targetlon_w,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+    sqd(eta,:) =F06_CalcReflection(sigma,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
     disp(eta)
 end
+% Sliding window-Use this loop in case using parallel GPU processing ==> Update F06_CalcReflection to work in GPU mode
+% figure
+% % window_center = 1;
+% for eta=1:etaTotal
+%     window_center = ((eta -1) * (Param.NtargetsAz -1) / (etaTotal-1)) + 1;
+%     window_center = ceil(window_center / window_step ) * (window_step);
+%     Lower_edge = max(1,round(window_center-window/2));
+%     Upper_edge = min(Param.NtargetsAz,round(window_center+window/2));
+%     Targetlat_w = Targetlat(Lower_edge:Upper_edge,:);    
+%     Targetlon_w = Targetlon(Lower_edge:Upper_edge,:);
+%     sigma_w = sigma(Lower_edge:Upper_edge,:);
+%     geoplot(Targetlat_w(:),Targetlon_w(:),'.')
+%     drawnow
+%     sqd(eta,:) =F06_CalcReflection(sigma_w,Targetlat_w,Targetlon_w,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
+%     disp(eta)
+% end
 % % Use this loop in case using parallel CPU processing ==> Update F06_CalcReflection to work in CPU mode
 % parfor eta=1:etaTotal
 %     sqd(eta,:) =F06_CalcReflection(a,Targetlat,Targetlon,Satlla(eta,:),RadPar,E,sataz,c,tauo,FastTime);
